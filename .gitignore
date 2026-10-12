@@ -1,0 +1,20 @@
+.env
+.venv/
+.uv-python/
+.uv-cache/
+__pycache__/
+*.pyc
+scratch/
+data/ratings.db-*
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+data/ratings.db
+
+# Kept on this computer, not published: only what the website needs goes to GitHub.
+tests/
+refresh.bat
+.env.example
+data/gold/
+data/eval/*_dev.json
+reports/history/

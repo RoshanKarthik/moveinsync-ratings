@@ -1,0 +1,59 @@
+# Settings for `ratings refresh`. Secrets never go here — put NVIDIA_API_KEY in .env.
+
+# The app the report is about.
+app:
+  id: com.moveinsync.ets
+  name: MoveInSync (employee app)
+  country: in
+  lang: en
+
+# Apps shown for comparison. Only their store listings and review replies are fetched;
+# their reviews are not tagged.
+benchmarks:
+  - id: in.mtap.iincube.safetrax.commuter
+    name: Safetrax Commuter
+  - id: com.whistledrive.empnative
+    name: WhistleDrive EmployeeApp
+  - id: in.smarttransport.emp
+    name: SMT Employee
+
+# Other MoveInSync apps listed on the store — tracked by their store numbers only.
+sibling_apps:
+  - id: com.moveinsync.driver.lite
+    name: Moveinsync Partner - Lite
+  - id: com.moveinsync.driver.dco
+    name: MoveInSync - Driver Partner
+  - id: field.moveinsync.ets
+    name: MoveInSync - Field app
+
+# Reviews older than this are kept for long-term trends but not sent to the model.
+tag_since: "2023-01-01"
+
+# Recent window the diagnosis and the issue ranking are based on.
+analysis:
+  recent_days: 90
+  comparison_days: 365
+  min_reviews_per_version: 25
+
+llm:
+  # Any OpenAI-compatible endpoint works; NVIDIA NIM's free tier is the default.
+  base_url: https://integrate.api.nvidia.com/v1
+  api_key_env: NVIDIA_API_KEY
+  # Best first. Chosen by `ratings eval` on labelled reference reviews (see docs/METHOD.md).
+  # "@nothink" turns the model's step-by-step reasoning off: same accuracy here, ~10x faster.
+  models:
+    - nvidia/nemotron-3-ultra-550b-a55b@nothink   # primary
+    - nvidia/nemotron-3-super-120b-a12b@nothink   # used only when the primary fails or times out
+  # fallback = first model tags; the next only fills gaps.  vote = all tag, majority wins.
+  strategy: fallback
+  batch_size: 20
+  requests_per_minute: 35
+  max_retries: 4
+  # A request slower than this is retried; a model that keeps failing is skipped for that batch
+  # and the others still vote, so one slow provider never blocks a refresh.
+  timeout_s: 120
+
+paths:
+  database: data/ratings.db
+  reports: reports
+  gold: data/gold/reference_labels.jsonl
