@@ -47,6 +47,22 @@ class LLMSettings(BaseModel):
         return os.environ.get(self.api_key_env) or None
 
 
+class AlertSettings(BaseModel):
+    # Slack incoming-webhook URL, read from this environment variable (a repo secret in CI).
+    webhook_env: str = "SLACK_WEBHOOK_URL"
+    # Linked from each alert message.
+    site_url: str | None = None
+    # No new review for this many days means the download has stopped working.
+    stale_days: int = 3
+    # Alert when Google's rating is this far below its highest snapshot in the last `rating_days`.
+    rating_drop: float = 0.01
+    rating_days: int = 7
+
+    @property
+    def webhook(self) -> str | None:
+        return os.environ.get(self.webhook_env) or None
+
+
 class Paths(BaseModel):
     database: str = "data/ratings.db"
     reports: str = "reports"
@@ -61,6 +77,7 @@ class Settings(BaseModel):
     tag_since: str = "2023-01-01"
     analysis: AnalysisSettings = AnalysisSettings()
     llm: LLMSettings
+    alerts: AlertSettings = AlertSettings()
     paths: Paths = Paths()
 
     @cached_property

@@ -3,6 +3,7 @@
 ratings refresh     download new reviews, tag them, rebuild the report and open it
 ratings doctor      check the setup (key, internet, data) and say what to fix
 ratings recommend   build the recommendation, backlog exports and reply playbook
+ratings alerts      send new alerts (safety, emerging issues, releases, rating, stale data) to Slack
 """
 
 from __future__ import annotations
@@ -243,6 +244,43 @@ def recommend(
     console.print("[bold green]Done.[/] Run `ratings report` to refresh the monitor's Fix tracker.")
     if open_report and not os.environ.get("CI"):
         webbrowser.open(paths["recommendation"].resolve().as_uri())
+
+
+@app.command()
+def alerts(
+    dry_run: Annotated[bool, typer.Option("--dry-run", help="Only print the alerts; send and record nothing.")] = False,
+) -> None:
+    """Send new alerts to Slack, each once: safety reviews, emerging issues, flagged releases, rating drops, stale data."""
+    from .alerts import collect, dispatch, post_slack, slack_payload
+    from .analysis import analyse
+
+    settings, tax, store = _ctx()
+    data = analyse(settings, tax, store)
+    found = collect(data, tax, store, settings)
+    if dry_run:
+        sent = store.sent_alert_keys()
+        for x in found:
+            console.print(f"  {'[dim](sent before)[/] ' if x.key in sent else ''}{x.text}")
+        console.print(f"{len(found)} alert condition(s); nothing sent (--dry-run).")
+        return
+    url = settings.alerts.webhook
+    send = (lambda new: post_slack(url, slack_payload(new, data, settings.alerts.site_url))) if url else None
+    try:
+        new = dispatch(found, store, send)
+    except Exception as e:
+        console.print(f"[bold red]Could not send alerts:[/] {e}. They will be retried on the next run.")
+        raise typer.Exit(1) from None
+    for x in new:
+        console.print(f"  {x.text}")
+    if not new:
+        console.print(f"No new alerts ({len(found)} condition(s) already sent).")
+    elif url:
+        console.print(f"[bold green]Sent {len(new)} new alert(s) to Slack.[/]")
+    else:
+        console.print(
+            f"[yellow]{settings.alerts.webhook_env} is not set: {len(new)} alert(s) printed above, not sent. "
+            "They will be sent once the webhook is added.[/]"
+        )
 
 
 @app.command(name="eval")

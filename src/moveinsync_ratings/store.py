@@ -88,6 +88,14 @@ CREATE TABLE IF NOT EXISTS answers (
     PRIMARY KEY (review_id, model, taxonomy_version)
 );
 
+-- Alerts already sent, so a scheduled run never sends the same one twice.
+CREATE TABLE IF NOT EXISTS alerts_sent (
+    key      TEXT PRIMARY KEY,
+    kind     TEXT NOT NULL,
+    sent_at  TEXT NOT NULL,
+    message  TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS runs (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     started_at   TEXT NOT NULL,
@@ -282,6 +290,29 @@ class Store:
                 "INSERT OR REPLACE INTO answers VALUES (?,?,?,?,?,?)",
                 [(rid, model, taxonomy_version, h, json.dumps(res, ensure_ascii=False), stamp) for rid, h, res in rows],
             )
+
+    # ── alerts ────────────────────────────────────────────────────────────────────────────
+    def sent_alert_keys(self) -> set[str]:
+        return {r[0] for r in self.conn.execute("SELECT key FROM alerts_sent")}
+
+    def record_alerts(self, rows: Iterable[tuple[str, str, str]]) -> None:
+        """Mark (key, kind, message) alerts as sent."""
+        stamp = now_iso()
+        with self.tx() as c:
+            c.executemany(
+                "INSERT OR REPLACE INTO alerts_sent VALUES (?,?,?,?)", [(k, kind, stamp, m) for k, kind, m in rows]
+            )
+
+    def rearm_alerts(self, kinds: Iterable[str], active: set[str]) -> int:
+        """Forget sent alerts of these kinds whose condition has cleared, so a recurrence alerts again."""
+        kinds = list(kinds)
+        rows = self.conn.execute(
+            f"SELECT key FROM alerts_sent WHERE kind IN ({','.join('?' * len(kinds))})", kinds
+        ).fetchall()
+        gone = [r[0] for r in rows if r[0] not in active]
+        with self.tx() as c:
+            c.executemany("DELETE FROM alerts_sent WHERE key=?", [(k,) for k in gone])
+        return len(gone)
 
     # ── runs ──────────────────────────────────────────────────────────────────────────────
     def start_run(self, model: str | None) -> int:

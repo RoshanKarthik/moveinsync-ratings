@@ -53,6 +53,14 @@ llm:
   # and the others still vote, so one slow provider never blocks a refresh.
   timeout_s: 120
 
+# `ratings alerts`, run by the scheduled workflow after each refresh. Each alert is sent once.
+alerts:
+  webhook_env: SLACK_WEBHOOK_URL     # Slack incoming webhook, set as a repo secret (never here)
+  site_url: https://roshankarthik.github.io/moveinsync-ratings/
+  stale_days: 3                      # no new review for this long = the download has stopped
+  rating_drop: 0.01                  # alert when the rating is this far below its 7-day high
+  rating_days: 7
+
 paths:
   database: data/ratings.db
   reports: reports
