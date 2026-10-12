@@ -1,0 +1,402 @@
+Summary,Issue Type,Priority,Labels,Labels,Labels,Description
+"[MIS-01] Answer every 1–2★ review within 2 working days, starting with the backlog",Task,Highest,play-rating,horizon-now,track-product,"h3. Problem
+MoveInSync stopped replying to Play Store reviews. Unhappy employees hear nothing back, and every new employee reading the store page sees complaints left unanswered, while the closest comparison app answers its negative reviews.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* Reviews answered: 98% in 2024Q1 (last quarter at 90% or more); at most 10% in every quarter since 2024Q3; last reply 18 Aug 2026.
+* Last 90 days: 0.6% of reviews answered (4 of 721; 95% CI 0.2%–1.4%); 1–2★ reviews answered: 1.0% (2 of 205; 95% CI 0.3%–3.5%).
+* Safetrax Commuter, last 365 days: answers 100% of reviews and 100% of 1–2★ reviews (58 of 58; 95% CI 94%–100%).
+* 639 of 9,802 reviews that got a reply (6.5%) were edited after it. Play keeps only the latest stars, so whether replies raise ratings is measured from now on (star-change log).
+
+
+h3. Proposed change
+* Reply to every unanswered 1–2★ review from the last 90 days, most-upvoted first, using the issue-specific templates in the reply playbook (address the specific problem, give a concrete next step or the fix's release, never ask for a rating change).
+* From then on, reply to every new 1–2★ review within 2 working days and to 3★ reviews weekly. When a fix ships, post a short follow-up reply on the reviews that named it.
+* Route each review to the owner in the playbook (tagging already assigns the issue and owner); service complaints go to the helpdesk queue with the employer named if the review gives it.
+* Give one named person ownership of the Play Console reply queue, with a back-up.
+
+h3. Acceptance criteria
+* Every 1–2★ review from the last 90 days has a reply.
+* In the following 4 weeks, at least 90% of new 1–2★ reviews are answered within 2 working days (monitor tile ""Reviews answered"").
+* No reply asks the user to change or raise their rating (Google Play policy).
+
+*Owner:* App support lead (with Product for routing)
+*Effort (estimate):* S · ~2 person-days to clear the 90-day backlog, then ~30 min a day
+*Success metric:* Share of 1–2★ reviews answered (monitor), and star changes after a reply (review_changes log).
+*Confirm with (internal data):* Play Console reply log; the monitor's star-change log (first full month after replies resume).
+*Expected effect:* Google notifies the reviewer of a reply by push and email, and the reviewer can update the rating. The size of the effect is not measurable from past public data; the star-change log measures it from now on."
+[MIS-02] Triage the crash rise in 12.19.0 with Android vitals and decide hotfix vs. rollback,Bug,Highest,play-rating,horizon-now,track-product,"h3. Problem
+""Crash, blank screen or won't open"" costs the rating more than any other issue and is rising in the latest reviews, led by the newest release. Play may also reduce the app's visibility and show a store-listing warning when crash or ANR rates pass its bad-behaviour thresholds.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* Crash, blank screen or won't open: in 13% of 1–2★ reviews in the last 90 days (27 of 205; 95% CI 9.2%–18%); 11% in the 90 days before (no significant change, p = 0.414).
+* Emerging: 19% of 1–2★ reviews in the last 30 days (14 of 73; 95% CI 12%–30%) vs 9.5% in the 180 days before (p = 0.015).
+* Rating cost rank #1 of 29: −0.090★ on the 365-day written-review average; named in 90 reviews in that period.
+{quote}whenever i update this app, i am not able to open the app again, I need to uninstall and reinstall again. facing this issue since 3 months (1★, Oct 2026){quote}
+{quote}a few days ago this app was working fine on my phone, but for the last 3 days it's not working at all. The app doesn't start on my phone, whenever I am opening it, it closes itself. I tried clearing data, reinstalled … (3★, Oct 2026){quote}
+
+h3. Proposed change
+* Pull Play Console Android vitals for 12.19.0 vs 12.18.1 — user-perceived crash rate and ANR rate, top clusters, split by device model and Android version.
+* If either rate is above Play's bad-behaviour threshold (1.09% crashes, 0.47% ANRs, or 8% on any phone model), halt the rollout and ship a hotfix for the top clusters; otherwise fix the top clusters in the next release (MIS-05).
+* Match crash clusters to the review quotes (blank screen on open, ""something went wrong"", closes on OTP screen) so the fix covers what users actually hit.
+
+h3. Acceptance criteria
+* Vitals comparison of 12.19.0 vs 12.18.1 shared with Product within 2 working days, with the top 3 crash and ANR clusters and their device spread.
+* Written hotfix or rollback decision, with the threshold used.
+
+*Owner:* Mobile engineering lead
+*Effort (estimate):* S · 1–2 engineer-days to triage; fix sized after triage
+*Success metric:* User-perceived crash and ANR rate per release (Android vitals); crash share of 1–2★ reviews (monitor).
+*Confirm with (internal data):* Android vitals (crash rate, ANR rate, top clusters per version and device).
+*Expected effect:* Stops the current rise; the lasting fix is MIS-05."
+[MIS-03] Staged rollout with halt rules for every release,Task,High,play-rating,horizon-now,track-product,"h3. Problem
+Releases ship often, and many reviews calling the app hard to use blame a recent update. A bad release reaches every employee before anyone notices.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* 29 releases had enough reviews to compare in the last 365 days; 0 flagged 'worse' or 'watch' by the monitor.
+
+
+h3. Proposed change
+* Release through Play staged rollout (for example 10% → 50% → 100% over a week).
+* Halt before widening if any of these holds — crash or ANR rate above the Play threshold, the monitor flags the new version, or a new complaint tops its reviews.
+* Add a short ""what changed"" note in-app and in the release notes for any change to the main screens (booking, trip, boarding OTP).
+
+h3. Acceptance criteria
+* The next two releases go out staged, with the halt check recorded at each step.
+* The monitor's release table is reviewed before each rollout step.
+
+*Owner:* Mobile engineering lead + QA
+*Effort (estimate):* S · process change, ~1 day to set up
+*Success metric:* Share of releases flagged ""worse""/""watch"" by the monitor; crash rate per release.
+*Confirm with (internal data):* Play Console release dashboard; Android vitals.
+*Expected effect:* Limits the damage of a bad release to a fraction of users for a few days."
+"[MIS-04] Fix the ""not downloaded from Play Store"" false block",Bug,Highest,play-rating,horizon-next,track-product,"h3. Problem
+Employees who installed from Google Play are told every few days that the app ""was not downloaded from Play Store"" and must reinstall. This is rising. The pattern (works, then fails days later) points to an integrity check that fails closed on transient errors or stale verdicts, not to sideloading.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* 'Not downloaded from Play Store' error: in 3.9% of 1–2★ reviews in the last 90 days (8 of 205; 95% CI 2.0%–7.5%); 0.9% in the 90 days before (rising, p = 0.044).
+* Rating cost rank #19 of 29: −0.015★ on the 365-day written-review average; named in 17 reviews in that period.
+{quote}Please fix the bug..Quite frequently it gives error as""move in synch application can not be installed/opened as it was not downloaded from play store"". (2★, Sep 2026){quote}
+{quote}there is an issue with the app. While opening the app, it shows the app is not installed from the play store whereas I never used other places to install. (2★, Sep 2026){quote}
+
+h3. Proposed change
+* Day 1 — pull the server-side integrity verdict logs for blocked sessions (verdict fields, exception codes, Play Services version, installer) to confirm the cause.
+* Never block on a transient or remediable error — call isRemediable() and show the Play Integrity GET_INTEGRITY remediation dialog (it can update Play Services or fix network issues); for an UNLICENSED verdict show the GET_LICENSED dialog instead of a block-and-reinstall message.
+* Do not re-run the check while offline; cache the last good verdict for the session.
+
+h3. Acceptance criteria
+* No hard block for remediable exceptions; the remediation dialog is shown instead.
+* Blocked sessions per day fall by at least 90% in the integrity logs within 2 weeks of release.
+
+*Owner:* Mobile engineering + Platform (integrity check)
+*Effort (estimate):* M · 3–5 engineer-days
+*Success metric:* Blocked sessions per day (integrity logs); share of 1–2★ reviews naming the error (monitor).
+Fix tracker baseline: 3.9% of 1–2★ reviews (8 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* Server-side Play Integrity verdict logs.
+*Expected effect:* Removes a failure that forces a reinstall, often while the cab is waiting."
+[MIS-05] Stability — fix top crash clusters and replace blank screens with a recoverable screen,Bug,Highest,play-rating,horizon-next,track-product,"h3. Problem
+Crashes, blank screens, an app that won't open, and slow screens that hang. Users hit them at the worst moment — opening the app to see the cab or the boarding OTP.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* Crash, blank screen or won't open: in 13% of 1–2★ reviews in the last 90 days (27 of 205; 95% CI 9.2%–18%); 11% in the 90 days before (no significant change, p = 0.414).
+* Emerging: 19% of 1–2★ reviews in the last 30 days (14 of 73; 95% CI 12%–30%) vs 9.5% in the 180 days before (p = 0.015).
+* Rating cost rank #1 of 29: −0.090★ on the 365-day written-review average; named in 90 reviews in that period.
+* Slow to load / hangs: in 6.8% of 1–2★ reviews in the last 90 days (14 of 205; 95% CI 4.1%–11%); 7.4% in the 90 days before (no significant change, p = 0.828).
+* Rating cost rank #6 of 29: −0.045★ on the 365-day written-review average; named in 61 reviews in that period.
+{quote}This aap keeps on crashing due to some bug and there is No Update Available Yet... What will Working Professionals do who avail cab services??? (1★, Sep 2026){quote}
+{quote}app crashed did not open in my mobile plx fixed it vivo v25 Pro (1★, Sep 2026){quote}
+
+h3. Proposed change
+* Fix the top crash and ANR clusters from Android vitals (from MIS-02), largest user impact first.
+* Replace blank or ""something went wrong"" screens with a screen that explains what failed and offers Retry, and that still shows today's trip (cab number, pickup time, boarding OTP) from the last successful sync.
+* Profile cold start and the trip screen on the 5 most-used low-end devices; set a cold-start budget and fail the release check if it regresses.
+
+h3. Acceptance criteria
+* User-perceived crash rate and ANR rate below Play's bad-behaviour thresholds overall and on every top-10 device model.
+* No blank screen in the top 10 user journeys when the network or backend is down (tested).
+* Today's trip and boarding OTP visible offline after one successful sync.
+
+*Owner:* Mobile engineering
+*Effort (estimate):* L · 2 sprints (1 squad)
+*Success metric:* Crash share of 1–2★ reviews (Fix tracker); crash and ANR rate (Android vitals).
+Fix tracker baseline: 13.0% of 1–2★ reviews (27 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* Android vitals; cold-start time per device.
+*Expected effect:* Targets the largest single rating cost."
+[MIS-06] Sign-in that works — OTP delivery fallback and fewer forced logouts,Story,High,play-rating,horizon-next,track-product,"h3. Problem
+Employees cannot get in — the OTP does not arrive — and are logged out often, so they need a new OTP at the moment the cab arrives. Each forced logout is another chance for OTP delivery to fail.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* Login OTP not received: in 5.4% of 1–2★ reviews in the last 90 days (11 of 205; 95% CI 3.0%–9.4%); 6.0% in the 90 days before (no significant change, p = 0.782).
+* Rating cost rank #3 of 29: −0.053★ on the 365-day written-review average; named in 56 reviews in that period.
+* Frequent logout / re-login: in 2.0% of 1–2★ reviews in the last 90 days (4 of 205; 95% CI 0.8%–4.9%); 4.6% in the 90 days before (no significant change, p = 0.128).
+* Rating cost rank #5 of 29: −0.046★ on the 365-day written-review average; named in 56 reviews in that period.
+* 16% of reviews naming it blame a recent update.
+{quote}This app is the worst. Not able to login via phone/email as the OTP is not received. The most disgusting thing is, it won't give any message whether the user's mobile/email is registered or not. Without this basic … (1★, Jan 2026){quote}
+{quote}wasted app email otp system don't work everyday have to login via otp don't know why and how created this application. so frustrating to use this app (1★, Jun 2026){quote}
+
+h3. Proposed change
+* Measure OTP delivery per operator and channel (sent → delivered → entered) and alert when delivery drops.
+* Offer a second channel (email, WhatsApp or voice) automatically after 30 seconds, with a visible resend timer; use the Android SMS Retriever API so the OTP fills itself.
+* Keep sessions alive with refresh tokens; never end a session during a booked trip window; where the employer's policy allows, re-authenticate with the device screen lock instead of a new OTP.
+* List employers whose settings force frequent re-login and share with the account team (OPS-05).
+
+h3. Acceptance criteria
+* OTP delivered within 30 seconds for at least 98% of requests, measured per operator.
+* No logout during a booked trip window in testing across the 5 most-used devices.
+
+*Owner:* Platform / backend (OTP) + Product & design (session rules)
+*Effort (estimate):* M · 1 sprint
+*Success metric:* OTP share of 1–2★ reviews (Fix tracker); OTP delivery rate; logins per active user per week.
+Fix tracker baseline: 5.3% of 1–2★ reviews (11 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* SMS gateway delivery reports; auth service logs (session length, re-login rate).
+*Expected effect:* Removes the two sign-in complaints; each forced logout avoided is also one fewer OTP that can fail."
+[MIS-07] Boarding — show the OTP first and move the seat-belt check after it,Story,High,play-rating,horizon-next,track-product,"h3. Problem
+The redesigned app is called hard to use, often blaming a recent update. The newest named complaint is the seat-belt confirmation that now pops up before the boarding OTP, adding a step and hiding the OTP while the driver waits.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* Hard to use / new UI worse: in 6.8% of 1–2★ reviews in the last 90 days (14 of 205; 95% CI 4.1%–11%); 6.5% in the 90 days before (no significant change, p = 0.876).
+* Rating cost rank #4 of 29: −0.052★ on the 365-day written-review average; named in 70 reviews in that period.
+* 27% of reviews naming it blame a recent update.
+* OTP/QR check-in friction: in 2.0% of 1–2★ reviews in the last 90 days (4 of 205; 95% CI 0.8%–4.9%); 2.8% in the 90 days before (no significant change, p = 0.583).
+* Rating cost rank #22 of 29: −0.014★ on the 365-day written-review average; named in 21 reviews in that period.
+{quote}The new feature and very annoying feature which you have introduced - when you click view otp , it pops up the seat belt safely first. Why do you ask for user input one more click . very annoying I should be able to see … (2★, Oct 2026){quote}
+{quote}The app is by far the worst.. when navigation etc is concerned. the number of selections, drop downs etc that need to be selected.. even before you reach the main page... (1★, Apr 2026){quote}
+
+h3. Proposed change
+* Show the boarding OTP immediately on ""View OTP""; ask the seat-belt confirmation after boarding as a single non-blocking tap. Keep it for safety, but not in front of the OTP.
+* Run a 5-user task test of the top 5 tasks (book, see next trip, track cab, show OTP, raise a complaint) on the current build and fix anything that takes more than one extra tap compared with the previous version.
+
+h3. Acceptance criteria
+* OTP visible in one tap from the trip card; seat-belt confirmation does not cover it.
+* Task test results written up, with fixes ticketed.
+
+*Owner:* Product & design + Mobile engineering
+*Effort (estimate):* S · 2–3 engineer-days
+*Success metric:* Hard-to-use share of 1–2★ reviews (Fix tracker).
+Fix tracker baseline: 7.2% of 1–2★ reviews (15 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* In-app analytics — time from opening the trip to OTP shown.
+*Expected effect:* Removes a fresh irritant from every trip; a small change with daily visibility."
+[MIS-08] Ask happy riders for a rating — in-app review prompt after good trips,Story,High,play-rating,horizon-next,track-product,"h3. Problem
+Most ratings come from employees who never write a review, and they rate the app highly. Asking them on Play at a good moment is the cheapest way to add recent positive ratings. The app's own post-trip rating pop-up, by contrast, is itself a complaint. (If the app already calls the In-App Review API, this ticket becomes tuning when it fires.)
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* 79% of the 114,880 ratings have no text; they average 4.91★, vs 3.61★ for written reviews (approximate: Google rescales its star counts).
+* About 87% of the store's 1★ ratings come with a written review: low ratings are almost all written, while most ratings without text are 5★.
+* Forced trip rating / feedback: in 2.9% of 1–2★ reviews in the last 90 days (6 of 205; 95% CI 1.3%–6.2%); 1.8% in the 90 days before (no significant change, p = 0.465).
+* Rating cost rank #13 of 29: −0.024★ on the 365-day written-review average; named in 25 reviews in that period.
+{quote}I am forced to rate every trip which is twice a day. There should be an option to skip the step (1★, May 2026){quote}
+{quote}there is no option to skip the feedback for the trips. Its forcing us to give the feedback. better to add the skip option in that screen (1★, May 2026){quote}
+
+h3. Proposed change
+* Call the Google Play In-App Review API after a positive moment — for example the 3rd completed on-time trip in a week with no complaint raised — at most once every few months per user.
+* Never precede it with a question such as ""Do you like the app?"", never trigger it from a button, and never show it after a late, cancelled or complained-about trip (Google's rules).
+* Do not stack it with the post-trip feedback pop-up; make that pop-up skippable.
+* Ship only after the crash fix (MIS-05) is live, so the prompt reaches users on a stable build.
+
+h3. Acceptance criteria
+* Prompt logic reviewed against Google's in-app review guidance before release.
+* Prompt eligibility, request and completion logged (Play does not report whether the card showed).
+
+*Owner:* Mobile engineering + Product
+*Effort (estimate):* S · 2–3 engineer-days
+*Success metric:* Weekly new ratings and store rating (monitor's listing snapshot); trip-rating complaint share.
+Fix tracker baseline: 2.9% of 1–2★ reviews (6 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* Play Console ratings over time; in-app analytics on prompt requests.
+*Expected effect:* Adds recent ratings from satisfied riders; because Play weights recent ratings more, this moves the store rating faster than fixes alone. Size depends on Google's prompt quota.
+*Depends on:* MIS-05"
+[MIS-09] Find out why notifications are missing or late,Bug,Medium,play-rating,horizon-next,track-product,"h3. Problem
+Complaints about missing, late or repeated notifications (cab allocated, cab arriving) are emerging in the last 30 days.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* Notifications missing, late or spammy: in 3.4% of 1–2★ reviews in the last 90 days (7 of 205; 95% CI 1.7%–6.9%); 2.3% in the 90 days before (no significant change, p = 0.493).
+* Rating cost rank #18 of 29: −0.015★ on the 365-day written-review average; named in 19 reviews in that period.
+{quote}06-10-2026 even after booked the trip it keep sends the push notification that trip is not booked. old: Bring monthly view ,not just day view... (1★, Oct 2026){quote}
+{quote}mobile number is not visible once cab is booked, I can not see latest notification, since seems like notification stack full and never notification can not be shown. for every button click it is asking for policy … (1★, Oct 2026){quote}
+
+h3. Proposed change
+* Check push delivery rate by Android version and device; check that the Android 13+ notification permission is requested and that the app is not stopped by battery optimisation.
+* Check for duplicate sends and for SMS and push both firing.
+
+h3. Acceptance criteria
+* Root cause written up with delivery rate by Android version; fix ticketed.
+
+*Owner:* Platform / backend
+*Effort (estimate):* S · 2 engineer-days to investigate
+*Success metric:* Notification share of 1–2★ reviews (Fix tracker); push delivery rate.
+Fix tracker baseline: 3.4% of 1–2★ reviews (7 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* Push provider delivery reports.
+*Expected effect:* Early action on an emerging complaint while it is still small."
+"[MIS-10] Live tracking you can trust — fresher cab location and an ""updated X s ago"" label",Story,Medium,play-rating,horizon-quarter,track-product,"h3. Problem
+The cab's location is wrong, frozen or minutes behind, and ETAs do not match reality, so employees cannot plan when to step out.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* Cab location wrong or lagging: in 5.9% of 1–2★ reviews in the last 90 days (12 of 205; 95% CI 3.4%–10.0%); 6.9% in the 90 days before (no significant change, p = 0.657).
+* Rating cost rank #8 of 29: −0.039★ on the 365-day written-review average; named in 64 reviews in that period.
+* ETA / arrival time wrong: in 2.0% of 1–2★ reviews in the last 90 days (4 of 205; 95% CI 0.8%–4.9%); 3.2% in the 90 days before (no significant change, p = 0.411).
+* Rating cost rank #21 of 29: −0.014★ on the 365-day written-review average; named in 23 reviews in that period.
+{quote}The GPS tracking system is very slow, and the pickup and drop timings are frequently incorrect. Additionally, the live location of other users is often not visible. Due to these issues, we are unable to determine the … (1★, Jul 2026){quote}
+{quote}The app is not working properly. We are receiving 'NA' for the sequence and cab details, and the sequence is displaying incorrectly. Specifically, the app shows one sequence while the driver app shows a different one … (1★, Feb 2026){quote}
+
+h3. Proposed change
+* Measure GPS ping interval and staleness from the driver app per vendor and device.
+* Show how old the location is (""updated 40 s ago"") and stop showing a moving cab when data is stale.
+* Recalculate ETA from the live position, not the planned route.
+
+h3. Acceptance criteria
+* Median location age on the employee map under 15 seconds while the trip is active.
+* Stale positions labelled in the app.
+
+*Owner:* Platform / backend + Routing (ETA)
+*Effort (estimate):* L · 1–2 sprints
+*Success metric:* Tracking share of 1–2★ reviews (Fix tracker); median location age.
+Fix tracker baseline: 5.8% of 1–2★ reviews (12 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* Driver-app GPS ping logs.
+*Expected effect:* Fewer complaints about wrong locations and ETAs, and fewer missed pickups that follow from them."
+[MIS-11] My trips — bookings always visible and confirmed,Story,Medium,play-rating,horizon-quarter,track-product,"h3. Problem
+Employees cannot find their booked trips, cab details or pickup time, and some bookings fail or silently disappear.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* Can't see my bookings / trip details: in 2.4% of 1–2★ reviews in the last 90 days (5 of 205; 95% CI 1.0%–5.6%); 4.6% in the 90 days before (no significant change, p = 0.229).
+* Rating cost rank #9 of 29: −0.035★ on the 365-day written-review average; named in 45 reviews in that period.
+* Booking fails or not recorded: in 5.4% of 1–2★ reviews in the last 90 days (11 of 205; 95% CI 3.0%–9.4%); 2.8% in the 90 days before (no significant change, p = 0.174).
+* Rating cost rank #11 of 29: −0.028★ on the 365-day written-review average; named in 36 reviews in that period.
+{quote}Unable to view the schedule for the whole month even though the schedule is done a month prior. Only the following / next schedule is shown. Reinstalled app multiple times! (1★, Jan 2026){quote}
+{quote}it was good till 2 days back but now we are not able to see the people who are aligned to our pickup or drop. the app is not showing pickup timing as well now. only via msg we are getting the information which is most … (2★, Feb 2026){quote}
+
+h3. Proposed change
+* Put a ""Next trip"" card on the home screen (date, pickup time, cab number, OTP) and a list of upcoming bookings.
+* Confirm every booking or change with an in-app receipt; make the booking API idempotent and show a clear error when a booking is refused (cut-off, limit) instead of failing silently.
+
+h3. Acceptance criteria
+* Next trip visible from the home screen in zero taps.
+* Every refused booking shows the reason.
+
+*Owner:* Product & design + Platform / backend
+*Effort (estimate):* M · 1 sprint
+*Success metric:* Can't-see-bookings share of 1–2★ reviews (Fix tracker); booking error rate.
+Fix tracker baseline: 2.9% of 1–2★ reviews (6 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* Booking API error logs.
+*Expected effect:* Removes a daily source of uncertainty."
+[OPS-01] Follow up every safety concern raised in a review within 24 hours,Task,Highest,play-rating,horizon-now,track-ops,"h3. Problem
+Safety concerns are rare in reviews but each one needs action; more reviews praise safety than raise a concern, so safety is a strength to protect.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* 24 of 2,848 reviews in the last 365 days raise a safety concern; 1 in the last 30 days. 36 reviews praise safety.
+{quote}drivers and management are extremely rude and they talk in an inappropriate and disrespectful manner. Drivers shout during the conversation. Such behavior is unacceptable and that makes feel very uncomfortable and unsafe (1★, Jun 2026){quote}
+{quote}Keeps logging out after every 5 to 10 mins of inactivity on the app. Logging in again requires authentication via company's app which is time consuming. Also this poses a problem especially for female passengers who … (1★, May 2026){quote}
+
+h3. Proposed change
+* Review the safety list in the monitor every week; contact the employer's transport desk for each concern within 24 hours, and reply publicly with the escalation route.
+
+h3. Acceptance criteria
+* Every safety review from the last 30 days has an owner, an action and a public reply.
+
+*Owner:* Safety & compliance
+*Effort (estimate):* S · ongoing
+*Success metric:* Safety concerns per month and time to follow-up.
+Fix tracker baseline: 2.4% of 1–2★ reviews (5 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* Safety incident log.
+*Expected effect:* Protects a strength; prevents a single incident review from going unanswered."
+"[OPS-02] Close the loop on complaints — ticket number, status and resolution in the app",Story,High,play-rating,horizon-next,track-ops,"h3. Problem
+Complaints raised with the helpdesk or transport team get no answer or no resolution, and the employee has no way to see what happened to them.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* Helpdesk unhelpful / complaints ignored: in 9.3% of 1–2★ reviews in the last 90 days (19 of 205; 95% CI 6.0%–14%); 9.7% in the 90 days before (no significant change, p = 0.886).
+* Rating cost rank #2 of 29: −0.054★ on the 365-day written-review average; named in 64 reviews in that period.
+{quote}Pathetic app. My office is using their service and driver doesn't come on time for pickup. Most of the time driver doesn't pick the call. Their customer care is also not easy to connect. (1★, Dec 2025){quote}
+{quote}Not worth it - worst ever employee complaints are ignoring by transportation & Cab owners worst facilities. (2★, Jul 2026){quote}
+
+h3. Proposed change
+* Every complaint gets a ticket number and a status the employee can see in the app.
+* Set and publish a response target (for example 4 working hours) and resolution target; escalate automatically when missed.
+* Send a closing message saying what was done.
+
+h3. Acceptance criteria
+* Complaint status visible in the app; response-time target met for at least 90% of complaints.
+
+*Owner:* Operations & helpdesk + Product
+*Effort (estimate):* M · process now, in-app status in 1 sprint
+*Success metric:* Helpdesk share of 1–2★ reviews (Fix tracker); complaint response time.
+Fix tracker baseline: 9.2% of 1–2★ reviews (19 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* Helpdesk ticket system (response and resolution times).
+*Expected effect:* Turns an ignored complaint into a visible resolution, so it does not end up on the store page."
+"[OPS-03] Vendor scorecards for late cabs, no-shows and driver behaviour",Task,Medium,play-rating,horizon-quarter,track-ops,"h3. Problem
+Late or missing cabs, driver behaviour and disputed no-shows are service failures that show up as app reviews.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* Cab late, early or didn't come: in 6.3% of 1–2★ reviews in the last 90 days (13 of 205; 95% CI 3.7%–11%); 4.1% in the 90 days before (no significant change, p = 0.311).
+* Rating cost rank #12 of 29: −0.027★ on the 365-day written-review average; named in 33 reviews in that period.
+* Driver behaviour or driving: in 2.9% of 1–2★ reviews in the last 90 days (6 of 205; 95% CI 1.3%–6.2%); 2.3% in the 90 days before (no significant change, p = 0.688).
+* Rating cost rank #20 of 29: −0.014★ on the 365-day written-review average; named in 26 reviews in that period.
+* Wrongly marked no-show: in 2.0% of 1–2★ reviews in the last 90 days (4 of 205; 95% CI 0.8%–4.9%); 1.4% in the 90 days before (no significant change, p = 0.648).
+* Rating cost rank #24 of 29: −0.013★ on the 365-day written-review average; named in 21 reviews in that period.
+{quote}Complaint Regarding Pathetic Transport Service I would like to raise a complaint regarding the pathetic transport service provided today. (1★, Jul 2026){quote}
+{quote}cab is never assigned on time...always late ..no value of others time...after logout every day we have to wait for 40+ mins for cab the 20 mins distance route...which is totally waste of time...third class (1★, Jun 2026){quote}
+
+h3. Proposed change
+* Monthly vendor scorecard from trip data — on-time pickup, missed pickups, disputed no-shows, complaints per 1,000 trips.
+* Let employees dispute a no-show in the app, with GPS evidence shown to both sides.
+
+h3. Acceptance criteria
+* Scorecard reviewed with each vendor monthly; disputes resolved within 48 hours.
+
+*Owner:* Operations & vendors
+*Effort (estimate):* M · monthly process
+*Success metric:* Service-issue share of 1–2★ reviews (Fix tracker); on-time pickup rate.
+Fix tracker baseline: 6.3% of 1–2★ reviews (13 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* Trip data (planned vs actual pickup), no-show dispute log.
+*Expected effect:* Reduces the service share of complaints."
+[OPS-04] Review routing rules — long routes and clubbing,Task,Medium,play-rating,horizon-quarter,track-ops,"h3. Problem
+Routes are long, too many people are clubbed, and pickup times change at short notice.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* Long routes / bad clubbing: in 6.3% of 1–2★ reviews in the last 90 days (13 of 205; 95% CI 3.7%–11%); 5.5% in the 90 days before (no significant change, p = 0.724).
+* Rating cost rank #7 of 29: −0.041★ on the 365-day written-review average; named in 48 reviews in that period.
+* Pickup time unpredictable / changed late: in 2.0% of 1–2★ reviews in the last 90 days (4 of 205; 95% CI 0.8%–4.9%); 2.3% in the 90 days before (no significant change, p = 0.802).
+* Rating cost rank #23 of 29: −0.013★ on the 365-day written-review average; named in 18 reviews in that period.
+{quote}Worst Transport App ever, none of the teams have coordination, Routing Team is pethic, tracking team and Helpdesk will not help at all, instead they will blame each other teams. No point in writing email or raising … (1★, Mar 2026){quote}
+{quote}using from 5 year this app it doesn't show time of traffic, route delay problem, does not have proper timings if you use this app you will be late at office or any place you want to go on time. (1★, Feb 2026){quote}
+
+h3. Proposed change
+* Find routes where ride time exceeds the employer's maximum or the direct time by a large factor; review clubbing and maximum-ride-time settings with each affected employer.
+* Notify employees of a pickup-time change as soon as it is made, with the reason.
+
+h3. Acceptance criteria
+* Outlier routes listed per employer and reviewed with their transport desk.
+
+*Owner:* Routing & scheduling team + account teams
+*Effort (estimate):* M · analysis 1 week, then per-employer changes
+*Success metric:* Routing share of 1–2★ reviews (Fix tracker); ride time vs direct time.
+Fix tracker baseline: 6.3% of 1–2★ reviews (13 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* Routing engine output (planned ride time per employee).
+*Expected effect:* Fewer complaints about ride length."
+"[OPS-05] Account reviews with named employers — calls disabled, cut-offs, forced logout",Task,Medium,play-rating,horizon-next,track-ops,"h3. Problem
+Some complaints come from employer settings — calls to drivers disabled ""as per company policy"", strict booking cut-offs, frequent re-login — which are invisible from outside.
+
+h3. Evidence (Play Store reviews to 11 Oct 2026)
+* Concentrix: named in 7 reviews since 2023, 57% 1–2★ (Long routes / bad clubbing, Helpdesk unhelpful / complaints ignored, Driver behaviour or driving).
+* Wipro: named in 5 reviews since 2023, 60% 1–2★ (Slow to load / hangs, Cab location wrong or lagging, Can't call or message driver).
+* HCL: named in 4 reviews since 2023, 75% 1–2★ (Pickup time unpredictable / changed late, Can't see my bookings / trip details, Crash, blank screen or won't open).
+* Tech Mahindra: named in 4 reviews since 2023, 50% 1–2★ (Helpdesk unhelpful / complaints ignored, Long routes / bad clubbing).
+* JPMorgan Chase: named in 3 reviews since 2023, 33% 1–2★ (no specific issue).
+* Small numbers: a lead for the account team, not a verdict.
+* Can't call or message driver: in 1.0% of 1–2★ reviews in the last 90 days (2 of 205; 95% CI 0.3%–3.5%); 2.3% in the 90 days before (no significant change, p = 0.286).
+* Rating cost rank #16 of 29: −0.017★ on the 365-day written-review average; named in 27 reviews in that period.
+* Booking rules too strict: in 1.5% of 1–2★ reviews in the last 90 days (3 of 205; 95% CI 0.5%–4.2%); 1.4% in the 90 days before (no significant change, p = 0.944).
+* Rating cost rank #26 of 29: −0.013★ on the 365-day written-review average; named in 18 reviews in that period.
+{quote}Worst experience with this app, there is no perfect timing scheduled it changes very badly and when we try to contact the driver no response the auto reply comes (looks like the driver is not responding) and there … (1★, Apr 2026){quote}
+{quote}I'm getting calling permission is disabled as per company policy (1★, Aug 2026){quote}
+
+h3. Proposed change
+* Share the monitor's employer table with account managers; review the settings behind the complaints with each named employer and agree changes or in-app explanations.
+* Where a rule stays, explain it in the app at the moment it applies (for example ""Calls are masked by your company's policy — use in-app call"").
+
+h3. Acceptance criteria
+* Each employer named three or more times has had a settings review.
+
+*Owner:* Account management + employer transport desks
+*Effort (estimate):* S · one meeting per employer
+*Success metric:* Policy share of 1–2★ reviews; employer-level complaint counts (monitor).
+Fix tracker baseline: 1.0% of 1–2★ reviews (2 of 207, 90 days to 2026-10-09).
+*Confirm with (internal data):* Employer configuration records.
+*Expected effect:* Lowers policy-driven complaints that the app team cannot fix alone."

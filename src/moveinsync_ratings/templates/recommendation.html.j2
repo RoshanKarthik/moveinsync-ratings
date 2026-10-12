@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raising the Play Rating</title>
+<meta name="description" content="Why the MoveInSync employee app is rated {{ '%.2f' | format(a.listing.main.score) }}★ and what to fix first — as of Play Store reviews to {{ a.data_through }}.">
+<script>try{var t=localStorage.getItem("ratings-theme");if(t&&t!=="auto")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<style>
+{% include "_base.css" %}
+.answer { border-left: 4px solid var(--accent); }
+.answer p.lead { font-size: 17px; line-height: 1.6; max-width: 78ch; }
+.answer p.lead strong { color: var(--ink); }
+.glance { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+.glance .col { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+.glance h3 { margin: 0 0 2px; font-size: 14px; }
+.glance ol { margin: 6px 0 0; padding-left: 0; list-style: none; font-size: 13.5px; }
+.glance li { margin: 5px 0; }
+.glance li a { text-decoration: none; color: var(--ink); }
+.glance li a:hover { text-decoration: underline; }
+.id { display: inline-block; font: 600 11.5px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace; padding: 0 6px; border-radius: 6px; background: var(--chip); color: var(--ink-2); margin-right: 6px; white-space: nowrap; }
+.finding h3 { margin-top: 0; font-size: 17px; }
+.finding .num-badge { display: inline-flex; width: 24px; height: 24px; border-radius: 50%; align-items: center; justify-content: center; background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; margin-right: 8px; vertical-align: 1px; }
+.horizon { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 26px 0 8px; }
+.horizon h2 { margin: 0; }
+.ticket { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; box-shadow: var(--shadow); margin-top: 12px; }
+.ticket > header h3 { margin: 0 0 6px; font-size: 16.5px; line-height: 1.35; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.meta-row .chip { white-space: normal; }
+.chip.pri-Highest { color: var(--critical-ink); font-weight: 600; }
+.chip.pri-High { color: var(--ink); font-weight: 600; }
+.cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 24px; }
+.cols h4, .ticket h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 10px 0 4px; }
+.ticket ul { margin: 0; padding-left: 18px; font-size: 14px; }
+.ticket ul li { margin: 3px 0; }
+.ticket ul.ev li { font-size: 13.5px; color: var(--ink-2); }
+.outcome { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--grid); font-size: 13.5px; }
+.outcome p { margin: 0; color: var(--ink-2); }
+.problem { color: var(--ink-2); margin-bottom: 4px; }
+.callout { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 13.5px; color: var(--ink-2); }
+table.scen td, table.scen th { font-size: 14px; }
+.big { font-size: 18px; font-weight: 600; color: var(--ink); }
+@media (max-width: 860px) {
+  .glance, .cols, .outcome { grid-template-columns: 1fr; }
+}
+@media print {
+  .ticket { box-shadow: none; break-inside: avoid; }
+  a { color: inherit; text-decoration: none; }
+}
+</style>
+</head>
+<body>
+{% set main = a.listing.main %}
+{% set W = a.windows %}
+{% set I = a.issues %}
+{% set bench = a.listing.benchmarks[0] if a.listing.benchmarks else none %}
+{% set bench_r = a.benchmark_reviews[0] if a.benchmark_reviews else none %}
+{% set rs = replies_story %}
+{% set crash_e = emerging.get(top.code) %}
+{% set active = "recommendation" %}{% set monitor_href = "../reports/latest.html" %}{% set rec_href = "recommendation.html" %}
+{% include "_appbar.html.j2" %}
+{% macro tref(id) %}{% set t = by_id[id] %}<a href="#{{ t.id }}"><span class="id">{{ t.id }}</span>{{ t.title }}</a>{% endmacro %}
+{% macro ticket_card(t) %}
+<article class="ticket" id="{{ t.id }}">
+  <header>
+    <h3><span class="id">{{ t.id }}</span>{{ t.title }}</h3>
+    <div class="meta-row">
+      <span class="chip pri-{{ t.priority }}">{{ t.priority }} priority</span>
+      <span class="chip">Owner: {{ t.owner }}</span>
+      <span class="chip">Effort: {{ t.effort }}</span>
+      {% if t.depends_on %}<span class="chip">After {{ t.depends_on | join(", ") }}</span>{% endif %}
+    </div>
+  </header>
+  <p class="problem">{{ t.problem }}</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul>{% for x in t.change %}<li>{{ x }}</li>{% endfor %}</ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev">{% for x in t.evidence_lines %}<li>{{ x }}</li>{% endfor %}</ul>
+      {% for q in t.quotes %}<blockquote>“{{ q.text }}”<span class="meta">{{ q.stars }}★ · {{ q.date }}{% if q.version %} · v{{ q.version }}{% endif %}</span></blockquote>{% endfor %}
+    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>{{ t.expected }}{% if t.cost > 0 %} Upper bound: <strong>+{{ t.cost | f3 }}★</strong> on the written-review average if no 1–2★ review named {{ "this issue" if t.labels | length == 1 else "these issues" }}.{% endif %}</p></div>
+    <div><h4>Success metric</h4><p>{{ t.metric }}{% if t.baseline %} Baseline {{ t.baseline.share | pct(1) }} ({{ t.baseline.k }} of {{ t.baseline.n }}){% if t.detectable is not none %}; the monitor can confirm improvement once it is at or below {{ t.detectable | pct(1) }}{% endif %}.{% endif %}</p></div>
+    <div><h4>Confirm with (internal)</h4><p>{{ t.confirm_with }}</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px">{% for x in t.acceptance %}<li>{{ x }}</li>{% endfor %}</ul>
+  </details>
+</article>
+{% endmacro %}
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>What to fix first to raise the employee app's Play Store rating</h1>
+      <div class="sub">{{ a.app.name }} · <code>{{ a.app.id }}</code> · as of Play Store reviews to <strong>{{ a.data_through }}</strong> (store snapshot {{ main.captured_at[:10] }})</div>
+    </div>
+    <div class="sub small">Recommendation · evidence refreshed {{ a.generated_at }}{% if plan_as_of %} · plan written {{ plan_as_of }}{% endif %} · <a href="../reports/latest.html">Live ratings monitor</a></div>
+  </header>
+  <nav class="toc" aria-label="Sections">
+    <a href="#answer">The answer</a><a href="#why">Why</a><a href="#plan">What to do first</a><a href="#scenario">What it adds up to</a>
+    <a href="#ops">Operations track</a><a href="#playbook">Reply playbook</a><a href="#measure">How we'll know</a><a href="#method">Method &amp; limits</a>
+  </nav>
+
+  {% if uncovered %}
+  <section id="plan-check">
+    <div class="card" style="border-left:4px solid var(--critical)">
+      <h2>Not yet in the plan</h2>
+      <p class="sub">The data has moved since the plan was written{% if plan_as_of %} ({{ plan_as_of }}){% endif %}. These signals are not covered by any ticket. Add a ticket to <code>backlog.yaml</code> or record why not.</p>
+      <ul class="points">{% for u in uncovered %}<li><strong>{{ u.label }}</strong> — {{ u.why }}.</li>{% endfor %}</ul>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ── (a) The answer ───────────────────────────────────────────────── -->
+  <section id="answer">
+    <div class="card answer">
+      <h2>The answer</h2>
+      <p class="lead">
+        <strong>The app is rated {{ main.score | f2 }}★{% if bench %}, below {{ bench.name }}'s {{ bench.score | f2 }}★, because {{ main.one_star.p | pct(1) }} of its ratings are 1★ against {{ bench.one_star.p | pct(1) }}{% endif %}</strong> — and about {{ one_star_written | pct }} of those 1★ ratings come with a written review, while the {{ (1 - a.gap.written_share_of_ratings) | pct }} of raters who leave no text average {{ a.gap.star_only_mean | f2 }}★.
+      </p>
+      <p class="lead">
+        {{ targets.app.p | pct }} of the {{ I.year_neg_n | num }} 1–2★ reviews of the last {{ W.year.days }} days are about the app rather than the cab service; the costliest problem is <strong>“{{ top.label }}”</strong> ({{ top.recent.p | pct }} of 1–2★ reviews in the last {{ W.recent.days }} days{% if crash_e %}, {{ crash_e.last30.p | pct }} in the last 30 days{% endif %}), followed by {% for i in I.issues[1:5] %}“{{ i.label }}”{% if loop.revindex == 2 %} and {% elif not loop.last %}, {% endif %}{% endfor %}.
+        <strong>Meanwhile MoveInSync stopped answering reviews</strong>: {{ rs.high.replied.p | pct }} were answered in {{ rs.high.quarter }}, {{ W.recent.replied.p | pct }} in the last {{ W.recent.days }} days{% if bench_r %}, while {{ bench_r.name }} answers {{ bench_r.replied_neg.p | pct }} of its 1–2★ reviews{% endif %}.
+      </p>
+      <p class="lead">
+        <strong>First, this week and with no release:</strong> answer every 1–2★ review, triage {% if watch %}release {{ watch[0].version }} (flagged by the monitor){% else %}each new release{% endif %} with Android vitals, and put releases behind staged rollouts; <strong>then, in the next two releases,</strong> fix crashes, the false “not downloaded from Play Store” block and sign-in, show the boarding OTP before the seat-belt check, and start asking happy riders for a rating after good trips.
+        {% if scen.parity %}If 1–2★ ratings fell to {{ scen.parity.name }}'s share, the rating would be about <strong>{{ scen.parity.rating | f2 }}★</strong> (directional); the weekly monitor tracks each fix against its baseline.{% endif %}
+      </p>
+      <div class="grid-4" style="margin-top:14px">
+        <div class="tile">
+          <div class="label">Play Store rating</div>
+          <div class="value">{{ main.score | f2 }}★</div>
+          <div class="ctx">{{ main.ratings | num }} ratings · {{ main.one_star.p | pct(1) }} are 1★{% if bench %} · {{ bench.name }} {{ bench.score | f2 }}★, {{ bench.one_star.p | pct(1) }} 1★{% endif %}</div>
+        </div>
+        <div class="tile">
+          <div class="label">Written reviews that are 1–2★, last {{ W.recent.days }} days</div>
+          <div class="value">{{ W.recent.neg.p | pct }}</div>
+          <div class="ctx">{{ W.recent.neg.k }} of {{ W.recent.neg.n }} · 95% CI {{ W.recent.neg.lo | pct }}–{{ W.recent.neg.hi | pct }} · average {{ W.recent.mean.mean | f2 }}★</div>
+        </div>
+        <div class="tile">
+          <div class="label">Reviews answered, last {{ W.recent.days }} days</div>
+          <div class="value delta-bad">{{ W.recent.replied.p | pct }}</div>
+          <div class="ctx">{{ W.recent.replied.k }} of {{ W.recent.replied.n }} · {{ rs.high.replied.p | pct }} in {{ rs.high.quarter }}{% if bench_r %} · {{ bench_r.name }}: {{ bench_r.replied.p | pct }}{% endif %}</div>
+        </div>
+        <div class="tile">
+          <div class="label">{{ top.label }}, share of 1–2★ reviews{% if crash_e %}, last 30 days{% endif %}</div>
+          <div class="value delta-bad">{{ (crash_e.last30.p if crash_e else top.recent.p) | pct }}</div>
+          <div class="ctx">{% if crash_e %}{{ crash_e.last30.k }} of {{ crash_e.last30.n }} · was {{ crash_e.base.p | pct }} in the 180 days before (p = {{ "%.3f" | format(crash_e.p) }}){% else %}{{ top.recent.k }} of {{ top.recent.n }}{% endif %} · #1 rating cost</div>
+        </div>
+      </div>
+      <div class="glance" aria-label="Plan at a glance">
+        {% for h in ["now", "next", "quarter"] %}
+        <div class="col">
+          <h3>{{ horizons[h][0] }}</h3>
+          <div class="small muted">{{ horizons[h][1] }}</div>
+          <ol>{% for t in tickets if t.horizon == h %}<li>{{ tref(t.id) }}{% if t.track == "ops" %} <span class="muted small">(ops)</span>{% endif %}</li>{% endfor %}</ol>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── (b) Why ──────────────────────────────────────────────────────── -->
+  <section id="why">
+    <h2 style="margin-bottom:10px">Why the rating is where it is</h2>
+    <div class="card finding">
+      <h3><span class="num-badge">1</span>The low ratings are written ones; most raters are happy and silent</h3>
+      <p>Of {{ main.ratings | num }} ratings, about {{ (1 - a.gap.written_share_of_ratings) | pct }} have no text and average <strong>{{ a.gap.star_only_mean | f2 }}★</strong>; the {{ a.counts.reviews | num }} written reviews average <strong>{{ a.gap.written_mean | f2 }}★</strong> ({{ W.year.mean.mean | f2 }}★ over the last {{ W.year.days }} days). About {{ one_star_written | pct }} of the store's 1★ ratings come with a written review. So the rating is set by two things: <em>how many 1–2★ written reviews arrive</em>, and <em>how many happy riders rate at all</em>. Right now the first goes unanswered and the second is left to chance.</p>
+      {{ c.star_mix | safe }}
+      <p class="note">Star-only = Google's published star counts minus written reviews per star. Approximate: Google rescales its counts to match its recency-weighted rating, and they include all languages.</p>
+    </div>
+    <div class="card finding">
+      <h3><span class="num-badge">2</span>{{ targets.app.p | pct }} of complaints are about the app, and {{ roots.defect.p | pct }} are plain defects</h3>
+      <p>Of {{ I.year_neg_n | num }} 1–2★ reviews in the last {{ W.year.days }} days, {{ targets.app.p | pct }} are about the app, {{ targets.service.p | pct }} about the service and {{ targets.both.p | pct }} about both. By root cause of the main issue:
+      {% for k, s in I.roots.items() %}{{ {"defect":"broken","design":"badly designed","policy":"employer or MoveInSync rule","service":"cab, driver or helpdesk","gap":"missing feature","unspecified":"no specific reason"}[k] }} {{ s.p | pct }} <span class="ci">({{ s.lo | pct }}–{{ s.hi | pct }})</span>{% if not loop.last %} · {% endif %}{% endfor %}.
+      The chart ranks issues by <strong>rating cost</strong>: stars of the written-review average lost to each issue (its 1–2★ reviews re-scored at the {{ I.alt_score | f2 }}★ average of reviewers with no complaint; costs add up).</p>
+      <div class="legend">
+        {% for k, label in [("defect","Broken"),("design","Badly designed"),("policy","Rule (employer / MoveInSync)"),("service","Cab, driver or helpdesk"),("gap","Missing feature")] %}
+        <span><i style="background:var({{ root_vars[k] }})"></i>{{ label }}</span>
+        {% endfor %}
+      </div>
+      {{ c.cost | safe }}
+      <p class="note">Shares and trends for every issue are in the monitor (<code>reports/latest.html</code>) and in <code>backlog.xlsx</code> → “Issue evidence”.</p>
+    </div>
+    <div class="card finding">
+      <h3><span class="num-badge">3</span>Replies stopped{% if bench_r %}; {{ bench_r.name }} answers {{ bench_r.replied_neg.p | pct }} of its 1–2★ reviews{% endif %}</h3>
+      <p>{{ rs.high.replied.p | pct }} of reviews were answered in {{ rs.high.quarter }}; since {{ rs.collapse }} no quarter has been above {{ rs.post_max | pct }}, and the last reply was on {{ a.replies.last_reply }}. In the last {{ W.recent.days }} days {{ W.recent.replied_neg.k }} of {{ W.recent.replied_neg.n }} 1–2★ reviews got a reply. Google notifies a reviewer of a reply by push and email, and the reviewer can then update the rating; {{ a.replies.edited_after_reply.p | pct }} of past replied reviews ({{ a.replies.edited_after_reply.k | num }}) were edited after the reply.</p>
+      {{ c.replies | safe }}
+      <div class="table-scroll"><table style="margin-top:10px">
+        <thead><tr><th>App, last {{ W.year.days }} days</th><th class="num">Store rating</th><th class="num">Written reviews</th><th class="num">Answered</th><th class="num">1–2★ answered</th></tr></thead>
+        <tbody>
+          <tr><td><strong>{{ a.app.name }}</strong></td><td class="num">{{ main.score | f2 }}</td><td class="num">{{ W.year.n | num }}</td><td class="num">{{ W.year.replied.p | pct }}</td><td class="num">{{ W.year.replied_neg.p | pct }}</td></tr>
+          {% for b in a.benchmark_reviews %}{% set bl = a.listing.benchmarks | selectattr("id", "equalto", b.id) | first %}<tr><td>{{ b.name }}</td><td class="num">{{ bl.score | f2 if bl else "—" }}</td><td class="num">{{ b.n | num }}</td><td class="num">{{ b.replied.p | pct }}</td><td class="num">{{ b.replied_neg.p | pct }}</td></tr>{% endfor %}
+        </tbody>
+      </table></div>
+      <p class="note">Comparison apps get far fewer written reviews, so their review averages are not comparable; their reply rates are.</p>
+    </div>
+    <div class="card finding">
+      <h3><span class="num-badge">4</span>{% if yoy_p < 0.05 and W.year.neg.p < W.year_before.neg.p %}Better than a year ago{% elif yoy_p < 0.05 %}Worse than a year ago{% else %}No better than a year ago{% endif %}{% if a.emerging %} — but new problems are emerging{% endif %}</h3>
+      <ul class="points">
+        <li>Last {{ W.year.days }} days: {{ W.year.neg.p | pct }} of written reviews were 1–2★ ({{ W.year.neg.k | num }} of {{ W.year.neg.n | num }}), vs {{ W.year_before.neg.p | pct }} the year before ({{ "p = %.3f" | format(yoy_p) if yoy_p >= 0.001 else "p < 0.001" }}{{ ", significant" if yoy_p < 0.05 else ", not significant" }}).</li>
+        <li>Last {{ W.recent.days }} days vs the {{ W.recent.days }} before: {{ W.recent.neg.p | pct }} vs {{ W.prior.neg.p | pct }} — no significant change.</li>
+        {% for e in a.emerging %}<li><strong>Emerging:</strong> “{{ e.label }}” — {{ e.last30.p | pct }} of 1–2★ reviews in the last 30 days ({{ e.last30.k }} of {{ e.last30.n }}) vs {{ e.base.p | pct }} in the 180 days before (p = {{ "%.3f" | format(e.p) }}).</li>{% endfor %}
+        {% for i in I.issues if i.trend == "rising" %}<li><strong>Rising:</strong> “{{ i.label }}” — {{ i.recent.p | pct }} of 1–2★ reviews in the last {{ W.recent.days }} days vs {{ i.prior.p | pct }} before (p = {{ "%.3f" | format(i.trend_p) }}).</li>{% endfor %}
+        {% for v in watch %}<li><strong>{{ "Worse release" if v.flag == "worse" else "Release to watch" }}: {{ v.version }}</strong> — {{ v.neg.p | pct }} of its {{ v.n }} reviews are 1–2★ vs {{ v.baseline_neg | pct }} for other releases (p = {{ "%.3f" | format(v.p) }}{% if v.flag == "watch" %}; not significant after correcting for {{ v.tests }} releases, so treat as a lead{% endif %}). Most named: {% for code, n in v.top_issues %}“{{ tax.issues[code].label }}” ({{ n }}){% if not loop.last %}, {% endif %}{% endfor %}.</li>{% endfor %}
+      </ul>
+    </div>
+    <div class="card finding">
+      <h3><span class="num-badge">5</span>A strength to protect: safety</h3>
+      <p>{{ a.safety.praise }} reviews in the last {{ W.year.days }} days praise safety; {{ a.safety.n }} raise a concern ({{ a.safety.last30 }} in the last 30 days). Every concern is listed in the monitor for the safety team (<a href="#OPS-01">OPS-01</a>). Safety features should not be removed to cut friction — <a href="#MIS-07">MIS-07</a> moves the seat-belt check, it does not drop it.</p>
+    </div>
+  </section>
+
+  <!-- ── (c) Plan ─────────────────────────────────────────────────────── -->
+  <section id="plan">
+    <h2>What to do first</h2>
+    <p class="sub">Ranked within each horizon. Effort is an estimate for the owning team to confirm. Evidence shares are of 1–2★ written reviews, with 95% intervals; quotes are verbatim, without names.</p>
+    {% for h in ["now", "next", "quarter"] %}
+    <div class="horizon"><h2>{{ horizons[h][0] }}</h2><span class="sub">{{ horizons[h][1] }}</span></div>
+    {% for t in tickets if t.horizon == h and t.track == "product" %}{{ ticket_card(t) }}{% endfor %}
+    {% endfor %}
+  </section>
+
+  <section id="scenario">
+    <div class="card">
+      <h2>What it could add up to</h2>
+      <p class="sub">Directional scenarios on the store histogram: the share of 1–2★ ratings changes and the mix within 1–2★ and within 3–5★ stays as today. Google's rating is recency-weighted and its counts are rescaled, so read these as direction and rough size, not a forecast.</p>
+      <div class="table-scroll"><table class="scen">
+        <thead><tr><th>Scenario</th><th class="num">1–2★ share of ratings</th><th class="num">Rating</th></tr></thead>
+        <tbody>
+          <tr><td>Today</td><td class="num">{{ scen.current.neg | pct(1) }}</td><td class="num"><span class="big">{{ scen.current.rating | f2 }}★</span></td></tr>
+          <tr><td>Product fixes for this week and the next two releases halve the 1–2★ reviews about their issues ({{ scen.plan_share | pct }} of 1–2★ reviews, split evenly when a review names several)</td><td class="num">{{ scen.half.neg | pct(1) }}</td><td class="num">{{ scen.half.rating | f2 }}★</td></tr>
+          <tr><td>…remove them entirely (upper bound)</td><td class="num">{{ scen.full.neg | pct(1) }}</td><td class="num">{{ scen.full.rating | f2 }}★</td></tr>
+          {% if scen.parity %}<tr><td>1–2★ share falls to {{ scen.parity.name }}'s</td><td class="num">{{ scen.parity.neg | pct(1) }}</td><td class="num">{{ scen.parity.rating | f2 }}★</td></tr>{% endif %}
+        </tbody>
+      </table></div>
+      <p class="note">On the written-review average ({{ scen.written_mean | f2 }}★ over {{ W.year.days }} days), the same product issues cost up to {{ scen.plan_cost | f3 }}★. Not modelled: more ratings from happy riders (<a href="#MIS-08">MIS-08</a>) and rating updates after replies (<a href="#MIS-01">MIS-01</a>) — both push in the same direction and are measured by the monitor once live.</p>
+    </div>
+  </section>
+
+  <!-- ── (d) Operations ──────────────────────────────────────────────── -->
+  <section id="ops">
+    <h2>Operations and account-team track</h2>
+    <p class="sub">{{ (targets.service.p + targets.both.p) | pct }} of 1–2★ reviews are partly or wholly about the service. The app is the messenger: these need operations, vendors and employer transport desks, run in parallel with the product plan.</p>
+    {% for t in tickets if t.track == "ops" %}{{ ticket_card(t) }}{% endfor %}
+  </section>
+
+  <!-- ── Reply playbook ─────────────────────────────────────────────── -->
+  <section id="playbook">
+    <div class="card">
+      <h2>Reply playbook</h2>
+      <p class="sub">For <a href="#MIS-01">MIS-01</a>. Google's rules for replies: address the user's specific comment, be respectful, and never solicit — no asking for a better rating. Full templates, including the follow-up to post once a fix ships, are in <code>deliverables/reply_playbook.md</code>.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Review names</th><th class="num">Unanswered 1–2★, last {{ W.recent.days }}d</th><th>Route to</th><th>Reply (fill the braces)</th></tr></thead>
+        <tbody>{% for r in playbook %}<tr><td class="small">{{ r.labels | join("; ") }}</td><td class="num">{{ r.unanswered }}</td><td class="small">{{ r.route }}</td><td class="small muted">{{ r.template }}</td></tr>{% endfor %}</tbody>
+      </table></div>
+      <p class="note">Counts are distinct reviews within a row; a review naming issues from two rows appears in both.</p>
+    </div>
+  </section>
+
+  <!-- ── (e) Measure ─────────────────────────────────────────────────── -->
+  <section id="measure">
+    <div class="card">
+      <h2>How we'll know it worked</h2>
+      <p class="sub">The monitor (<code>reports/latest.html</code>, refreshed weekly by <code>refresh.bat</code> or GitHub Actions) answers “how are our ratings?” and tracks every fix below against its baseline.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>KPI</th><th class="num">Now</th><th>Target</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>Play Store rating</td><td class="num">{{ main.score | f2 }}★</td><td>Rising week on week{% if scen.parity %}; {{ scen.parity.rating | f2 }}★ at {{ scen.parity.name }}'s 1–2★ share{% endif %}</td><td class="small">Monitor: weekly listing snapshot</td></tr>
+          <tr><td>1★ share of all ratings</td><td class="num">{{ main.one_star.p | pct(1) }}</td><td>{% if bench %}Toward {{ bench.name }}'s {{ bench.one_star.p | pct(1) }}{% else %}Falling{% endif %}</td><td class="small">Monitor: listing snapshot</td></tr>
+          <tr><td>1–2★ share of written reviews, last {{ W.recent.days }} days</td><td class="num">{{ W.recent.neg.p | pct }} <span class="ci">{{ W.recent.neg.lo | pct }}–{{ W.recent.neg.hi | pct }}</span></td><td>Significantly below today (monitor's test)</td><td class="small">Monitor: summary</td></tr>
+          <tr><td>1–2★ reviews answered within 2 working days</td><td class="num">{{ W.recent.replied_neg.p | pct }} answered at all</td><td>≥ 90%</td><td class="small">Monitor: “Reviews answered”</td></tr>
+          <tr><td>Star changes after a reply</td><td class="num">{% if a.rating_changes.all.n %}{{ a.rating_changes.after_reply.up }} up / {{ a.rating_changes.after_reply.down }} down{% else %}tracking starts now{% endif %}</td><td>More up than down</td><td class="small"><code>review_changes</code> log (new: Play shows only the latest stars)</td></tr>
+          <tr><td>Each fix's issue share</td><td class="num">see below</td><td>“Improved” in the Fix tracker</td><td class="small">Monitor: Fix tracker</td></tr>
+          <tr><td>Crash and ANR rate (Android vitals)</td><td class="num">internal</td><td>Below 1.09% / 0.47%, and 8% on every phone model</td><td class="small">Play Console</td></tr>
+          <tr><td>OTP delivered within 30 s</td><td class="num">internal</td><td>≥ 98%, per operator</td><td class="small">SMS gateway delivery reports</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Fix tracker baselines</h3>
+      <p class="sub small">Share of 1–2★ reviews naming each fix's main issue in the {{ W.recent.days }} days to the baseline date. With about {{ I.recent_neg_n }} 1–2★ reviews per {{ W.recent.days }} days the monitor can only confirm large drops — the last column is the share at which the whole 95% interval clears the baseline. Smaller effects show up first in the internal metrics.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Fix</th><th>Main issue</th><th class="num">Baseline</th><th class="num">Confirmed at</th></tr></thead>
+        <tbody>{% for t in tickets if t.baseline %}<tr><td><a href="#{{ t.id }}"><span class="id">{{ t.id }}</span></a>{{ t.title }}</td><td class="small">{{ t.labels[0] }}</td><td class="num">{{ t.baseline.share | pct(1) }} <span class="ci">{{ t.baseline.k }}/{{ t.baseline.n }}</span></td><td class="num">{% if t.detectable is not none %}≤ {{ t.detectable | pct(1) }}{% else %}<span class="muted">too rare to confirm</span>{% endif %}</td></tr>{% endfor %}</tbody>
+      </table></div>
+      <p class="note">Effects take time to show: the {{ W.recent.days }}-day window needs several weeks of post-release reviews, and Play's rating moves gradually because it weights recent ratings. Judge fixes 4–8 weeks after full rollout, and judge releases on Android vitals within days.</p>
+    </div>
+  </section>
+
+  <!-- ── (f) Method ──────────────────────────────────────────────────── -->
+  <section id="method">
+    <div class="card">
+      <h2>Method, accuracy and limits</h2>
+      <ul class="points small">
+        <li><strong>Data.</strong> All {{ a.counts.reviews | num }} public Google Play reviews of <code>{{ a.app.id }}</code> ({{ a.counts.first_review }} to {{ a.data_through }}, India store, English), the store listing, and three comparable employee-commute apps' listings and replies. Reviewer names are never stored.</li>
+        <li><strong>Tagging.</strong> {{ a.counts.tagged | num }} of {{ a.counts.tag_window | num }} reviews since Jan 2023 are tagged with up to three of {{ tax.issues | length }} issues built from the employee journey, each with a fixed owner and root-cause type. Short praise is tagged by rule; the rest by {{ a.models[0].split("/")[-1].split("@")[0] }} on NVIDIA's free NIM tier{% if a.models | length > 1 %}, with {{ a.models[1].split("/")[-1].split("@")[0] }} as fallback{% endif %}.</li>
+        {% if a.eval %}<li><strong>Accuracy</strong> on {{ a.eval.result.n }} held-out, labelled reference reviews: main issue correct {{ a.eval.result.primary_accuracy | pct }} (95% CI {{ a.eval.result.primary_ci95[0] | pct }}–{{ a.eval.result.primary_ci95[1] | pct }}), tag precision {{ a.eval.result.label_precision | pct }}, recall {{ a.eval.result.label_recall | pct }}, {{ a.eval.result.safety.fn }} safety reviews missed. Recall below 100% means issue shares slightly undercount.</li>{% endif %}
+        <li><strong>Statistics.</strong> “1–2★ share” = share of 1–2★ reviews in the window naming the issue (95% Wilson interval, n shown). Changes: two-proportion z-test; “emerging” = last 30 days vs the 180 before; releases are Bonferroni-corrected. Rating cost splits each review evenly between the issues it names, so costs add up; it is an upper bound on what a fix can recover.</li>
+        <li><strong>Assumptions.</strong> Scenarios keep today's star mix within 1–2★ and 3–5★ and assume the store's 1–2★ share moves with written 1–2★ reviews (most 1★ ratings carry text). Effort estimates and internal targets are proposals for the owning teams to confirm.</li>
+        <li><strong>Limits.</strong> Written reviews are about {{ a.gap.written_share_of_ratings | pct }} of ratings and skew negative: they show <em>what</em> goes wrong and how often relative to other problems, not how many trips go wrong. There is no access to crash, OTP, GPS or trip data — each ticket names the internal metric that would confirm it. Employer settings are invisible from outside. Google's rating formula is private.</li>
+        <li><strong>Google Play facts used</strong> (replies notify users, reply and in-app review rules, recency weighting, Android vitals thresholds, Play Integrity remediation): sources in <a href="../docs/SOURCES.md">docs/SOURCES.md</a>. Full method: <a href="../docs/METHOD.md">docs/METHOD.md</a>.</li>
+        <li><strong>Downloads.</strong> <a href="backlog.xlsx">backlog.xlsx</a> · <a href="backlog_jira.csv">backlog_jira.csv</a> (Jira import) · <a href="reply_playbook.md">reply_playbook.md</a>.</li>
+        <li><strong>Tools.</strong> Python 3.12, pandas, SQLite, google-play-scraper, NVIDIA NIM (Nemotron-3) through the OpenAI-compatible API, Jinja2 with hand-built SVG charts, openpyxl, Typer; pytest, ruff, mypy. Regenerate everything with <code>uv run ratings recommend</code>.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+<div id="tip" role="tooltip"></div>
+<script>
+{% include "_ui.js" %}
+</script>
+</body>
+</html>

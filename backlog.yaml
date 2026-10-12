@@ -1,0 +1,507 @@
+# Recommended fixes for the MoveInSync employee app's Play Store rating.
+#
+# This file is the single source for deliverables/recommendation.html, backlog.xlsx,
+# backlog_jira.csv and reply_playbook.md (`uv run ratings recommend`), and for the monitor's
+# Fix tracker. Text here is judgement; every number is added from the data at render time.
+#
+# - horizon: now (this week, no release) | next (next 1-2 releases) | quarter (this quarter)
+# - track: product (app & platform) | ops (operations / account teams)
+# - issues: taxonomy.yaml codes. The first one is what the Fix tracker follows
+#   (unless `tracked: false`).
+# - baseline: written once by `ratings recommend` (share of 1-2 star reviews naming the first
+#   issue in the 90 days before the recommendation). Never edit by hand; --rebaseline resets.
+version: 1
+tickets:
+- id: MIS-01
+  title: Answer every 1–2★ review within 2 working days, starting with the backlog
+  horizon: now
+  track: product
+  type: Task
+  priority: Highest
+  owner: App support lead (with Product for routing)
+  effort: S · ~2 person-days to clear the 90-day backlog, then ~30 min a day
+  issues: []
+  evidence: replies
+  problem: >-
+    MoveInSync stopped replying to Play Store reviews. Unhappy employees hear nothing back,
+    and every new employee reading the store page sees complaints left unanswered, while the
+    closest comparison app answers its negative reviews.
+  change:
+  - Reply to every unanswered 1–2★ review from the last 90 days, most-upvoted first, using the
+    issue-specific templates in the reply playbook (address the specific problem, give a concrete
+    next step or the fix's release, never ask for a rating change).
+  - From then on, reply to every new 1–2★ review within 2 working days and to 3★ reviews
+    weekly. When a fix ships, post a short follow-up reply on the reviews that named it.
+  - Route each review to the owner in the playbook (tagging already assigns the issue and owner);
+    service complaints go to the helpdesk queue with the employer named if the review gives it.
+  - Give one named person ownership of the Play Console reply queue, with a back-up.
+  acceptance:
+  - Every 1–2★ review from the last 90 days has a reply.
+  - In the following 4 weeks, at least 90% of new 1–2★ reviews are answered within 2 working days
+    (monitor tile "Reviews answered").
+  - No reply asks the user to change or raise their rating (Google Play policy).
+  metric: Share of 1–2★ reviews answered (monitor), and star changes after a reply (review_changes log).
+  confirm_with: Play Console reply log; the monitor's star-change log (first full month after replies resume).
+  expected: >-
+    Google notifies the reviewer of a reply by push and email, and the reviewer can update the
+    rating. The size of the effect is not measurable from past public data; the star-change log
+    measures it from now on.
+
+- id: MIS-02
+  title: Triage the crash rise in 12.19.0 with Android vitals and decide hotfix vs. rollback
+  horizon: now
+  track: product
+  type: Bug
+  priority: Highest
+  owner: Mobile engineering lead
+  effort: S · 1–2 engineer-days to triage; fix sized after triage
+  issues: [crash_or_wont_open, slow_or_hangs]
+  tracked: false  # MIS-05 tracks the crash share
+  evidence: release
+  problem: >-
+    "Crash, blank screen or won't open" costs the rating more than any other issue and is
+    rising in the latest reviews, led by the newest release. Play may also reduce the app's
+    visibility and show a store-listing warning when crash or ANR rates pass its bad-behaviour
+    thresholds.
+  change:
+  - Pull Play Console Android vitals for 12.19.0 vs 12.18.1 — user-perceived crash rate and ANR
+    rate, top clusters, split by device model and Android version.
+  - If either rate is above Play's bad-behaviour threshold (1.09% crashes, 0.47% ANRs, or 8% on any
+    phone model), halt the rollout and ship a hotfix for the top clusters; otherwise fix the top
+    clusters in the next release (MIS-05).
+  - Match crash clusters to the review quotes (blank screen on open, "something went wrong",
+    closes on OTP screen) so the fix covers what users actually hit.
+  acceptance:
+  - Vitals comparison of 12.19.0 vs 12.18.1 shared with Product within 2 working days, with the top
+    3 crash and ANR clusters and their device spread.
+  - Written hotfix or rollback decision, with the threshold used.
+  metric: User-perceived crash and ANR rate per release (Android vitals); crash share of 1–2★ reviews (monitor).
+  confirm_with: Android vitals (crash rate, ANR rate, top clusters per version and device).
+  expected: Stops the current rise; the lasting fix is MIS-05.
+
+- id: MIS-03
+  title: Staged rollout with halt rules for every release
+  horizon: now
+  track: product
+  type: Task
+  priority: High
+  owner: Mobile engineering lead + QA
+  effort: S · process change, ~1 day to set up
+  issues: []
+  evidence: releases
+  problem: >-
+    Releases ship often, and many reviews calling the app hard to use blame a recent update.
+    A bad release reaches every employee before anyone notices.
+  change:
+  - Release through Play staged rollout (for example 10% → 50% → 100% over a week).
+  - Halt before widening if any of these holds — crash or ANR rate above the Play threshold, the
+    monitor flags the new version, or a new complaint tops its reviews.
+  - Add a short "what changed" note in-app and in the release notes for any change to the main
+    screens (booking, trip, boarding OTP).
+  acceptance:
+  - The next two releases go out staged, with the halt check recorded at each step.
+  - The monitor's release table is reviewed before each rollout step.
+  metric: Share of releases flagged "worse"/"watch" by the monitor; crash rate per release.
+  confirm_with: Play Console release dashboard; Android vitals.
+  expected: Limits the damage of a bad release to a fraction of users for a few days.
+
+- id: MIS-04
+  title: Fix the "not downloaded from Play Store" false block
+  horizon: next
+  track: product
+  type: Bug
+  priority: Highest
+  owner: Mobile engineering + Platform (integrity check)
+  effort: M · 3–5 engineer-days
+  issues: [play_integrity_error]
+  baseline: {share: 0.0386, k: 8, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: issue
+  quote_terms: ["play store"]
+  problem: >-
+    Employees who installed from Google Play are told every few days that the app "was not
+    downloaded from Play Store" and must reinstall. This is rising. The pattern (works, then
+    fails days later) points to an integrity check that fails closed on transient errors or
+    stale verdicts, not to sideloading.
+  change:
+  - Day 1 — pull the server-side integrity verdict logs for blocked sessions (verdict fields,
+    exception codes, Play Services version, installer) to confirm the cause.
+  - Never block on a transient or remediable error — call isRemediable() and show the Play
+    Integrity GET_INTEGRITY remediation dialog (it can update Play Services or fix network
+    issues); for an UNLICENSED verdict show the GET_LICENSED dialog instead of a block-and-reinstall
+    message.
+  - Do not re-run the check while offline; cache the last good verdict for the session.
+  acceptance:
+  - No hard block for remediable exceptions; the remediation dialog is shown instead.
+  - Blocked sessions per day fall by at least 90% in the integrity logs within 2 weeks of release.
+  metric: Blocked sessions per day (integrity logs); share of 1–2★ reviews naming the error (monitor).
+  confirm_with: Server-side Play Integrity verdict logs.
+  expected: Removes a failure that forces a reinstall, often while the cab is waiting.
+
+- id: MIS-05
+  title: Stability — fix top crash clusters and replace blank screens with a recoverable screen
+  horizon: next
+  track: product
+  type: Bug
+  priority: Highest
+  owner: Mobile engineering
+  effort: L · 2 sprints (1 squad)
+  quote_terms: ["something went wrong", "blank", "white screen", "crash", "not opening", "not open"]
+  issues: [crash_or_wont_open, slow_or_hangs]
+  baseline: {share: 0.1304, k: 27, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: issue
+  problem: >-
+    Crashes, blank screens, an app that won't open, and slow screens that hang. Users hit them
+    at the worst moment — opening the app to see the cab or the boarding OTP.
+  change:
+  - Fix the top crash and ANR clusters from Android vitals (from MIS-02), largest user impact first.
+  - Replace blank or "something went wrong" screens with a screen that explains what failed and
+    offers Retry, and that still shows today's trip (cab number, pickup time, boarding OTP)
+    from the last successful sync.
+  - Profile cold start and the trip screen on the 5 most-used low-end devices; set a cold-start
+    budget and fail the release check if it regresses.
+  acceptance:
+  - User-perceived crash rate and ANR rate below Play's bad-behaviour thresholds overall and on
+    every top-10 device model.
+  - No blank screen in the top 10 user journeys when the network or backend is down (tested).
+  - Today's trip and boarding OTP visible offline after one successful sync.
+  metric: Crash share of 1–2★ reviews (Fix tracker); crash and ANR rate (Android vitals).
+  confirm_with: Android vitals; cold-start time per device.
+  expected: Targets the largest single rating cost.
+
+- id: MIS-06
+  title: Sign-in that works — OTP delivery fallback and fewer forced logouts
+  horizon: next
+  track: product
+  type: Story
+  priority: High
+  owner: Platform / backend (OTP) + Product & design (session rules)
+  effort: M · 1 sprint
+  issues: [otp_not_received, forced_logout]
+  baseline: {share: 0.0531, k: 11, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: issue
+  problem: >-
+    Employees cannot get in — the OTP does not arrive — and are logged out often, so they need
+    a new OTP at the moment the cab arrives. Each forced logout is another chance for OTP
+    delivery to fail.
+  change:
+  - Measure OTP delivery per operator and channel (sent → delivered → entered) and alert when
+    delivery drops.
+  - Offer a second channel (email, WhatsApp or voice) automatically after 30 seconds, with a
+    visible resend timer; use the Android SMS Retriever API so the OTP fills itself.
+  - Keep sessions alive with refresh tokens; never end a session during a booked trip window;
+    where the employer's policy allows, re-authenticate with the device screen lock instead of a
+    new OTP.
+  - List employers whose settings force frequent re-login and share with the account team (OPS-05).
+  acceptance:
+  - OTP delivered within 30 seconds for at least 98% of requests, measured per operator.
+  - No logout during a booked trip window in testing across the 5 most-used devices.
+  metric: OTP share of 1–2★ reviews (Fix tracker); OTP delivery rate; logins per active user per week.
+  confirm_with: SMS gateway delivery reports; auth service logs (session length, re-login rate).
+  expected: Removes the two sign-in complaints; each forced logout avoided is also one fewer OTP that can fail.
+
+- id: MIS-07
+  title: Boarding — show the OTP first and move the seat-belt check after it
+  horizon: next
+  track: product
+  type: Story
+  priority: High
+  owner: Product & design + Mobile engineering
+  effort: S · 2–3 engineer-days
+  issues: [ui_redesign, checkin_friction]
+  baseline: {share: 0.0725, k: 15, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: issue
+  quote_terms: ["seat belt", "seat buckle"]
+  problem: >-
+    The redesigned app is called hard to use, often blaming a recent update. The newest named
+    complaint is the seat-belt confirmation that now pops up before the boarding OTP, adding a
+    step and hiding the OTP while the driver waits.
+  change:
+  - Show the boarding OTP immediately on "View OTP"; ask the seat-belt confirmation after boarding
+    as a single non-blocking tap. Keep it for safety, but not in front of the OTP.
+  - Run a 5-user task test of the top 5 tasks (book, see next trip, track cab, show OTP, raise a
+    complaint) on the current build and fix anything that takes more than one extra tap compared
+    with the previous version.
+  acceptance:
+  - OTP visible in one tap from the trip card; seat-belt confirmation does not cover it.
+  - Task test results written up, with fixes ticketed.
+  metric: Hard-to-use share of 1–2★ reviews (Fix tracker).
+  confirm_with: In-app analytics — time from opening the trip to OTP shown.
+  expected: Removes a fresh irritant from every trip; a small change with daily visibility.
+
+- id: MIS-08
+  title: Ask happy riders for a rating — in-app review prompt after good trips
+  horizon: next
+  track: product
+  type: Story
+  priority: High
+  owner: Mobile engineering + Product
+  effort: S · 2–3 engineer-days
+  issues: [forced_trip_rating]
+  baseline: {share: 0.0290, k: 6, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: silent
+  depends_on: [MIS-05]
+  problem: >-
+    Most ratings come from employees who never write a review, and they rate the app highly.
+    Asking them on Play at a good moment is the cheapest way to add recent positive ratings.
+    The app's own post-trip rating pop-up, by contrast, is itself a complaint. (If the app
+    already calls the In-App Review API, this ticket becomes tuning when it fires.)
+  change:
+  - Call the Google Play In-App Review API after a positive moment — for example the 3rd completed
+    on-time trip in a week with no complaint raised — at most once every few months per user.
+  - Never precede it with a question such as "Do you like the app?", never trigger it from a
+    button, and never show it after a late, cancelled or complained-about trip (Google's rules).
+  - Do not stack it with the post-trip feedback pop-up; make that pop-up skippable.
+  - Ship only after the crash fix (MIS-05) is live, so the prompt reaches users on a stable build.
+  acceptance:
+  - Prompt logic reviewed against Google's in-app review guidance before release.
+  - Prompt eligibility, request and completion logged (Play does not report whether the card showed).
+  metric: Weekly new ratings and store rating (monitor's listing snapshot); trip-rating complaint share.
+  confirm_with: Play Console ratings over time; in-app analytics on prompt requests.
+  expected: >-
+    Adds recent ratings from satisfied riders; because Play weights recent ratings more, this
+    moves the store rating faster than fixes alone. Size depends on Google's prompt quota.
+
+- id: MIS-09
+  title: Find out why notifications are missing or late
+  horizon: next
+  track: product
+  type: Bug
+  priority: Medium
+  owner: Platform / backend
+  effort: S · 2 engineer-days to investigate
+  issues: [notifications]
+  quote_terms: ["notification", "notify", "alert"]
+  baseline: {share: 0.0338, k: 7, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: issue
+  problem: >-
+    Complaints about missing, late or repeated notifications (cab allocated, cab arriving) are
+    emerging in the last 30 days.
+  change:
+  - Check push delivery rate by Android version and device; check that the Android 13+ notification
+    permission is requested and that the app is not stopped by battery optimisation.
+  - Check for duplicate sends and for SMS and push both firing.
+  acceptance:
+  - Root cause written up with delivery rate by Android version; fix ticketed.
+  metric: Notification share of 1–2★ reviews (Fix tracker); push delivery rate.
+  confirm_with: Push provider delivery reports.
+  expected: Early action on an emerging complaint while it is still small.
+
+- id: MIS-10
+  title: Live tracking you can trust — fresher cab location and an "updated X s ago" label
+  horizon: quarter
+  track: product
+  type: Story
+  priority: Medium
+  owner: Platform / backend + Routing (ETA)
+  effort: L · 1–2 sprints
+  issues: [tracking_inaccurate, eta_inaccurate]
+  baseline: {share: 0.0580, k: 12, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: issue
+  problem: >-
+    The cab's location is wrong, frozen or minutes behind, and ETAs do not match reality, so
+    employees cannot plan when to step out.
+  change:
+  - Measure GPS ping interval and staleness from the driver app per vendor and device.
+  - Show how old the location is ("updated 40 s ago") and stop showing a moving cab when data is stale.
+  - Recalculate ETA from the live position, not the planned route.
+  acceptance:
+  - Median location age on the employee map under 15 seconds while the trip is active.
+  - Stale positions labelled in the app.
+  metric: Tracking share of 1–2★ reviews (Fix tracker); median location age.
+  confirm_with: Driver-app GPS ping logs.
+  expected: Fewer complaints about wrong locations and ETAs, and fewer missed pickups that follow from them.
+
+- id: MIS-11
+  title: My trips — bookings always visible and confirmed
+  horizon: quarter
+  track: product
+  type: Story
+  priority: Medium
+  owner: Product & design + Platform / backend
+  effort: M · 1 sprint
+  issues: [schedule_not_visible, booking_fails]
+  baseline: {share: 0.0290, k: 6, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: issue
+  problem: >-
+    Employees cannot find their booked trips, cab details or pickup time, and some bookings fail
+    or silently disappear.
+  change:
+  - Put a "Next trip" card on the home screen (date, pickup time, cab number, OTP) and a list of
+    upcoming bookings.
+  - Confirm every booking or change with an in-app receipt; make the booking API idempotent and
+    show a clear error when a booking is refused (cut-off, limit) instead of failing silently.
+  acceptance:
+  - Next trip visible from the home screen in zero taps.
+  - Every refused booking shows the reason.
+  metric: Can't-see-bookings share of 1–2★ reviews (Fix tracker); booking error rate.
+  confirm_with: Booking API error logs.
+  expected: Removes a daily source of uncertainty.
+
+# ── Operations / account-team track: service problems the app only reports ──────────────────
+- id: OPS-01
+  title: Follow up every safety concern raised in a review within 24 hours
+  horizon: now
+  track: ops
+  type: Task
+  priority: Highest
+  owner: Safety & compliance
+  effort: S · ongoing
+  issues: [safety_concern]
+  baseline: {share: 0.0242, k: 5, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: safety
+  problem: >-
+    Safety concerns are rare in reviews but each one needs action; more reviews praise safety
+    than raise a concern, so safety is a strength to protect.
+  change:
+  - Review the safety list in the monitor every week; contact the employer's transport desk for
+    each concern within 24 hours, and reply publicly with the escalation route.
+  acceptance:
+  - Every safety review from the last 30 days has an owner, an action and a public reply.
+  metric: Safety concerns per month and time to follow-up.
+  confirm_with: Safety incident log.
+  expected: Protects a strength; prevents a single incident review from going unanswered.
+
+- id: OPS-02
+  title: Close the loop on complaints — ticket number, status and resolution in the app
+  horizon: next
+  track: ops
+  type: Story
+  priority: High
+  owner: Operations & helpdesk + Product
+  effort: M · process now, in-app status in 1 sprint
+  issues: [helpdesk_support]
+  baseline: {share: 0.0918, k: 19, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: issue
+  problem: >-
+    Complaints raised with the helpdesk or transport team get no answer or no resolution, and
+    the employee has no way to see what happened to them.
+  change:
+  - Every complaint gets a ticket number and a status the employee can see in the app.
+  - Set and publish a response target (for example 4 working hours) and resolution target; escalate
+    automatically when missed.
+  - Send a closing message saying what was done.
+  acceptance:
+  - Complaint status visible in the app; response-time target met for at least 90% of complaints.
+  metric: Helpdesk share of 1–2★ reviews (Fix tracker); complaint response time.
+  confirm_with: Helpdesk ticket system (response and resolution times).
+  expected: Turns an ignored complaint into a visible resolution, so it does not end up on the store page.
+
+- id: OPS-03
+  title: Vendor scorecards for late cabs, no-shows and driver behaviour
+  horizon: quarter
+  track: ops
+  type: Task
+  priority: Medium
+  owner: Operations & vendors
+  effort: M · monthly process
+  issues: [cab_late_or_missing, driver_behaviour, no_show_dispute]
+  baseline: {share: 0.0628, k: 13, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: issue
+  problem: >-
+    Late or missing cabs, driver behaviour and disputed no-shows are service failures that show
+    up as app reviews.
+  change:
+  - Monthly vendor scorecard from trip data — on-time pickup, missed pickups, disputed no-shows,
+    complaints per 1,000 trips.
+  - Let employees dispute a no-show in the app, with GPS evidence shown to both sides.
+  acceptance:
+  - Scorecard reviewed with each vendor monthly; disputes resolved within 48 hours.
+  metric: Service-issue share of 1–2★ reviews (Fix tracker); on-time pickup rate.
+  confirm_with: Trip data (planned vs actual pickup), no-show dispute log.
+  expected: Reduces the service share of complaints.
+
+- id: OPS-04
+  title: Review routing rules — long routes and clubbing
+  horizon: quarter
+  track: ops
+  type: Task
+  priority: Medium
+  owner: Routing & scheduling team + account teams
+  effort: M · analysis 1 week, then per-employer changes
+  issues: [routing_clubbing, pickup_time_changes]
+  baseline: {share: 0.0628, k: 13, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: issue
+  problem: >-
+    Routes are long, too many people are clubbed, and pickup times change at short notice.
+  change:
+  - Find routes where ride time exceeds the employer's maximum or the direct time by a large
+    factor; review clubbing and maximum-ride-time settings with each affected employer.
+  - Notify employees of a pickup-time change as soon as it is made, with the reason.
+  acceptance:
+  - Outlier routes listed per employer and reviewed with their transport desk.
+  metric: Routing share of 1–2★ reviews (Fix tracker); ride time vs direct time.
+  confirm_with: Routing engine output (planned ride time per employee).
+  expected: Fewer complaints about ride length.
+
+- id: OPS-05
+  title: Account reviews with named employers — calls disabled, cut-offs, forced logout
+  horizon: next
+  track: ops
+  type: Task
+  priority: Medium
+  owner: Account management + employer transport desks
+  effort: S · one meeting per employer
+  issues: [cannot_contact_driver, booking_rules]
+  baseline: {share: 0.0097, k: 2, n: 207, days: 90, as_of: '2026-10-09'}
+  evidence: orgs
+  problem: >-
+    Some complaints come from employer settings — calls to drivers disabled "as per company
+    policy", strict booking cut-offs, frequent re-login — which are invisible from outside.
+  change:
+  - Share the monitor's employer table with account managers; review the settings behind the
+    complaints with each named employer and agree changes or in-app explanations.
+  - Where a rule stays, explain it in the app at the moment it applies (for example "Calls are
+    masked by your company's policy — use in-app call").
+  acceptance:
+  - Each employer named three or more times has had a settings review.
+  metric: Policy share of 1–2★ reviews; employer-level complaint counts (monitor).
+  confirm_with: Employer configuration records.
+  expected: Lowers policy-driven complaints that the app team cannot fix alone.
+
+# ── Reply playbook (Google Play: address the comment, be respectful, never solicit ratings) ──
+replies:
+- issues: [crash_or_wont_open, slow_or_hangs, play_integrity_error]
+  route: Mobile engineering (attach app version and device from the review)
+  template: >-
+    Sorry the app {crashed / would not open / was slow} for you, especially with your cab on
+    the way. Our engineers are working on this. Please update to the latest version; if it still
+    happens, write to app@moveinsync.com with your phone model so we can check it directly.
+  after_fix: >-
+    An update that fixes this problem is now on Google Play (version {x}). Thank you for reporting it.
+- issues: [otp_not_received, forced_logout, registration_help]
+  route: Platform / backend (OTP) · Product (sessions)
+  template: >-
+    Sorry you could not sign in. If the OTP does not arrive within a minute, please use
+    the resend option; if it still does not arrive, write to app@moveinsync.com from your work email
+    with your mobile operator, and we will check delivery for your number.
+  after_fix: >-
+    We have added a second way to receive the OTP and you will be asked to sign in less often in
+    version {x}. Thank you for telling us.
+- issues: [ui_redesign, checkin_friction, popups_permissions, forced_trip_rating]
+  route: Product & design
+  template: >-
+    Thank you for the detailed feedback on {the new design / the seat-belt step / the pop-ups}. We
+    have shared it with our design team and are changing {specific step} so it takes fewer taps.
+- issues: [helpdesk_support, cab_late_or_missing, driver_behaviour, vehicle_condition, no_show_dispute]
+  route: Operations & helpdesk (include employer if named)
+  template: >-
+    We are sorry about {the late cab / the driver / the no-show}. This should not happen. Please
+    raise it in the app under Help with the trip date, or write to app@moveinsync.com from your work
+    email, so the transport team for your company can look into this trip.
+- issues: [routing_clubbing, pickup_time_changes, booking_rules, cannot_contact_driver]
+  route: Routing team / account team (often an employer setting)
+  template: >-
+    Thank you for raising this. {Route length / booking cut-off / calling the driver} is set
+    together with your company's transport team. We have passed your feedback to them; you can also
+    raise it with your transport desk directly.
+- issues: [safety_concern]
+  route: Safety & compliance — same day
+  template: >-
+    We are very sorry to read this. Your safety is our priority and we would like to follow up
+    personally. Please write to app@moveinsync.com with the trip date so our safety team can act on it today.
+- issues: [tracking_inaccurate, eta_inaccurate, notifications, schedule_not_visible, booking_fails]
+  route: Platform / backend
+  template: >-
+    Sorry the {cab location / arrival time / notification / booking} was wrong. We are working on
+    {more accurate tracking / reliable notifications / clearer bookings}. If it happens again,
+    please send the trip date to app@moveinsync.com so we can trace it.

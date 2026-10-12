@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raising the Play Rating</title>
+<meta name="description" content="Why the MoveInSync employee app is rated 4.64★ and what to fix first — as of Play Store reviews to 11 Oct 2026.">
+<script>try{var t=localStorage.getItem("ratings-theme");if(t&&t!=="auto")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --card: #ffffff;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.1);
+  --accent: #2a78d6;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --muted-fill: #c3c2b7;
+  --div-neg-2: #b8322f;
+  --div-neg-1: #e98a87;
+  --div-mid: #d9d8d3;
+  --div-pos-1: #86b6ef;
+  --div-pos-2: #1c5cab;
+  --good: #0ca30c;
+  --good-ink: #006300;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+  --critical-ink: #b3261e;
+  --chip: #f0efec;
+  --star: #eda100;
+  --appbar: rgba(249, 249, 247, 0.86);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --card: #161615;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255, 255, 255, 0.1);
+    --accent: #3987e5;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --series-5: #d55181;
+    --muted-fill: #52514e;
+    --div-neg-2: #d14b48;
+    --div-neg-1: #e98a87;
+    --div-mid: #a8a79f;
+    --div-pos-1: #86b6ef;
+    --div-pos-2: #6da7ec;
+    --good-ink: #0ca30c;
+    --critical-ink: #ff8a80;
+    --chip: #262624;
+    --star: #c98500;
+    --appbar: rgba(13, 13, 13, 0.86);
+    --shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface: #1a1a19;
+  --card: #161615;
+  --ink: #ffffff;
+  --ink-2: #c3c2b7;
+  --muted: #898781;
+  --grid: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #3987e5;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --muted-fill: #52514e;
+  --div-neg-2: #d14b48;
+  --div-neg-1: #e98a87;
+  --div-mid: #a8a79f;
+  --div-pos-1: #86b6ef;
+  --div-pos-2: #6da7ec;
+  --good-ink: #0ca30c;
+  --critical-ink: #ff8a80;
+  --chip: #262624;
+  --star: #c98500;
+  --appbar: rgba(13, 13, 13, 0.86);
+  --shadow: none;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding: 32px 16px 80px; }
+header.top { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+h1 { font-size: 26px; line-height: 1.2; margin: 0; letter-spacing: -0.01em; }
+h2 { font-size: 19px; margin: 0 0 4px; letter-spacing: -0.005em; }
+h3 { font-size: 15px; margin: 18px 0 6px; }
+p { margin: 0 0 10px; }
+.sub { color: var(--ink-2); font-size: 14px; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+a { color: var(--accent); }
+section { margin-top: 28px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); }
+.card + .card { margin-top: 16px; }
+.grid-2 > .card { margin-top: 0; }
+.lede { font-size: 16px; color: var(--ink-2); max-width: 72ch; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 860px) { .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .grid-2 { grid-template-columns: 1fr; } }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
+.tile .label { color: var(--ink-2); font-size: 13px; }
+.tile .value { font-size: 30px; font-weight: 600; line-height: 1.2; margin-top: 2px; }
+.tile .ctx { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.delta-bad { color: var(--critical-ink); }
+.delta-good { color: var(--good-ink); }
+ul.points { margin: 8px 0 0; padding-left: 20px; }
+ul.points li { margin: 4px 0; }
+.chart { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .grid { stroke: var(--grid); stroke-width: 1; }
+.chart .ref { stroke: var(--axis); stroke-width: 1.5; stroke-dasharray: 0; }
+.chart .tick { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.chart .rowlabel { fill: var(--ink-2); font-size: 12.5px; }
+.chart .value, .chart .end { fill: var(--ink); font-size: 12px; font-variant-numeric: tabular-nums; }
+.chart .end { paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round; font-weight: 600; }
+.chart .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .line.faded { opacity: 0.4; }
+.chart .band { opacity: 0.12; }
+.chart .dot { stroke: var(--surface); stroke-width: 2; }
+.chart .whisker { stroke: var(--ink-2); stroke-width: 1.2; }
+.chart .hit { fill: transparent; cursor: default; outline: none; }
+.chart .hit:hover, .chart .hit:focus { fill: var(--ink); fill-opacity: 0.04; }
+.chart .seglabel { font-size: 11.5px; font-weight: 600; pointer-events: none; }
+.chart .seglabel.on-dark { fill: #ffffff; }
+.chart .seglabel.on-light { fill: #0b0b0b; }
+.chart .pt { stroke: var(--surface); stroke-width: 2; }
+.chart .pt.neutral { fill: var(--muted); }
+.chart .pt.critical { fill: var(--critical); }
+.chart .pt.serious { fill: var(--serious); }
+.chart .pt.good { fill: var(--good); }
+.spark { width: 110px; height: 26px; display: block; }
+.spark path { fill: none; stroke: var(--series-1); stroke-width: 1.5; }
+.spark circle { fill: var(--series-1); }
+.spark .hit { fill: transparent; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--ink-2); margin: 6px 0 2px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { font-weight: 600; color: var(--ink-2); font-size: 12.5px; white-space: nowrap; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.chip { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--chip); color: var(--ink-2); white-space: nowrap; }
+.chip.rising, .chip.worse { color: var(--critical-ink); }
+.chip.falling, .chip.improved { color: var(--good-ink); }
+.sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: 0; }
+blockquote { margin: 8px 0; padding: 8px 12px; border-left: 3px solid var(--grid); color: var(--ink-2); font-size: 13.5px; }
+blockquote .meta { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+details { margin-top: 8px; }
+details summary { cursor: pointer; color: var(--accent); font-size: 13.5px; }
+.ci { color: var(--muted); font-size: 12px; }
+.note { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 0; }
+nav.toc a { font-size: 13px; text-decoration: none; padding: 3px 10px; border-radius: 999px; background: var(--chip); color: var(--ink-2); }
+#tip { position: fixed; z-index: 10; max-width: 340px; pointer-events: none; background: var(--ink); color: var(--page); font-size: 12.5px; line-height: 1.4; padding: 7px 10px; border-radius: 8px; opacity: 0; transition: opacity 0.08s; }
+/* ── App bar (shared by the monitor and the recommendation) ─────────────────────────────── */
+.appbar { position: sticky; top: 0; z-index: 20; background: var(--appbar); -webkit-backdrop-filter: saturate(1.4) blur(10px); backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--border); }
+.appbar-in { max-width: 1080px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px 20px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-width: 0; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.brand-text strong { font-size: 15px; }
+.brand-sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tabs { display: flex; gap: 4px; background: var(--chip); padding: 3px; border-radius: 10px; }
+.tabs a { font-size: 13.5px; text-decoration: none; color: var(--ink-2); padding: 5px 12px; border-radius: 8px; }
+.tabs a[aria-current="page"] { background: var(--card); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); }
+.appbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.live { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
+.live i { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 0 var(--good); animation: pulse 2.4s infinite; }
+.live.stale i { background: var(--warning); animation: none; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(12, 163, 12, 0.45); } 70% { box-shadow: 0 0 0 7px rgba(12, 163, 12, 0); } 100% { box-shadow: 0 0 0 0 rgba(12, 163, 12, 0); } }
+@media (prefers-reduced-motion: reduce) { .live i { animation: none; } }
+.theme-btn { font: inherit; font-size: 15px; width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--ink); cursor: pointer; }
+.theme-btn:hover { background: var(--chip); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ── Hero ─────────────────────────────────────────────────────────────────────────────────── */
+.page-title { margin-bottom: 14px; }
+.hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 16px; }
+.hero-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; box-shadow: var(--shadow); }
+.eyebrow { font-size: 12.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.hero-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 4px; }
+.hero-value { font-size: 64px; line-height: 1; font-weight: 650; letter-spacing: -0.02em; }
+.stars { --pct: 0%; position: relative; display: inline-block; font-size: 26px; line-height: 1; letter-spacing: 2px; color: var(--grid); }
+.stars::before { content: "★★★★★"; }
+.stars::after { content: "★★★★★"; position: absolute; left: 0; top: 0; width: var(--pct); overflow: hidden; white-space: nowrap; color: var(--star); }
+.hero-ctx { color: var(--ink-2); font-size: 14px; margin-top: 8px; }
+.peers { margin-top: 16px; display: grid; gap: 7px; }
+.peer { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr) 48px; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); }
+.peer .bar { height: 6px; border-radius: 3px; background: var(--grid); overflow: hidden; }
+.peer .bar span { display: block; height: 100%; border-radius: 3px; background: var(--muted-fill); }
+.peer.me { color: var(--ink); font-weight: 600; }
+.peer.me .bar span { background: var(--accent); }
+.peer .num { text-align: right; font-variant-numeric: tabular-nums; }
+.hero-chart { margin-top: 14px; }
+.signals { list-style: none; margin: 8px 0 0; padding: 0; }
+.signals li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; padding: 9px 0; border-bottom: 1px solid var(--grid); font-size: 14px; }
+.signals li:last-child { border-bottom: 0; }
+.sig-icon { width: 20px; height: 20px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 10.5px; margin-top: 1px; }
+.sig-bad .sig-icon { background: rgba(208, 59, 59, 0.12); color: var(--critical-ink); }
+.sig-good .sig-icon { background: rgba(12, 163, 12, 0.12); color: var(--good-ink); }
+.sig-info .sig-icon { background: var(--chip); color: var(--ink-2); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.tiles { margin-top: 12px; }
+.tile .delta { font-size: 13px; margin-top: 4px; }
+.tile .delta .note { color: var(--muted); }
+.tile-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.tile-spark { width: 132px; height: 34px; flex: none; }
+.tile-spark path { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+.tile-spark circle { fill: var(--accent); }
+
+/* ── Action cards ─────────────────────────────────────────────────────────────────────────── */
+.actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.action { border: 1px solid var(--border); border-left: 4px solid var(--muted-fill); border-radius: 10px; padding: 12px 14px; background: var(--surface); }
+.action.p-today { border-left-color: var(--critical); }
+.action.p-week { border-left-color: var(--serious); }
+.action.p-watch { border-left-color: var(--warning); }
+.action.p-fyi { border-left-color: var(--good); }
+.action-top { display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; color: var(--muted); }
+.action-title { margin: 6px 0 4px; font-weight: 600; font-size: 14.5px; }
+.action-why { margin: 0; font-size: 13px; color: var(--ink-2); }
+tr.folded { display: none; }
+.more-btn { margin-top: 10px; font: inherit; font-size: 13.5px; color: var(--accent); background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+.site-foot { max-width: 1080px; margin: 0 auto; padding: 0 16px 40px; font-size: 12.5px; color: var(--muted); }
+@media (max-width: 860px) {
+  .hero, .grid-3, .actions { grid-template-columns: 1fr; }
+  .hero-value { font-size: 52px; }
+}
+@media (max-width: 520px) {
+  .brand-text, .live-text { display: none; }
+  .appbar-in { flex-wrap: nowrap; gap: 10px; }
+  .live { gap: 0; }
+  .tabs a { padding: 5px 9px; }
+}
+
+@media print {
+  .appbar, .theme-btn, .more-btn { display: none; }
+  tr.folded { display: table-row; }
+  body { background: #fff; }
+  .card, .tile { box-shadow: none; break-inside: avoid; }
+  nav.toc, #tip { display: none; }
+  details { display: block; }
+  details > * { display: block; }
+}
+@media (max-width: 640px) {
+  /* Keep chart text readable on phones: charts keep a minimum size and scroll inside their card. */
+  .card { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .card > .chart { min-width: 600px; }
+  h1 { font-size: 22px; }
+}.answer { border-left: 4px solid var(--accent); }
+.answer p.lead { font-size: 17px; line-height: 1.6; max-width: 78ch; }
+.answer p.lead strong { color: var(--ink); }
+.glance { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+.glance .col { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+.glance h3 { margin: 0 0 2px; font-size: 14px; }
+.glance ol { margin: 6px 0 0; padding-left: 0; list-style: none; font-size: 13.5px; }
+.glance li { margin: 5px 0; }
+.glance li a { text-decoration: none; color: var(--ink); }
+.glance li a:hover { text-decoration: underline; }
+.id { display: inline-block; font: 600 11.5px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace; padding: 0 6px; border-radius: 6px; background: var(--chip); color: var(--ink-2); margin-right: 6px; white-space: nowrap; }
+.finding h3 { margin-top: 0; font-size: 17px; }
+.finding .num-badge { display: inline-flex; width: 24px; height: 24px; border-radius: 50%; align-items: center; justify-content: center; background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; margin-right: 8px; vertical-align: 1px; }
+.horizon { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 26px 0 8px; }
+.horizon h2 { margin: 0; }
+.ticket { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; box-shadow: var(--shadow); margin-top: 12px; }
+.ticket > header h3 { margin: 0 0 6px; font-size: 16.5px; line-height: 1.35; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.meta-row .chip { white-space: normal; }
+.chip.pri-Highest { color: var(--critical-ink); font-weight: 600; }
+.chip.pri-High { color: var(--ink); font-weight: 600; }
+.cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 24px; }
+.cols h4, .ticket h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 10px 0 4px; }
+.ticket ul { margin: 0; padding-left: 18px; font-size: 14px; }
+.ticket ul li { margin: 3px 0; }
+.ticket ul.ev li { font-size: 13.5px; color: var(--ink-2); }
+.outcome { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--grid); font-size: 13.5px; }
+.outcome p { margin: 0; color: var(--ink-2); }
+.problem { color: var(--ink-2); margin-bottom: 4px; }
+.callout { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 13.5px; color: var(--ink-2); }
+table.scen td, table.scen th { font-size: 14px; }
+.big { font-size: 18px; font-weight: 600; color: var(--ink); }
+@media (max-width: 860px) {
+  .glance, .cols, .outcome { grid-template-columns: 1fr; }
+}
+@media print {
+  .ticket { box-shadow: none; break-inside: avoid; }
+  a { color: inherit; text-decoration: none; }
+}
+</style>
+</head>
+<body>
+<header class="appbar">
+  <div class="appbar-in">
+    <a class="brand" href="../reports/latest.html">
+      <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 6.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L16 21.1l-5.9 3.2 1.3-6.5-4.9-4.5 6.6-.8z" fill="#fff"/></svg>
+      <span class="brand-text"><strong>Ratings Monitor</strong><span class="brand-sub">MoveInSync (employee app)</span></span>
+    </a>
+    <nav class="tabs" aria-label="Pages">
+      <a href="../reports/latest.html">Monitor</a>
+      <a href="recommendation.html" aria-current="page">Recommendation</a>
+    </nav>
+    <div class="appbar-right">
+      <span class="live" data-ts="2026-10-12T20:24:33+00:00" title="Data refreshed 13 Oct 2026, 01:54; reviews up to 11 Oct 2026"><i aria-hidden="true"></i><span class="live-text">Updated 13 Oct 2026, 01:54</span></span>
+      <button class="theme-btn" type="button" aria-label="Colour theme: automatic" title="Colour theme">◐</button>
+    </div>
+  </div>
+</header><div class="wrap">
+  <header class="top">
+    <div>
+      <h1>What to fix first to raise the employee app's Play Store rating</h1>
+      <div class="sub">MoveInSync (employee app) · <code>com.moveinsync.ets</code> · as of Play Store reviews to <strong>11 Oct 2026</strong> (store snapshot 2026-10-12)</div>
+    </div>
+    <div class="sub small">Recommendation · evidence refreshed 13 Oct 2026, 01:54 · plan written 2026-10-09 · <a href="../reports/latest.html">Live ratings monitor</a></div>
+  </header>
+  <nav class="toc" aria-label="Sections">
+    <a href="#answer">The answer</a><a href="#why">Why</a><a href="#plan">What to do first</a><a href="#scenario">What it adds up to</a>
+    <a href="#ops">Operations track</a><a href="#playbook">Reply playbook</a><a href="#measure">How we'll know</a><a href="#method">Method &amp; limits</a>
+  </nav>
+
+
+  <!-- ── (a) The answer ───────────────────────────────────────────────── -->
+  <section id="answer">
+    <div class="card answer">
+      <h2>The answer</h2>
+      <p class="lead">
+        <strong>The app is rated 4.64★, below Safetrax Commuter's 4.72★, because 6.4% of its ratings are 1★ against 3.8%</strong> — and about 87% of those 1★ ratings come with a written review, while the 79% of raters who leave no text average 4.91★.
+      </p>
+      <p class="lead">
+        66% of the 769 1–2★ reviews of the last 365 days are about the app rather than the cab service; the costliest problem is <strong>“Crash, blank screen or won&#39;t open”</strong> (13% of 1–2★ reviews in the last 90 days, 19% in the last 30 days), followed by “Helpdesk unhelpful / complaints ignored”, “Login OTP not received”, “Hard to use / new UI worse” and “Frequent logout / re-login”.
+        <strong>Meanwhile MoveInSync stopped answering reviews</strong>: 98% were answered in 2024Q1, 1% in the last 90 days, while Safetrax Commuter answers 100% of its 1–2★ reviews.
+      </p>
+      <p class="lead">
+        <strong>First, this week and with no release:</strong> answer every 1–2★ review, triage each new release with Android vitals, and put releases behind staged rollouts; <strong>then, in the next two releases,</strong> fix crashes, the false “not downloaded from Play Store” block and sign-in, show the boarding OTP before the seat-belt check, and start asking happy riders for a rating after good trips.
+If 1–2★ ratings fell to Safetrax Commuter's share, the rating would be about <strong>4.74★</strong> (directional); the weekly monitor tracks each fix against its baseline.      </p>
+      <div class="grid-4" style="margin-top:14px">
+        <div class="tile">
+          <div class="label">Play Store rating</div>
+          <div class="value">4.64★</div>
+          <div class="ctx">114,880 ratings · 6.4% are 1★ · Safetrax Commuter 4.72★, 3.8% 1★</div>
+        </div>
+        <div class="tile">
+          <div class="label">Written reviews that are 1–2★, last 90 days</div>
+          <div class="value">28%</div>
+          <div class="ctx">205 of 721 · 95% CI 25%–32% · average 3.81★</div>
+        </div>
+        <div class="tile">
+          <div class="label">Reviews answered, last 90 days</div>
+          <div class="value delta-bad">1%</div>
+          <div class="ctx">4 of 721 · 98% in 2024Q1 · Safetrax Commuter: 100%</div>
+        </div>
+        <div class="tile">
+          <div class="label">Crash, blank screen or won&#39;t open, share of 1–2★ reviews, last 30 days</div>
+          <div class="value delta-bad">19%</div>
+          <div class="ctx">14 of 73 · was 10% in the 180 days before (p = 0.015) · #1 rating cost</div>
+        </div>
+      </div>
+      <div class="glance" aria-label="Plan at a glance">
+        <div class="col">
+          <h3>This week</h3>
+          <div class="small muted">No release needed</div>
+          <ol><li><a href="#MIS-01"><span class="id">MIS-01</span>Answer every 1–2★ review within 2 working days, starting with the backlog</a></li><li><a href="#MIS-02"><span class="id">MIS-02</span>Triage the crash rise in 12.19.0 with Android vitals and decide hotfix vs. rollback</a></li><li><a href="#MIS-03"><span class="id">MIS-03</span>Staged rollout with halt rules for every release</a></li><li><a href="#OPS-01"><span class="id">OPS-01</span>Follow up every safety concern raised in a review within 24 hours</a> <span class="muted small">(ops)</span></li></ol>
+        </div>
+        <div class="col">
+          <h3>Next 1–2 releases</h3>
+          <div class="small muted">Code changes, shipped in the next one or two app updates</div>
+          <ol><li><a href="#MIS-04"><span class="id">MIS-04</span>Fix the &#34;not downloaded from Play Store&#34; false block</a></li><li><a href="#MIS-05"><span class="id">MIS-05</span>Stability — fix top crash clusters and replace blank screens with a recoverable screen</a></li><li><a href="#MIS-06"><span class="id">MIS-06</span>Sign-in that works — OTP delivery fallback and fewer forced logouts</a></li><li><a href="#MIS-07"><span class="id">MIS-07</span>Boarding — show the OTP first and move the seat-belt check after it</a></li><li><a href="#MIS-08"><span class="id">MIS-08</span>Ask happy riders for a rating — in-app review prompt after good trips</a></li><li><a href="#MIS-09"><span class="id">MIS-09</span>Find out why notifications are missing or late</a></li><li><a href="#OPS-02"><span class="id">OPS-02</span>Close the loop on complaints — ticket number, status and resolution in the app</a> <span class="muted small">(ops)</span></li><li><a href="#OPS-05"><span class="id">OPS-05</span>Account reviews with named employers — calls disabled, cut-offs, forced logout</a> <span class="muted small">(ops)</span></li></ol>
+        </div>
+        <div class="col">
+          <h3>This quarter</h3>
+          <div class="small muted">Larger changes that need a sprint or more</div>
+          <ol><li><a href="#MIS-10"><span class="id">MIS-10</span>Live tracking you can trust — fresher cab location and an &#34;updated X s ago&#34; label</a></li><li><a href="#MIS-11"><span class="id">MIS-11</span>My trips — bookings always visible and confirmed</a></li><li><a href="#OPS-03"><span class="id">OPS-03</span>Vendor scorecards for late cabs, no-shows and driver behaviour</a> <span class="muted small">(ops)</span></li><li><a href="#OPS-04"><span class="id">OPS-04</span>Review routing rules — long routes and clubbing</a> <span class="muted small">(ops)</span></li></ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── (b) Why ──────────────────────────────────────────────────────── -->
+  <section id="why">
+    <h2 style="margin-bottom:10px">Why the rating is where it is</h2>
+    <div class="card finding">
+      <h3><span class="num-badge">1</span>The low ratings are written ones; most raters are happy and silent</h3>
+      <p>Of 114,880 ratings, about 79% have no text and average <strong>4.91★</strong>; the 24,317 written reviews average <strong>3.61★</strong> (3.84★ over the last 365 days). About 87% of the store's 1★ ratings come with a written review. So the rating is set by two things: <em>how many 1–2★ written reviews arrive</em>, and <em>how many happy riders rate at all</em>. Right now the first goes unanswered and the second is left to chance.</p>
+      <svg viewBox="0 0 720 128" class="chart" role="img" aria-label="Star mix: silent raters vs reviewers"><text class="rowlabel" x="160" y="26" text-anchor="end">Star-only ratings</text><rect class="seg" x="170.0" y="12" width="3.7" height="22" rx="2" style="fill:var(--div-neg-2)" data-tip="Star-only ratings: 1★ = 964 (1%)" tabindex="0"/><rect class="seg" x="175.7" y="12" width="0.5" height="22" rx="2" style="fill:var(--div-mid)" data-tip="Star-only ratings: 3★ = 135 (0%)" tabindex="0"/><rect class="seg" x="176.5" y="12" width="24.5" height="22" rx="2" style="fill:var(--div-pos-1)" data-tip="Star-only ratings: 4★ = 4,459 (5%)" tabindex="0"/><rect class="seg" x="203.0" y="12" width="505.0" height="22" rx="2" style="fill:var(--div-pos-2)" data-tip="Star-only ratings: 5★ = 85,325 (94%)" tabindex="0"/><text class="seglabel on-dark" x="456.5" y="27" text-anchor="middle">5★ 94%</text><text class="rowlabel" x="160" y="66" text-anchor="end">Written reviews</text><rect class="seg" x="170.0" y="52" width="139.1" height="22" rx="2" style="fill:var(--div-neg-2)" data-tip="Written reviews: 1★ = 6,352 (26%)" tabindex="0"/><text class="seglabel on-dark" x="240.5" y="67" text-anchor="middle">1★ 26%</text><rect class="seg" x="311.1" y="52" width="23.9" height="22" rx="2" style="fill:var(--div-neg-1)" data-tip="Written reviews: 2★ = 1,165 (5%)" tabindex="0"/><rect class="seg" x="336.9" y="52" width="22.2" height="22" rx="2" style="fill:var(--div-mid)" data-tip="Written reviews: 3★ = 1,089 (4%)" tabindex="0"/><rect class="seg" x="361.1" y="52" width="60.0" height="22" rx="2" style="fill:var(--div-pos-1)" data-tip="Written reviews: 4★ = 2,794 (11%)" tabindex="0"/><text class="seglabel on-light" x="392.1" y="67" text-anchor="middle">4★ 11%</text><rect class="seg" x="423.2" y="52" width="284.8" height="22" rx="2" style="fill:var(--div-pos-2)" data-tip="Written reviews: 5★ = 12,917 (53%)" tabindex="0"/><text class="seglabel on-dark" x="566.6" y="67" text-anchor="middle">5★ 53%</text><text class="rowlabel" x="160" y="106" text-anchor="end">Safetrax Commuter (all)</text><rect class="seg" x="170.0" y="92" width="18.6" height="22" rx="2" style="fill:var(--div-neg-2)" data-tip="Safetrax Commuter (all): 1★ = 922 (4%)" tabindex="0"/><rect class="seg" x="190.6" y="92" width="1.3" height="22" rx="2" style="fill:var(--div-neg-1)" data-tip="Safetrax Commuter (all): 2★ = 149 (1%)" tabindex="0"/><rect class="seg" x="194.0" y="92" width="4.9" height="22" rx="2" style="fill:var(--div-mid)" data-tip="Safetrax Commuter (all): 3★ = 310 (1%)" tabindex="0"/><rect class="seg" x="200.9" y="92" width="42.9" height="22" rx="2" style="fill:var(--div-pos-1)" data-tip="Safetrax Commuter (all): 4★ = 2,006 (8%)" tabindex="0"/><text class="seglabel on-light" x="223.3" y="107" text-anchor="middle">4★ 8%</text><rect class="seg" x="245.8" y="92" width="462.2" height="22" rx="2" style="fill:var(--div-pos-2)" data-tip="Safetrax Commuter (all): 5★ = 20,753 (86%)" tabindex="0"/><text class="seglabel on-dark" x="477.9" y="107" text-anchor="middle">5★ 86%</text></svg>
+      <p class="note">Star-only = Google's published star counts minus written reviews per star. Approximate: Google rescales its counts to match its recency-weighted rating, and they include all languages.</p>
+    </div>
+    <div class="card finding">
+      <h3><span class="num-badge">2</span>66% of complaints are about the app, and 33% are plain defects</h3>
+      <p>Of 769 1–2★ reviews in the last 365 days, 66% are about the app, 17% about the service and 16% about both. By root cause of the main issue:
+broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span class="ci">(22%–28%)</span> · badly designed 21% <span class="ci">(18%–24%)</span> · cab, driver or helpdesk 11% <span class="ci">(9%–13%)</span> · employer or MoveInSync rule 8% <span class="ci">(6%–10%)</span> · missing feature 3% <span class="ci">(2%–4%)</span>.
+      The chart ranks issues by <strong>rating cost</strong>: stars of the written-review average lost to each issue (its 1–2★ reviews re-scored at the 4.93★ average of reviewers with no complaint; costs add up).</p>
+      <div class="legend">
+        <span><i style="background:var(--series-1)"></i>Broken</span>
+        <span><i style="background:var(--series-2)"></i>Badly designed</span>
+        <span><i style="background:var(--series-3)"></i>Rule (employer / MoveInSync)</span>
+        <span><i style="background:var(--series-4)"></i>Cab, driver or helpdesk</span>
+        <span><i style="background:var(--series-5)"></i>Missing feature</span>
+      </div>
+      <svg viewBox="0 0 720 388" class="chart" role="img" aria-label="Stars of written-review average lost to each issue"><line class="grid" x1="250.0" x2="250.0" y1="6" y2="368"/><text class="tick" x="250.0" y="382" text-anchor="middle">0</text><line class="grid" x1="350.0" x2="350.0" y1="6" y2="368"/><text class="tick" x="350.0" y="382" text-anchor="middle">−0.025★</text><line class="grid" x1="450.0" x2="450.0" y1="6" y2="368"/><text class="tick" x="450.0" y="382" text-anchor="middle">−0.050★</text><line class="grid" x1="550.0" x2="550.0" y1="6" y2="368"/><text class="tick" x="550.0" y="382" text-anchor="middle">−0.075★</text><line class="grid" x1="650.0" x2="650.0" y1="6" y2="368"/><text class="tick" x="650.0" y="382" text-anchor="middle">−0.100★</text><text class="rowlabel" x="240" y="25.0" text-anchor="end">Crash, blank screen or won&#x27;t open</text><path class="bar" style="fill:var(--series-1)" d="M250.0,14.0 L607.4,14.0 Q611.4,14.0 611.4,18.0 L611.4,24.0 Q611.4,28.0 607.4,28.0 L250.0,28.0 Z"/><text class="value" x="617.4" y="25.0">−0.090★</text><rect class="hit" x="0" y="6.0" width="720" height="30" data-tip="Crash, blank screen or won&#x27;t open: −0.090★ on the written-review average over 365 days · 13% of recent 1–2★ reviews · owner Mobile engineering" tabindex="0"/><text class="rowlabel" x="240" y="55.0" text-anchor="end">Helpdesk unhelpful / complaints ignored</text><path class="bar" style="fill:var(--series-4)" d="M250.0,44.0 L461.2,44.0 Q465.2,44.0 465.2,48.0 L465.2,54.0 Q465.2,58.0 461.2,58.0 L250.0,58.0 Z"/><text class="value" x="471.2" y="55.0">−0.054★</text><rect class="hit" x="0" y="36.0" width="720" height="30" data-tip="Helpdesk unhelpful / complaints ignored: −0.054★ on the written-review average over 365 days · 9% of recent 1–2★ reviews · owner Operations, vendors &amp; helpdesk" tabindex="0"/><text class="rowlabel" x="240" y="85.0" text-anchor="end">Login OTP not received</text><path class="bar" style="fill:var(--series-1)" d="M250.0,74.0 L456.9,74.0 Q460.9,74.0 460.9,78.0 L460.9,84.0 Q460.9,88.0 456.9,88.0 L250.0,88.0 Z"/><text class="value" x="466.9" y="85.0">−0.053★</text><rect class="hit" x="0" y="66.0" width="720" height="30" data-tip="Login OTP not received: −0.053★ on the written-review average over 365 days · 5% of recent 1–2★ reviews · owner Platform / backend" tabindex="0"/><text class="rowlabel" x="240" y="115.0" text-anchor="end">Hard to use / new UI worse</text><path class="bar" style="fill:var(--series-2)" d="M250.0,104.0 L454.9,104.0 Q458.9,104.0 458.9,108.0 L458.9,114.0 Q458.9,118.0 454.9,118.0 L250.0,118.0 Z"/><text class="value" x="464.9" y="115.0">−0.052★</text><rect class="hit" x="0" y="96.0" width="720" height="30" data-tip="Hard to use / new UI worse: −0.052★ on the written-review average over 365 days · 7% of recent 1–2★ reviews · owner Product &amp; design" tabindex="0"/><text class="rowlabel" x="240" y="145.0" text-anchor="end">Frequent logout / re-login</text><path class="bar" style="fill:var(--series-3)" d="M250.0,134.0 L431.3,134.0 Q435.3,134.0 435.3,138.0 L435.3,144.0 Q435.3,148.0 431.3,148.0 L250.0,148.0 Z"/><text class="value" x="441.3" y="145.0">−0.046★</text><rect class="hit" x="0" y="126.0" width="720" height="30" data-tip="Frequent logout / re-login: −0.046★ on the written-review average over 365 days · 2% of recent 1–2★ reviews · owner Product &amp; design" tabindex="0"/><text class="rowlabel" x="240" y="175.0" text-anchor="end">Slow to load / hangs</text><path class="bar" style="fill:var(--series-1)" d="M250.0,164.0 L427.8,164.0 Q431.8,164.0 431.8,168.0 L431.8,174.0 Q431.8,178.0 427.8,178.0 L250.0,178.0 Z"/><text class="value" x="437.8" y="175.0">−0.045★</text><rect class="hit" x="0" y="156.0" width="720" height="30" data-tip="Slow to load / hangs: −0.045★ on the written-review average over 365 days · 7% of recent 1–2★ reviews · owner Mobile engineering" tabindex="0"/><text class="rowlabel" x="240" y="205.0" text-anchor="end">Long routes / bad clubbing</text><path class="bar" style="fill:var(--series-2)" d="M250.0,194.0 L408.8,194.0 Q412.8,194.0 412.8,198.0 L412.8,204.0 Q412.8,208.0 408.8,208.0 L250.0,208.0 Z"/><text class="value" x="418.8" y="205.0">−0.041★</text><rect class="hit" x="0" y="186.0" width="720" height="30" data-tip="Long routes / bad clubbing: −0.041★ on the written-review average over 365 days · 6% of recent 1–2★ reviews · owner Routing &amp; scheduling team" tabindex="0"/><text class="rowlabel" x="240" y="235.0" text-anchor="end">Cab location wrong or lagging</text><path class="bar" style="fill:var(--series-1)" d="M250.0,224.0 L401.5,224.0 Q405.5,224.0 405.5,228.0 L405.5,234.0 Q405.5,238.0 401.5,238.0 L250.0,238.0 Z"/><text class="value" x="411.5" y="235.0">−0.039★</text><rect class="hit" x="0" y="216.0" width="720" height="30" data-tip="Cab location wrong or lagging: −0.039★ on the written-review average over 365 days · 6% of recent 1–2★ reviews · owner Platform / backend" tabindex="0"/><text class="rowlabel" x="240" y="265.0" text-anchor="end">Can&#x27;t see my bookings / trip details</text><path class="bar" style="fill:var(--series-1)" d="M250.0,254.0 L385.8,254.0 Q389.8,254.0 389.8,258.0 L389.8,264.0 Q389.8,268.0 385.8,268.0 L250.0,268.0 Z"/><text class="value" x="395.8" y="265.0">−0.035★</text><rect class="hit" x="0" y="246.0" width="720" height="30" data-tip="Can&#x27;t see my bookings / trip details: −0.035★ on the written-review average over 365 days · 2% of recent 1–2★ reviews · owner Product &amp; design" tabindex="0"/><text class="rowlabel" x="240" y="295.0" text-anchor="end">Missing feature</text><path class="bar" style="fill:var(--series-5)" d="M250.0,284.0 L362.3,284.0 Q366.3,284.0 366.3,288.0 L366.3,294.0 Q366.3,298.0 362.3,298.0 L250.0,298.0 Z"/><text class="value" x="372.3" y="295.0">−0.029★</text><rect class="hit" x="0" y="276.0" width="720" height="30" data-tip="Missing feature: −0.029★ on the written-review average over 365 days · 5% of recent 1–2★ reviews · owner Product &amp; design" tabindex="0"/><text class="rowlabel" x="240" y="325.0" text-anchor="end">Booking fails or not recorded</text><path class="bar" style="fill:var(--series-1)" d="M250.0,314.0 L356.2,314.0 Q360.2,314.0 360.2,318.0 L360.2,324.0 Q360.2,328.0 356.2,328.0 L250.0,328.0 Z"/><text class="value" x="366.2" y="325.0">−0.028★</text><rect class="hit" x="0" y="306.0" width="720" height="30" data-tip="Booking fails or not recorded: −0.028★ on the written-review average over 365 days · 5% of recent 1–2★ reviews · owner Platform / backend" tabindex="0"/><text class="rowlabel" x="240" y="355.0" text-anchor="end">Cab late, early or didn&#x27;t come</text><path class="bar" style="fill:var(--series-4)" d="M250.0,344.0 L354.2,344.0 Q358.2,344.0 358.2,348.0 L358.2,354.0 Q358.2,358.0 354.2,358.0 L250.0,358.0 Z"/><text class="value" x="364.2" y="355.0">−0.027★</text><rect class="hit" x="0" y="336.0" width="720" height="30" data-tip="Cab late, early or didn&#x27;t come: −0.027★ on the written-review average over 365 days · 6% of recent 1–2★ reviews · owner Operations, vendors &amp; helpdesk" tabindex="0"/></svg>
+      <p class="note">Shares and trends for every issue are in the monitor (<code>reports/latest.html</code>) and in <code>backlog.xlsx</code> → “Issue evidence”.</p>
+    </div>
+    <div class="card finding">
+      <h3><span class="num-badge">3</span>Replies stopped; Safetrax Commuter answers 100% of its 1–2★ reviews</h3>
+      <p>98% of reviews were answered in 2024Q1; since 2024Q3 no quarter has been above 10%, and the last reply was on 18 Aug 2026. In the last 90 days 2 of 205 1–2★ reviews got a reply. Google notifies a reviewer of a reply by push and email, and the reviewer can then update the rating; 7% of past replied reviews (639) were edited after the reply.</p>
+      <svg viewBox="0 0 720 220" class="chart" role="img" aria-label="Share of reviews that got a developer reply, by quarter"><line class="grid" x1="44" x2="708" y1="192.0" y2="192.0"/><text class="tick" x="38" y="196.0" text-anchor="end">0%</text><line class="grid" x1="44" x2="708" y1="148.5" y2="148.5"/><text class="tick" x="38" y="152.5" text-anchor="end">25%</text><line class="grid" x1="44" x2="708" y1="105.0" y2="105.0"/><text class="tick" x="38" y="109.0" text-anchor="end">50%</text><line class="grid" x1="44" x2="708" y1="61.5" y2="61.5"/><text class="tick" x="38" y="65.5" text-anchor="end">75%</text><line class="grid" x1="44" x2="708" y1="18.0" y2="18.0"/><text class="tick" x="38" y="22.0" text-anchor="end">100%</text><path class="bar" style="fill:var(--series-1)" d="M50.3,192.0 L50.3,23.3 Q50.3,19.3 54.3,19.3 L65.3,19.3 Q69.3,19.3 69.3,23.3 L69.3,192.0 Z"/><rect class="hit" x="44.0" y="18" width="31.6" height="174" data-tip="2021Q4: replied to 257 of 259 reviews (99%)" tabindex="0"/><text class="tick" x="59.8" y="212" text-anchor="middle">21 Q4</text><path class="bar" style="fill:var(--series-1)" d="M81.9,192.0 L81.9,63.1 Q81.9,59.1 85.9,59.1 L96.9,59.1 Q100.9,59.1 100.9,63.1 L100.9,192.0 Z"/><rect class="hit" x="75.6" y="18" width="31.6" height="174" data-tip="2022Q1: replied to 197 of 258 reviews (76%)" tabindex="0"/><path class="bar" style="fill:var(--series-1)" d="M113.6,192.0 L113.6,71.5 Q113.6,67.5 117.6,67.5 L128.5,67.5 Q132.5,67.5 132.5,71.5 L132.5,192.0 Z"/><rect class="hit" x="107.2" y="18" width="31.6" height="174" data-tip="2022Q2: replied to 551 of 770 reviews (72%)" tabindex="0"/><text class="tick" x="123.0" y="212" text-anchor="middle">22 Q2</text><path class="bar" style="fill:var(--series-1)" d="M145.2,192.0 L145.2,24.7 Q145.2,20.7 149.2,20.7 L160.2,20.7 Q164.2,20.7 164.2,24.7 L164.2,192.0 Z"/><rect class="hit" x="138.9" y="18" width="31.6" height="174" data-tip="2022Q3: replied to 700 of 711 reviews (98%)" tabindex="0"/><path class="bar" style="fill:var(--series-1)" d="M176.8,192.0 L176.8,27.0 Q176.8,23.0 180.8,23.0 L191.8,23.0 Q195.8,23.0 195.8,27.0 L195.8,192.0 Z"/><rect class="hit" x="170.5" y="18" width="31.6" height="174" data-tip="2022Q4: replied to 538 of 554 reviews (97%)" tabindex="0"/><text class="tick" x="186.3" y="212" text-anchor="middle">22 Q4</text><path class="bar" style="fill:var(--series-1)" d="M208.4,192.0 L208.4,23.9 Q208.4,19.9 212.4,19.9 L223.4,19.9 Q227.4,19.9 227.4,23.9 L227.4,192.0 Z"/><rect class="hit" x="202.1" y="18" width="31.6" height="174" data-tip="2023Q1: replied to 452 of 457 reviews (99%)" tabindex="0"/><path class="bar" style="fill:var(--series-1)" d="M240.0,192.0 L240.0,24.8 Q240.0,20.8 244.0,20.8 L255.0,20.8 Q259.0,20.8 259.0,24.8 L259.0,192.0 Z"/><rect class="hit" x="233.7" y="18" width="31.6" height="174" data-tip="2023Q2: replied to 487 of 495 reviews (98%)" tabindex="0"/><text class="tick" x="249.5" y="212" text-anchor="middle">23 Q2</text><path class="bar" style="fill:var(--series-1)" d="M271.7,192.0 L271.7,27.9 Q271.7,23.9 275.7,23.9 L286.6,23.9 Q290.6,23.9 290.6,27.9 L290.6,192.0 Z"/><rect class="hit" x="265.3" y="18" width="31.6" height="174" data-tip="2023Q3: replied to 680 of 704 reviews (97%)" tabindex="0"/><path class="bar" style="fill:var(--series-1)" d="M303.3,192.0 L303.3,25.9 Q303.3,21.9 307.3,21.9 L318.2,21.9 Q322.2,21.9 322.2,25.9 L322.2,192.0 Z"/><rect class="hit" x="297.0" y="18" width="31.6" height="174" data-tip="2023Q4: replied to 739 of 756 reviews (98%)" tabindex="0"/><text class="tick" x="312.8" y="212" text-anchor="middle">23 Q4</text><path class="bar" style="fill:var(--series-1)" d="M334.9,192.0 L334.9,26.3 Q334.9,22.3 338.9,22.3 L349.9,22.3 Q353.9,22.3 353.9,26.3 L353.9,192.0 Z"/><rect class="hit" x="328.6" y="18" width="31.6" height="174" data-tip="2024Q1: replied to 630 of 646 reviews (98%)" tabindex="0"/><path class="bar" style="fill:var(--series-1)" d="M366.5,192.0 L366.5,103.9 Q366.5,99.9 370.5,99.9 L381.5,99.9 Q385.5,99.9 385.5,103.9 L385.5,192.0 Z"/><rect class="hit" x="360.2" y="18" width="31.6" height="174" data-tip="2024Q2: replied to 340 of 642 reviews (53%)" tabindex="0"/><text class="tick" x="376.0" y="212" text-anchor="middle">24 Q2</text><path class="bar" style="fill:var(--series-2)" d="M398.1,192.0 L398.1,190.4 Q398.1,188.8 399.7,188.8 L415.5,188.8 Q417.1,188.8 417.1,190.4 L417.1,192.0 Z"/><rect class="hit" x="391.8" y="18" width="31.6" height="174" data-tip="2024Q3: replied to 13 of 711 reviews (2%)" tabindex="0"/><path class="bar" style="fill:var(--series-2)" d="M429.8,192.0 L429.8,190.8 Q429.8,189.5 431.0,189.5 L447.5,189.5 Q448.7,189.5 448.7,190.8 L448.7,192.0 Z"/><rect class="hit" x="423.4" y="18" width="31.6" height="174" data-tip="2024Q4: replied to 10 of 696 reviews (1%)" tabindex="0"/><text class="tick" x="439.2" y="212" text-anchor="middle">24 Q4</text><path class="bar" style="fill:var(--series-2)" d="M461.4,192.0 L461.4,189.5 Q461.4,187.1 463.8,187.1 L477.9,187.1 Q480.3,187.1 480.3,189.5 L480.3,192.0 Z"/><rect class="hit" x="455.0" y="18" width="31.6" height="174" data-tip="2025Q1: replied to 21 of 745 reviews (3%)" tabindex="0"/><path class="bar" style="fill:var(--series-2)" d="M493.0,192.0 L493.0,190.8 Q493.0,189.6 494.2,189.6 L510.7,189.6 Q512.0,189.6 512.0,190.8 L512.0,192.0 Z"/><rect class="hit" x="486.7" y="18" width="31.6" height="174" data-tip="2025Q2: replied to 11 of 786 reviews (1%)" tabindex="0"/><text class="tick" x="502.5" y="212" text-anchor="middle">25 Q2</text><path class="bar" style="fill:var(--series-2)" d="M524.6,192.0 L524.6,188.8 Q524.6,185.6 527.8,185.6 L540.4,185.6 Q543.6,185.6 543.6,188.8 L543.6,192.0 Z"/><rect class="hit" x="518.3" y="18" width="31.6" height="174" data-tip="2025Q3: replied to 27 of 739 reviews (4%)" tabindex="0"/><path class="bar" style="fill:var(--series-2)" d="M556.2,192.0 L556.2,178.4 Q556.2,174.4 560.2,174.4 L571.2,174.4 Q575.2,174.4 575.2,178.4 L575.2,192.0 Z"/><rect class="hit" x="549.9" y="18" width="31.6" height="174" data-tip="2025Q4: replied to 66 of 653 reviews (10%)" tabindex="0"/><text class="tick" x="565.7" y="212" text-anchor="middle">25 Q4</text><path class="bar" style="fill:var(--series-2)" d="M587.8,192.0 L587.8,190.4 Q587.8,188.9 589.4,188.9 L605.3,188.9 Q606.8,188.9 606.8,190.4 L606.8,192.0 Z"/><rect class="hit" x="581.5" y="18" width="31.6" height="174" data-tip="2026Q1: replied to 11 of 615 reviews (2%)" tabindex="0"/><path class="bar" style="fill:var(--series-2)" d="M619.5,192.0 L619.5,191.6 Q619.5,191.1 619.9,191.1 L638.0,191.1 Q638.4,191.1 638.4,191.6 L638.4,192.0 Z"/><rect class="hit" x="613.1" y="18" width="31.6" height="174" data-tip="2026Q2: replied to 4 of 812 reviews (0%)" tabindex="0"/><text class="tick" x="629.0" y="212" text-anchor="middle">26 Q2</text><path class="bar" style="fill:var(--series-2)" d="M651.1,192.0 L651.1,191.7 Q651.1,191.3 651.4,191.3 L669.7,191.3 Q670.1,191.3 670.1,191.7 L670.1,192.0 Z"/><rect class="hit" x="644.8" y="18" width="31.6" height="174" data-tip="2026Q3: replied to 3 of 772 reviews (0%)" tabindex="0"/><path class="bar" style="fill:var(--series-2)" d="M682.7,192.0 L682.7,190.9 Q682.7,189.9 683.8,189.9 L700.6,189.9 Q701.7,189.9 701.7,190.9 L701.7,192.0 Z"/><rect class="hit" x="676.4" y="18" width="31.6" height="174" data-tip="2026Q4: replied to 1 of 82 reviews (1%)" tabindex="0"/><text class="tick" x="692.2" y="212" text-anchor="middle">26 Q4</text></svg>
+      <div class="table-scroll"><table style="margin-top:10px">
+        <thead><tr><th>App, last 365 days</th><th class="num">Store rating</th><th class="num">Written reviews</th><th class="num">Answered</th><th class="num">1–2★ answered</th></tr></thead>
+        <tbody>
+          <tr><td><strong>MoveInSync (employee app)</strong></td><td class="num">4.64</td><td class="num">2,848</td><td class="num">3%</td><td class="num">4%</td></tr>
+<tr><td>Safetrax Commuter</td><td class="num">4.72</td><td class="num">114</td><td class="num">100%</td><td class="num">100%</td></tr><tr><td>WhistleDrive EmployeeApp</td><td class="num">4.67</td><td class="num">15</td><td class="num">0%</td><td class="num">0%</td></tr><tr><td>SMT Employee</td><td class="num">3.17</td><td class="num">48</td><td class="num">0%</td><td class="num">0%</td></tr>        </tbody>
+      </table></div>
+      <p class="note">Comparison apps get far fewer written reviews, so their review averages are not comparable; their reply rates are.</p>
+    </div>
+    <div class="card finding">
+      <h3><span class="num-badge">4</span>Better than a year ago — but new problems are emerging</h3>
+      <ul class="points">
+        <li>Last 365 days: 27% of written reviews were 1–2★ (769 of 2,848), vs 30% the year before (p = 0.004, significant).</li>
+        <li>Last 90 days vs the 90 before: 28% vs 27% — no significant change.</li>
+<li><strong>Emerging:</strong> “Crash, blank screen or won&#39;t open” — 19% of 1–2★ reviews in the last 30 days (14 of 73) vs 10% in the 180 days before (p = 0.015).</li><li><strong>Rising:</strong> “&#39;Not downloaded from Play Store&#39; error” — 4% of 1–2★ reviews in the last 90 days vs 1% before (p = 0.044).</li>      </ul>
+    </div>
+    <div class="card finding">
+      <h3><span class="num-badge">5</span>A strength to protect: safety</h3>
+      <p>36 reviews in the last 365 days praise safety; 24 raise a concern (1 in the last 30 days). Every concern is listed in the monitor for the safety team (<a href="#OPS-01">OPS-01</a>). Safety features should not be removed to cut friction — <a href="#MIS-07">MIS-07</a> moves the seat-belt check, it does not drop it.</p>
+    </div>
+  </section>
+
+  <!-- ── (c) Plan ─────────────────────────────────────────────────────── -->
+  <section id="plan">
+    <h2>What to do first</h2>
+    <p class="sub">Ranked within each horizon. Effort is an estimate for the owning team to confirm. Evidence shares are of 1–2★ written reviews, with 95% intervals; quotes are verbatim, without names.</p>
+    <div class="horizon"><h2>This week</h2><span class="sub">No release needed</span></div>
+<article class="ticket" id="MIS-01">
+  <header>
+    <h3><span class="id">MIS-01</span>Answer every 1–2★ review within 2 working days, starting with the backlog</h3>
+    <div class="meta-row">
+      <span class="chip pri-Highest">Highest priority</span>
+      <span class="chip">Owner: App support lead (with Product for routing)</span>
+      <span class="chip">Effort: S · ~2 person-days to clear the 90-day backlog, then ~30 min a day</span>
+    </div>
+  </header>
+  <p class="problem">MoveInSync stopped replying to Play Store reviews. Unhappy employees hear nothing back, and every new employee reading the store page sees complaints left unanswered, while the closest comparison app answers its negative reviews.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Reply to every unanswered 1–2★ review from the last 90 days, most-upvoted first, using the issue-specific templates in the reply playbook (address the specific problem, give a concrete next step or the fix&#39;s release, never ask for a rating change).</li><li>From then on, reply to every new 1–2★ review within 2 working days and to 3★ reviews weekly. When a fix ships, post a short follow-up reply on the reviews that named it.</li><li>Route each review to the owner in the playbook (tagging already assigns the issue and owner); service complaints go to the helpdesk queue with the employer named if the review gives it.</li><li>Give one named person ownership of the Play Console reply queue, with a back-up.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>Reviews answered: 98% in 2024Q1 (last quarter at 90% or more); at most 10% in every quarter since 2024Q3; last reply 18 Aug 2026.</li><li>Last 90 days: 0.6% of reviews answered (4 of 721; 95% CI 0.2%–1.4%); 1–2★ reviews answered: 1.0% (2 of 205; 95% CI 0.3%–3.5%).</li><li>Safetrax Commuter, last 365 days: answers 100% of reviews and 100% of 1–2★ reviews (58 of 58; 95% CI 94%–100%).</li><li>639 of 9,802 reviews that got a reply (6.5%) were edited after it. Play keeps only the latest stars, so whether replies raise ratings is measured from now on (star-change log).</li></ul>
+    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Google notifies the reviewer of a reply by push and email, and the reviewer can update the rating. The size of the effect is not measurable from past public data; the star-change log measures it from now on.</p></div>
+    <div><h4>Success metric</h4><p>Share of 1–2★ reviews answered (monitor), and star changes after a reply (review_changes log).</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Play Console reply log; the monitor&#39;s star-change log (first full month after replies resume).</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>Every 1–2★ review from the last 90 days has a reply.</li><li>In the following 4 weeks, at least 90% of new 1–2★ reviews are answered within 2 working days (monitor tile &#34;Reviews answered&#34;).</li><li>No reply asks the user to change or raise their rating (Google Play policy).</li></ul>
+  </details>
+</article>
+<article class="ticket" id="MIS-02">
+  <header>
+    <h3><span class="id">MIS-02</span>Triage the crash rise in 12.19.0 with Android vitals and decide hotfix vs. rollback</h3>
+    <div class="meta-row">
+      <span class="chip pri-Highest">Highest priority</span>
+      <span class="chip">Owner: Mobile engineering lead</span>
+      <span class="chip">Effort: S · 1–2 engineer-days to triage; fix sized after triage</span>
+    </div>
+  </header>
+  <p class="problem">&#34;Crash, blank screen or won&#39;t open&#34; costs the rating more than any other issue and is rising in the latest reviews, led by the newest release. Play may also reduce the app&#39;s visibility and show a store-listing warning when crash or ANR rates pass its bad-behaviour thresholds.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Pull Play Console Android vitals for 12.19.0 vs 12.18.1 — user-perceived crash rate and ANR rate, top clusters, split by device model and Android version.</li><li>If either rate is above Play&#39;s bad-behaviour threshold (1.09% crashes, 0.47% ANRs, or 8% on any phone model), halt the rollout and ship a hotfix for the top clusters; otherwise fix the top clusters in the next release (MIS-05).</li><li>Match crash clusters to the review quotes (blank screen on open, &#34;something went wrong&#34;, closes on OTP screen) so the fix covers what users actually hit.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>Crash, blank screen or won&#39;t open: in 13% of 1–2★ reviews in the last 90 days (27 of 205; 95% CI 9.2%–18%); 11% in the 90 days before (no significant change, p = 0.414).</li><li>Emerging: 19% of 1–2★ reviews in the last 30 days (14 of 73; 95% CI 12%–30%) vs 9.5% in the 180 days before (p = 0.015).</li><li>Rating cost rank #1 of 29: −0.090★ on the 365-day written-review average; named in 90 reviews in that period.</li></ul>
+<blockquote>“whenever i update this app, i am not able to open the app again, I need to uninstall and reinstall again. facing this issue since 3 months”<span class="meta">1★ · Oct 2026 · vnan</span></blockquote><blockquote>“a few days ago this app was working fine on my phone, but for the last 3 days it&#39;s not working at all. The app doesn&#39;t start on my phone, whenever I am opening it, it closes itself. I tried clearing data, reinstalled …”<span class="meta">3★ · Oct 2026 · vnan</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Stops the current rise; the lasting fix is MIS-05. Upper bound: <strong>+0.136★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
+    <div><h4>Success metric</h4><p>User-perceived crash and ANR rate per release (Android vitals); crash share of 1–2★ reviews (monitor).</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Android vitals (crash rate, ANR rate, top clusters per version and device).</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>Vitals comparison of 12.19.0 vs 12.18.1 shared with Product within 2 working days, with the top 3 crash and ANR clusters and their device spread.</li><li>Written hotfix or rollback decision, with the threshold used.</li></ul>
+  </details>
+</article>
+<article class="ticket" id="MIS-03">
+  <header>
+    <h3><span class="id">MIS-03</span>Staged rollout with halt rules for every release</h3>
+    <div class="meta-row">
+      <span class="chip pri-High">High priority</span>
+      <span class="chip">Owner: Mobile engineering lead + QA</span>
+      <span class="chip">Effort: S · process change, ~1 day to set up</span>
+    </div>
+  </header>
+  <p class="problem">Releases ship often, and many reviews calling the app hard to use blame a recent update. A bad release reaches every employee before anyone notices.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Release through Play staged rollout (for example 10% → 50% → 100% over a week).</li><li>Halt before widening if any of these holds — crash or ANR rate above the Play threshold, the monitor flags the new version, or a new complaint tops its reviews.</li><li>Add a short &#34;what changed&#34; note in-app and in the release notes for any change to the main screens (booking, trip, boarding OTP).</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>29 releases had enough reviews to compare in the last 365 days; 0 flagged &#39;worse&#39; or &#39;watch&#39; by the monitor.</li></ul>
+    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Limits the damage of a bad release to a fraction of users for a few days.</p></div>
+    <div><h4>Success metric</h4><p>Share of releases flagged &#34;worse&#34;/&#34;watch&#34; by the monitor; crash rate per release.</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Play Console release dashboard; Android vitals.</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>The next two releases go out staged, with the halt check recorded at each step.</li><li>The monitor&#39;s release table is reviewed before each rollout step.</li></ul>
+  </details>
+</article>
+    <div class="horizon"><h2>Next 1–2 releases</h2><span class="sub">Code changes, shipped in the next one or two app updates</span></div>
+<article class="ticket" id="MIS-04">
+  <header>
+    <h3><span class="id">MIS-04</span>Fix the &#34;not downloaded from Play Store&#34; false block</h3>
+    <div class="meta-row">
+      <span class="chip pri-Highest">Highest priority</span>
+      <span class="chip">Owner: Mobile engineering + Platform (integrity check)</span>
+      <span class="chip">Effort: M · 3–5 engineer-days</span>
+    </div>
+  </header>
+  <p class="problem">Employees who installed from Google Play are told every few days that the app &#34;was not downloaded from Play Store&#34; and must reinstall. This is rising. The pattern (works, then fails days later) points to an integrity check that fails closed on transient errors or stale verdicts, not to sideloading.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Day 1 — pull the server-side integrity verdict logs for blocked sessions (verdict fields, exception codes, Play Services version, installer) to confirm the cause.</li><li>Never block on a transient or remediable error — call isRemediable() and show the Play Integrity GET_INTEGRITY remediation dialog (it can update Play Services or fix network issues); for an UNLICENSED verdict show the GET_LICENSED dialog instead of a block-and-reinstall message.</li><li>Do not re-run the check while offline; cache the last good verdict for the session.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>&#39;Not downloaded from Play Store&#39; error: in 3.9% of 1–2★ reviews in the last 90 days (8 of 205; 95% CI 2.0%–7.5%); 0.9% in the 90 days before (rising, p = 0.044).</li><li>Rating cost rank #19 of 29: −0.015★ on the 365-day written-review average; named in 17 reviews in that period.</li></ul>
+<blockquote>“Please fix the bug..Quite frequently it gives error as&#34;move in synch application can not be installed/opened as it was not downloaded from play store&#34;.”<span class="meta">2★ · Sep 2026 · v12.19.0</span></blockquote><blockquote>“there is an issue with the app. While opening the app, it shows the app is not installed from the play store whereas I never used other places to install.”<span class="meta">2★ · Sep 2026 · v11.0.2</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Removes a failure that forces a reinstall, often while the cab is waiting. Upper bound: <strong>+0.015★</strong> on the written-review average if no 1–2★ review named this issue.</p></div>
+    <div><h4>Success metric</h4><p>Blocked sessions per day (integrity logs); share of 1–2★ reviews naming the error (monitor). Baseline 3.9% (8 of 207); the monitor can confirm improvement once it is at or below 1.0%.</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Server-side Play Integrity verdict logs.</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>No hard block for remediable exceptions; the remediation dialog is shown instead.</li><li>Blocked sessions per day fall by at least 90% in the integrity logs within 2 weeks of release.</li></ul>
+  </details>
+</article>
+<article class="ticket" id="MIS-05">
+  <header>
+    <h3><span class="id">MIS-05</span>Stability — fix top crash clusters and replace blank screens with a recoverable screen</h3>
+    <div class="meta-row">
+      <span class="chip pri-Highest">Highest priority</span>
+      <span class="chip">Owner: Mobile engineering</span>
+      <span class="chip">Effort: L · 2 sprints (1 squad)</span>
+    </div>
+  </header>
+  <p class="problem">Crashes, blank screens, an app that won&#39;t open, and slow screens that hang. Users hit them at the worst moment — opening the app to see the cab or the boarding OTP.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Fix the top crash and ANR clusters from Android vitals (from MIS-02), largest user impact first.</li><li>Replace blank or &#34;something went wrong&#34; screens with a screen that explains what failed and offers Retry, and that still shows today&#39;s trip (cab number, pickup time, boarding OTP) from the last successful sync.</li><li>Profile cold start and the trip screen on the 5 most-used low-end devices; set a cold-start budget and fail the release check if it regresses.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>Crash, blank screen or won&#39;t open: in 13% of 1–2★ reviews in the last 90 days (27 of 205; 95% CI 9.2%–18%); 11% in the 90 days before (no significant change, p = 0.414).</li><li>Emerging: 19% of 1–2★ reviews in the last 30 days (14 of 73; 95% CI 12%–30%) vs 9.5% in the 180 days before (p = 0.015).</li><li>Rating cost rank #1 of 29: −0.090★ on the 365-day written-review average; named in 90 reviews in that period.</li><li>Slow to load / hangs: in 6.8% of 1–2★ reviews in the last 90 days (14 of 205; 95% CI 4.1%–11%); 7.4% in the 90 days before (no significant change, p = 0.828).</li><li>Rating cost rank #6 of 29: −0.045★ on the 365-day written-review average; named in 61 reviews in that period.</li></ul>
+<blockquote>“This aap keeps on crashing due to some bug and there is No Update Available Yet... What will Working Professionals do who avail cab services???”<span class="meta">1★ · Sep 2026 · vnan</span></blockquote><blockquote>“app crashed did not open in my mobile plx fixed it vivo v25 Pro”<span class="meta">1★ · Sep 2026 · v12.19.0</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Targets the largest single rating cost. Upper bound: <strong>+0.136★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
+    <div><h4>Success metric</h4><p>Crash share of 1–2★ reviews (Fix tracker); crash and ANR rate (Android vitals). Baseline 13.0% (27 of 207); the monitor can confirm improvement once it is at or below 8.3%.</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Android vitals; cold-start time per device.</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>User-perceived crash rate and ANR rate below Play&#39;s bad-behaviour thresholds overall and on every top-10 device model.</li><li>No blank screen in the top 10 user journeys when the network or backend is down (tested).</li><li>Today&#39;s trip and boarding OTP visible offline after one successful sync.</li></ul>
+  </details>
+</article>
+<article class="ticket" id="MIS-06">
+  <header>
+    <h3><span class="id">MIS-06</span>Sign-in that works — OTP delivery fallback and fewer forced logouts</h3>
+    <div class="meta-row">
+      <span class="chip pri-High">High priority</span>
+      <span class="chip">Owner: Platform / backend (OTP) + Product &amp; design (session rules)</span>
+      <span class="chip">Effort: M · 1 sprint</span>
+    </div>
+  </header>
+  <p class="problem">Employees cannot get in — the OTP does not arrive — and are logged out often, so they need a new OTP at the moment the cab arrives. Each forced logout is another chance for OTP delivery to fail.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Measure OTP delivery per operator and channel (sent → delivered → entered) and alert when delivery drops.</li><li>Offer a second channel (email, WhatsApp or voice) automatically after 30 seconds, with a visible resend timer; use the Android SMS Retriever API so the OTP fills itself.</li><li>Keep sessions alive with refresh tokens; never end a session during a booked trip window; where the employer&#39;s policy allows, re-authenticate with the device screen lock instead of a new OTP.</li><li>List employers whose settings force frequent re-login and share with the account team (OPS-05).</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>Login OTP not received: in 5.4% of 1–2★ reviews in the last 90 days (11 of 205; 95% CI 3.0%–9.4%); 6.0% in the 90 days before (no significant change, p = 0.782).</li><li>Rating cost rank #3 of 29: −0.053★ on the 365-day written-review average; named in 56 reviews in that period.</li><li>Frequent logout / re-login: in 2.0% of 1–2★ reviews in the last 90 days (4 of 205; 95% CI 0.8%–4.9%); 4.6% in the 90 days before (no significant change, p = 0.128).</li><li>Rating cost rank #5 of 29: −0.046★ on the 365-day written-review average; named in 56 reviews in that period.</li><li>16% of reviews naming it blame a recent update.</li></ul>
+<blockquote>“This app is the worst. Not able to login via phone/email as the OTP is not received. The most disgusting thing is, it won&#39;t give any message whether the user&#39;s mobile/email is registered or not. Without this basic …”<span class="meta">1★ · Jan 2026 · v12.8.3</span></blockquote><blockquote>“wasted app email otp system don&#39;t work everyday have to login via otp don&#39;t know why and how created this application. so frustrating to use this app”<span class="meta">1★ · Jun 2026 · v12.13.0</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Removes the two sign-in complaints; each forced logout avoided is also one fewer OTP that can fail. Upper bound: <strong>+0.099★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
+    <div><h4>Success metric</h4><p>OTP share of 1–2★ reviews (Fix tracker); OTP delivery rate; logins per active user per week. Baseline 5.3% (11 of 207); the monitor can confirm improvement once it is at or below 2.0%.</p></div>
+    <div><h4>Confirm with (internal)</h4><p>SMS gateway delivery reports; auth service logs (session length, re-login rate).</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>OTP delivered within 30 seconds for at least 98% of requests, measured per operator.</li><li>No logout during a booked trip window in testing across the 5 most-used devices.</li></ul>
+  </details>
+</article>
+<article class="ticket" id="MIS-07">
+  <header>
+    <h3><span class="id">MIS-07</span>Boarding — show the OTP first and move the seat-belt check after it</h3>
+    <div class="meta-row">
+      <span class="chip pri-High">High priority</span>
+      <span class="chip">Owner: Product &amp; design + Mobile engineering</span>
+      <span class="chip">Effort: S · 2–3 engineer-days</span>
+    </div>
+  </header>
+  <p class="problem">The redesigned app is called hard to use, often blaming a recent update. The newest named complaint is the seat-belt confirmation that now pops up before the boarding OTP, adding a step and hiding the OTP while the driver waits.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Show the boarding OTP immediately on &#34;View OTP&#34;; ask the seat-belt confirmation after boarding as a single non-blocking tap. Keep it for safety, but not in front of the OTP.</li><li>Run a 5-user task test of the top 5 tasks (book, see next trip, track cab, show OTP, raise a complaint) on the current build and fix anything that takes more than one extra tap compared with the previous version.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>Hard to use / new UI worse: in 6.8% of 1–2★ reviews in the last 90 days (14 of 205; 95% CI 4.1%–11%); 6.5% in the 90 days before (no significant change, p = 0.876).</li><li>Rating cost rank #4 of 29: −0.052★ on the 365-day written-review average; named in 70 reviews in that period.</li><li>27% of reviews naming it blame a recent update.</li><li>OTP/QR check-in friction: in 2.0% of 1–2★ reviews in the last 90 days (4 of 205; 95% CI 0.8%–4.9%); 2.8% in the 90 days before (no significant change, p = 0.583).</li><li>Rating cost rank #22 of 29: −0.014★ on the 365-day written-review average; named in 21 reviews in that period.</li></ul>
+<blockquote>“The new feature and very annoying feature which you have introduced - when you click view otp , it pops up the seat belt safely first. Why do you ask for user input one more click . very annoying I should be able to see …”<span class="meta">2★ · Oct 2026 · v12.19.0</span></blockquote><blockquote>“The app is by far the worst.. when navigation etc is concerned. the number of selections, drop downs etc that need to be selected.. even before you reach the main page...”<span class="meta">1★ · Apr 2026 · v12.11.2</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Removes a fresh irritant from every trip; a small change with daily visibility. Upper bound: <strong>+0.066★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
+    <div><h4>Success metric</h4><p>Hard-to-use share of 1–2★ reviews (Fix tracker). Baseline 7.2% (15 of 207); the monitor can confirm improvement once it is at or below 3.4%.</p></div>
+    <div><h4>Confirm with (internal)</h4><p>In-app analytics — time from opening the trip to OTP shown.</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>OTP visible in one tap from the trip card; seat-belt confirmation does not cover it.</li><li>Task test results written up, with fixes ticketed.</li></ul>
+  </details>
+</article>
+<article class="ticket" id="MIS-08">
+  <header>
+    <h3><span class="id">MIS-08</span>Ask happy riders for a rating — in-app review prompt after good trips</h3>
+    <div class="meta-row">
+      <span class="chip pri-High">High priority</span>
+      <span class="chip">Owner: Mobile engineering + Product</span>
+      <span class="chip">Effort: S · 2–3 engineer-days</span>
+<span class="chip">After MIS-05</span>    </div>
+  </header>
+  <p class="problem">Most ratings come from employees who never write a review, and they rate the app highly. Asking them on Play at a good moment is the cheapest way to add recent positive ratings. The app&#39;s own post-trip rating pop-up, by contrast, is itself a complaint. (If the app already calls the In-App Review API, this ticket becomes tuning when it fires.)</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Call the Google Play In-App Review API after a positive moment — for example the 3rd completed on-time trip in a week with no complaint raised — at most once every few months per user.</li><li>Never precede it with a question such as &#34;Do you like the app?&#34;, never trigger it from a button, and never show it after a late, cancelled or complained-about trip (Google&#39;s rules).</li><li>Do not stack it with the post-trip feedback pop-up; make that pop-up skippable.</li><li>Ship only after the crash fix (MIS-05) is live, so the prompt reaches users on a stable build.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>79% of the 114,880 ratings have no text; they average 4.91★, vs 3.61★ for written reviews (approximate: Google rescales its star counts).</li><li>About 87% of the store&#39;s 1★ ratings come with a written review: low ratings are almost all written, while most ratings without text are 5★.</li><li>Forced trip rating / feedback: in 2.9% of 1–2★ reviews in the last 90 days (6 of 205; 95% CI 1.3%–6.2%); 1.8% in the 90 days before (no significant change, p = 0.465).</li><li>Rating cost rank #13 of 29: −0.024★ on the 365-day written-review average; named in 25 reviews in that period.</li></ul>
+<blockquote>“I am forced to rate every trip which is twice a day. There should be an option to skip the step”<span class="meta">1★ · May 2026 · v12.12.2</span></blockquote><blockquote>“there is no option to skip the feedback for the trips. Its forcing us to give the feedback. better to add the skip option in that screen”<span class="meta">1★ · May 2026 · v12.12.0</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Adds recent ratings from satisfied riders; because Play weights recent ratings more, this moves the store rating faster than fixes alone. Size depends on Google&#39;s prompt quota. Upper bound: <strong>+0.024★</strong> on the written-review average if no 1–2★ review named this issue.</p></div>
+    <div><h4>Success metric</h4><p>Weekly new ratings and store rating (monitor&#39;s listing snapshot); trip-rating complaint share. Baseline 2.9% (6 of 207); the monitor can confirm improvement once it is at or below 0.5%.</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Play Console ratings over time; in-app analytics on prompt requests.</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>Prompt logic reviewed against Google&#39;s in-app review guidance before release.</li><li>Prompt eligibility, request and completion logged (Play does not report whether the card showed).</li></ul>
+  </details>
+</article>
+<article class="ticket" id="MIS-09">
+  <header>
+    <h3><span class="id">MIS-09</span>Find out why notifications are missing or late</h3>
+    <div class="meta-row">
+      <span class="chip pri-Medium">Medium priority</span>
+      <span class="chip">Owner: Platform / backend</span>
+      <span class="chip">Effort: S · 2 engineer-days to investigate</span>
+    </div>
+  </header>
+  <p class="problem">Complaints about missing, late or repeated notifications (cab allocated, cab arriving) are emerging in the last 30 days.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Check push delivery rate by Android version and device; check that the Android 13+ notification permission is requested and that the app is not stopped by battery optimisation.</li><li>Check for duplicate sends and for SMS and push both firing.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>Notifications missing, late or spammy: in 3.4% of 1–2★ reviews in the last 90 days (7 of 205; 95% CI 1.7%–6.9%); 2.3% in the 90 days before (no significant change, p = 0.493).</li><li>Rating cost rank #18 of 29: −0.015★ on the 365-day written-review average; named in 19 reviews in that period.</li></ul>
+<blockquote>“06-10-2026 even after booked the trip it keep sends the push notification that trip is not booked. old: Bring monthly view ,not just day view...”<span class="meta">1★ · Oct 2026 · v12.19.0</span></blockquote><blockquote>“mobile number is not visible once cab is booked, I can not see latest notification, since seems like notification stack full and never notification can not be shown. for every button click it is asking for policy …”<span class="meta">1★ · Oct 2026 · v12.19.0</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Early action on an emerging complaint while it is still small. Upper bound: <strong>+0.015★</strong> on the written-review average if no 1–2★ review named this issue.</p></div>
+    <div><h4>Success metric</h4><p>Notification share of 1–2★ reviews (Fix tracker); push delivery rate. Baseline 3.4% (7 of 207); the monitor can confirm improvement once it is at or below 0.5%.</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Push provider delivery reports.</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>Root cause written up with delivery rate by Android version; fix ticketed.</li></ul>
+  </details>
+</article>
+    <div class="horizon"><h2>This quarter</h2><span class="sub">Larger changes that need a sprint or more</span></div>
+<article class="ticket" id="MIS-10">
+  <header>
+    <h3><span class="id">MIS-10</span>Live tracking you can trust — fresher cab location and an &#34;updated X s ago&#34; label</h3>
+    <div class="meta-row">
+      <span class="chip pri-Medium">Medium priority</span>
+      <span class="chip">Owner: Platform / backend + Routing (ETA)</span>
+      <span class="chip">Effort: L · 1–2 sprints</span>
+    </div>
+  </header>
+  <p class="problem">The cab&#39;s location is wrong, frozen or minutes behind, and ETAs do not match reality, so employees cannot plan when to step out.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Measure GPS ping interval and staleness from the driver app per vendor and device.</li><li>Show how old the location is (&#34;updated 40 s ago&#34;) and stop showing a moving cab when data is stale.</li><li>Recalculate ETA from the live position, not the planned route.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>Cab location wrong or lagging: in 5.9% of 1–2★ reviews in the last 90 days (12 of 205; 95% CI 3.4%–10.0%); 6.9% in the 90 days before (no significant change, p = 0.657).</li><li>Rating cost rank #8 of 29: −0.039★ on the 365-day written-review average; named in 64 reviews in that period.</li><li>ETA / arrival time wrong: in 2.0% of 1–2★ reviews in the last 90 days (4 of 205; 95% CI 0.8%–4.9%); 3.2% in the 90 days before (no significant change, p = 0.411).</li><li>Rating cost rank #21 of 29: −0.014★ on the 365-day written-review average; named in 23 reviews in that period.</li></ul>
+<blockquote>“The GPS tracking system is very slow, and the pickup and drop timings are frequently incorrect. Additionally, the live location of other users is often not visible. Due to these issues, we are unable to determine the …”<span class="meta">1★ · Jul 2026 · v12.14.1</span></blockquote><blockquote>“The app is not working properly. We are receiving &#39;NA&#39; for the sequence and cab details, and the sequence is displaying incorrectly. Specifically, the app shows one sequence while the driver app shows a different one …”<span class="meta">1★ · Feb 2026 · v12.9.4</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Fewer complaints about wrong locations and ETAs, and fewer missed pickups that follow from them. Upper bound: <strong>+0.053★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
+    <div><h4>Success metric</h4><p>Tracking share of 1–2★ reviews (Fix tracker); median location age. Baseline 5.8% (12 of 207); the monitor can confirm improvement once it is at or below 2.4%.</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Driver-app GPS ping logs.</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>Median location age on the employee map under 15 seconds while the trip is active.</li><li>Stale positions labelled in the app.</li></ul>
+  </details>
+</article>
+<article class="ticket" id="MIS-11">
+  <header>
+    <h3><span class="id">MIS-11</span>My trips — bookings always visible and confirmed</h3>
+    <div class="meta-row">
+      <span class="chip pri-Medium">Medium priority</span>
+      <span class="chip">Owner: Product &amp; design + Platform / backend</span>
+      <span class="chip">Effort: M · 1 sprint</span>
+    </div>
+  </header>
+  <p class="problem">Employees cannot find their booked trips, cab details or pickup time, and some bookings fail or silently disappear.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Put a &#34;Next trip&#34; card on the home screen (date, pickup time, cab number, OTP) and a list of upcoming bookings.</li><li>Confirm every booking or change with an in-app receipt; make the booking API idempotent and show a clear error when a booking is refused (cut-off, limit) instead of failing silently.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>Can&#39;t see my bookings / trip details: in 2.4% of 1–2★ reviews in the last 90 days (5 of 205; 95% CI 1.0%–5.6%); 4.6% in the 90 days before (no significant change, p = 0.229).</li><li>Rating cost rank #9 of 29: −0.035★ on the 365-day written-review average; named in 45 reviews in that period.</li><li>Booking fails or not recorded: in 5.4% of 1–2★ reviews in the last 90 days (11 of 205; 95% CI 3.0%–9.4%); 2.8% in the 90 days before (no significant change, p = 0.174).</li><li>Rating cost rank #11 of 29: −0.028★ on the 365-day written-review average; named in 36 reviews in that period.</li></ul>
+<blockquote>“Unable to view the schedule for the whole month even though the schedule is done a month prior. Only the following / next schedule is shown. Reinstalled app multiple times!”<span class="meta">1★ · Jan 2026 · v12.9.1</span></blockquote><blockquote>“it was good till 2 days back but now we are not able to see the people who are aligned to our pickup or drop. the app is not showing pickup timing as well now. only via msg we are getting the information which is most …”<span class="meta">2★ · Feb 2026 · v12.9.2</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Removes a daily source of uncertainty. Upper bound: <strong>+0.062★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
+    <div><h4>Success metric</h4><p>Can&#39;t-see-bookings share of 1–2★ reviews (Fix tracker); booking error rate. Baseline 2.9% (6 of 207); the monitor can confirm improvement once it is at or below 0.5%.</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Booking API error logs.</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>Next trip visible from the home screen in zero taps.</li><li>Every refused booking shows the reason.</li></ul>
+  </details>
+</article>
+  </section>
+
+  <section id="scenario">
+    <div class="card">
+      <h2>What it could add up to</h2>
+      <p class="sub">Directional scenarios on the store histogram: the share of 1–2★ ratings changes and the mix within 1–2★ and within 3–5★ stays as today. Google's rating is recency-weighted and its counts are rescaled, so read these as direction and rough size, not a forecast.</p>
+      <div class="table-scroll"><table class="scen">
+        <thead><tr><th>Scenario</th><th class="num">1–2★ share of ratings</th><th class="num">Rating</th></tr></thead>
+        <tbody>
+          <tr><td>Today</td><td class="num">7.1%</td><td class="num"><span class="big">4.64★</span></td></tr>
+          <tr><td>Product fixes for this week and the next two releases halve the 1–2★ reviews about their issues (35% of 1–2★ reviews, split evenly when a review names several)</td><td class="num">5.9%</td><td class="num">4.69★</td></tr>
+          <tr><td>…remove them entirely (upper bound)</td><td class="num">4.6%</td><td class="num">4.73★</td></tr>
+<tr><td>1–2★ share falls to Safetrax Commuter's</td><td class="num">4.4%</td><td class="num">4.74★</td></tr>        </tbody>
+      </table></div>
+      <p class="note">On the written-review average (3.84★ over 365 days), the same product issues cost up to 0.354★. Not modelled: more ratings from happy riders (<a href="#MIS-08">MIS-08</a>) and rating updates after replies (<a href="#MIS-01">MIS-01</a>) — both push in the same direction and are measured by the monitor once live.</p>
+    </div>
+  </section>
+
+  <!-- ── (d) Operations ──────────────────────────────────────────────── -->
+  <section id="ops">
+    <h2>Operations and account-team track</h2>
+    <p class="sub">33% of 1–2★ reviews are partly or wholly about the service. The app is the messenger: these need operations, vendors and employer transport desks, run in parallel with the product plan.</p>
+<article class="ticket" id="OPS-01">
+  <header>
+    <h3><span class="id">OPS-01</span>Follow up every safety concern raised in a review within 24 hours</h3>
+    <div class="meta-row">
+      <span class="chip pri-Highest">Highest priority</span>
+      <span class="chip">Owner: Safety &amp; compliance</span>
+      <span class="chip">Effort: S · ongoing</span>
+    </div>
+  </header>
+  <p class="problem">Safety concerns are rare in reviews but each one needs action; more reviews praise safety than raise a concern, so safety is a strength to protect.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Review the safety list in the monitor every week; contact the employer&#39;s transport desk for each concern within 24 hours, and reply publicly with the escalation route.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>24 of 2,848 reviews in the last 365 days raise a safety concern; 1 in the last 30 days. 36 reviews praise safety.</li></ul>
+<blockquote>“drivers and management are extremely rude and they talk in an inappropriate and disrespectful manner. Drivers shout during the conversation. Such behavior is unacceptable and that makes feel very uncomfortable and unsafe”<span class="meta">1★ · Jun 2026 · v12.13.2</span></blockquote><blockquote>“Keeps logging out after every 5 to 10 mins of inactivity on the app. Logging in again requires authentication via company&#39;s app which is time consuming. Also this poses a problem especially for female passengers who …”<span class="meta">1★ · May 2026 · v12.12.2</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Protects a strength; prevents a single incident review from going unanswered. Upper bound: <strong>+0.013★</strong> on the written-review average if no 1–2★ review named this issue.</p></div>
+    <div><h4>Success metric</h4><p>Safety concerns per month and time to follow-up. Baseline 2.4% (5 of 207).</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Safety incident log.</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>Every safety review from the last 30 days has an owner, an action and a public reply.</li></ul>
+  </details>
+</article>
+<article class="ticket" id="OPS-02">
+  <header>
+    <h3><span class="id">OPS-02</span>Close the loop on complaints — ticket number, status and resolution in the app</h3>
+    <div class="meta-row">
+      <span class="chip pri-High">High priority</span>
+      <span class="chip">Owner: Operations &amp; helpdesk + Product</span>
+      <span class="chip">Effort: M · process now, in-app status in 1 sprint</span>
+    </div>
+  </header>
+  <p class="problem">Complaints raised with the helpdesk or transport team get no answer or no resolution, and the employee has no way to see what happened to them.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Every complaint gets a ticket number and a status the employee can see in the app.</li><li>Set and publish a response target (for example 4 working hours) and resolution target; escalate automatically when missed.</li><li>Send a closing message saying what was done.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>Helpdesk unhelpful / complaints ignored: in 9.3% of 1–2★ reviews in the last 90 days (19 of 205; 95% CI 6.0%–14%); 9.7% in the 90 days before (no significant change, p = 0.886).</li><li>Rating cost rank #2 of 29: −0.054★ on the 365-day written-review average; named in 64 reviews in that period.</li></ul>
+<blockquote>“Pathetic app. My office is using their service and driver doesn&#39;t come on time for pickup. Most of the time driver doesn&#39;t pick the call. Their customer care is also not easy to connect.”<span class="meta">1★ · Dec 2025 · v12.7.2</span></blockquote><blockquote>“Not worth it - worst ever employee complaints are ignoring by transportation &amp; Cab owners worst facilities.”<span class="meta">2★ · Jul 2026 · v12.14.1</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Turns an ignored complaint into a visible resolution, so it does not end up on the store page. Upper bound: <strong>+0.054★</strong> on the written-review average if no 1–2★ review named this issue.</p></div>
+    <div><h4>Success metric</h4><p>Helpdesk share of 1–2★ reviews (Fix tracker); complaint response time. Baseline 9.2% (19 of 207); the monitor can confirm improvement once it is at or below 4.9%.</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Helpdesk ticket system (response and resolution times).</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>Complaint status visible in the app; response-time target met for at least 90% of complaints.</li></ul>
+  </details>
+</article>
+<article class="ticket" id="OPS-03">
+  <header>
+    <h3><span class="id">OPS-03</span>Vendor scorecards for late cabs, no-shows and driver behaviour</h3>
+    <div class="meta-row">
+      <span class="chip pri-Medium">Medium priority</span>
+      <span class="chip">Owner: Operations &amp; vendors</span>
+      <span class="chip">Effort: M · monthly process</span>
+    </div>
+  </header>
+  <p class="problem">Late or missing cabs, driver behaviour and disputed no-shows are service failures that show up as app reviews.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Monthly vendor scorecard from trip data — on-time pickup, missed pickups, disputed no-shows, complaints per 1,000 trips.</li><li>Let employees dispute a no-show in the app, with GPS evidence shown to both sides.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>Cab late, early or didn&#39;t come: in 6.3% of 1–2★ reviews in the last 90 days (13 of 205; 95% CI 3.7%–11%); 4.1% in the 90 days before (no significant change, p = 0.311).</li><li>Rating cost rank #12 of 29: −0.027★ on the 365-day written-review average; named in 33 reviews in that period.</li><li>Driver behaviour or driving: in 2.9% of 1–2★ reviews in the last 90 days (6 of 205; 95% CI 1.3%–6.2%); 2.3% in the 90 days before (no significant change, p = 0.688).</li><li>Rating cost rank #20 of 29: −0.014★ on the 365-day written-review average; named in 26 reviews in that period.</li><li>Wrongly marked no-show: in 2.0% of 1–2★ reviews in the last 90 days (4 of 205; 95% CI 0.8%–4.9%); 1.4% in the 90 days before (no significant change, p = 0.648).</li><li>Rating cost rank #24 of 29: −0.013★ on the 365-day written-review average; named in 21 reviews in that period.</li></ul>
+<blockquote>“Complaint Regarding Pathetic Transport Service I would like to raise a complaint regarding the pathetic transport service provided today.”<span class="meta">1★ · Jul 2026 · v12.15.0</span></blockquote><blockquote>“cab is never assigned on time...always late ..no value of others time...after logout every day we have to wait for 40+ mins for cab the 20 mins distance route...which is totally waste of time...third class”<span class="meta">1★ · Jun 2026 · v12.13.1</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Reduces the service share of complaints. Upper bound: <strong>+0.054★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
+    <div><h4>Success metric</h4><p>Service-issue share of 1–2★ reviews (Fix tracker); on-time pickup rate. Baseline 6.3% (13 of 207); the monitor can confirm improvement once it is at or below 2.9%.</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Trip data (planned vs actual pickup), no-show dispute log.</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>Scorecard reviewed with each vendor monthly; disputes resolved within 48 hours.</li></ul>
+  </details>
+</article>
+<article class="ticket" id="OPS-04">
+  <header>
+    <h3><span class="id">OPS-04</span>Review routing rules — long routes and clubbing</h3>
+    <div class="meta-row">
+      <span class="chip pri-Medium">Medium priority</span>
+      <span class="chip">Owner: Routing &amp; scheduling team + account teams</span>
+      <span class="chip">Effort: M · analysis 1 week, then per-employer changes</span>
+    </div>
+  </header>
+  <p class="problem">Routes are long, too many people are clubbed, and pickup times change at short notice.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Find routes where ride time exceeds the employer&#39;s maximum or the direct time by a large factor; review clubbing and maximum-ride-time settings with each affected employer.</li><li>Notify employees of a pickup-time change as soon as it is made, with the reason.</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>Long routes / bad clubbing: in 6.3% of 1–2★ reviews in the last 90 days (13 of 205; 95% CI 3.7%–11%); 5.5% in the 90 days before (no significant change, p = 0.724).</li><li>Rating cost rank #7 of 29: −0.041★ on the 365-day written-review average; named in 48 reviews in that period.</li><li>Pickup time unpredictable / changed late: in 2.0% of 1–2★ reviews in the last 90 days (4 of 205; 95% CI 0.8%–4.9%); 2.3% in the 90 days before (no significant change, p = 0.802).</li><li>Rating cost rank #23 of 29: −0.013★ on the 365-day written-review average; named in 18 reviews in that period.</li></ul>
+<blockquote>“Worst Transport App ever, none of the teams have coordination, Routing Team is pethic, tracking team and Helpdesk will not help at all, instead they will blame each other teams. No point in writing email or raising …”<span class="meta">1★ · Mar 2026 · v12.10.2</span></blockquote><blockquote>“using from 5 year this app it doesn&#39;t show time of traffic, route delay problem, does not have proper timings if you use this app you will be late at office or any place you want to go on time.”<span class="meta">1★ · Feb 2026 · v12.9.4</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Fewer complaints about ride length. Upper bound: <strong>+0.054★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
+    <div><h4>Success metric</h4><p>Routing share of 1–2★ reviews (Fix tracker); ride time vs direct time. Baseline 6.3% (13 of 207); the monitor can confirm improvement once it is at or below 2.9%.</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Routing engine output (planned ride time per employee).</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>Outlier routes listed per employer and reviewed with their transport desk.</li></ul>
+  </details>
+</article>
+<article class="ticket" id="OPS-05">
+  <header>
+    <h3><span class="id">OPS-05</span>Account reviews with named employers — calls disabled, cut-offs, forced logout</h3>
+    <div class="meta-row">
+      <span class="chip pri-Medium">Medium priority</span>
+      <span class="chip">Owner: Account management + employer transport desks</span>
+      <span class="chip">Effort: S · one meeting per employer</span>
+    </div>
+  </header>
+  <p class="problem">Some complaints come from employer settings — calls to drivers disabled &#34;as per company policy&#34;, strict booking cut-offs, frequent re-login — which are invisible from outside.</p>
+  <div class="cols">
+    <div>
+      <h4>The change</h4>
+      <ul><li>Share the monitor&#39;s employer table with account managers; review the settings behind the complaints with each named employer and agree changes or in-app explanations.</li><li>Where a rule stays, explain it in the app at the moment it applies (for example &#34;Calls are masked by your company&#39;s policy — use in-app call&#34;).</li></ul>
+    </div>
+    <div>
+      <h4>Evidence</h4>
+      <ul class="ev"><li>Concentrix: named in 7 reviews since 2023, 57% 1–2★ (Long routes / bad clubbing, Helpdesk unhelpful / complaints ignored, Driver behaviour or driving).</li><li>Wipro: named in 5 reviews since 2023, 60% 1–2★ (Slow to load / hangs, Cab location wrong or lagging, Can&#39;t call or message driver).</li><li>HCL: named in 4 reviews since 2023, 75% 1–2★ (Pickup time unpredictable / changed late, Can&#39;t see my bookings / trip details, Crash, blank screen or won&#39;t open).</li><li>Tech Mahindra: named in 4 reviews since 2023, 50% 1–2★ (Helpdesk unhelpful / complaints ignored, Long routes / bad clubbing).</li><li>JPMorgan Chase: named in 3 reviews since 2023, 33% 1–2★ (no specific issue).</li><li>Small numbers: a lead for the account team, not a verdict.</li><li>Can&#39;t call or message driver: in 1.0% of 1–2★ reviews in the last 90 days (2 of 205; 95% CI 0.3%–3.5%); 2.3% in the 90 days before (no significant change, p = 0.286).</li><li>Rating cost rank #16 of 29: −0.017★ on the 365-day written-review average; named in 27 reviews in that period.</li><li>Booking rules too strict: in 1.5% of 1–2★ reviews in the last 90 days (3 of 205; 95% CI 0.5%–4.2%); 1.4% in the 90 days before (no significant change, p = 0.944).</li><li>Rating cost rank #26 of 29: −0.013★ on the 365-day written-review average; named in 18 reviews in that period.</li></ul>
+<blockquote>“Worst experience with this app, there is no perfect timing scheduled it changes very badly and when we try to contact the driver no response the auto reply comes (looks like the driver is not responding) and there …”<span class="meta">1★ · Apr 2026 · v12.11.2</span></blockquote><blockquote>“I&#39;m getting calling permission is disabled as per company policy”<span class="meta">1★ · Aug 2026 · v12.17.0</span></blockquote>    </div>
+  </div>
+  <div class="outcome">
+    <div><h4>Expected effect</h4><p>Lowers policy-driven complaints that the app team cannot fix alone. Upper bound: <strong>+0.030★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
+    <div><h4>Success metric</h4><p>Policy share of 1–2★ reviews; employer-level complaint counts (monitor). Baseline 1.0% (2 of 207).</p></div>
+    <div><h4>Confirm with (internal)</h4><p>Employer configuration records.</p></div>
+  </div>
+  <details><summary>Acceptance criteria</summary>
+    <ul style="margin-top:6px"><li>Each employer named three or more times has had a settings review.</li></ul>
+  </details>
+</article>
+  </section>
+
+  <!-- ── Reply playbook ─────────────────────────────────────────────── -->
+  <section id="playbook">
+    <div class="card">
+      <h2>Reply playbook</h2>
+      <p class="sub">For <a href="#MIS-01">MIS-01</a>. Google's rules for replies: address the user's specific comment, be respectful, and never solicit — no asking for a better rating. Full templates, including the follow-up to post once a fix ships, are in <code>deliverables/reply_playbook.md</code>.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Review names</th><th class="num">Unanswered 1–2★, last 90d</th><th>Route to</th><th>Reply (fill the braces)</th></tr></thead>
+        <tbody><tr><td class="small">Crash, blank screen or won&#39;t open; Slow to load / hangs; &#39;Not downloaded from Play Store&#39; error</td><td class="num">47</td><td class="small">Mobile engineering (attach app version and device from the review)</td><td class="small muted">Sorry the app {crashed / would not open / was slow} for you, especially with your cab on the way. Our engineers are working on this. Please update to the latest version; if it still happens, write to app@moveinsync.com with your phone model so we can check it directly.</td></tr><tr><td class="small">Login OTP not received; Frequent logout / re-login; Onboarding / registration confusion</td><td class="num">15</td><td class="small">Platform / backend (OTP) · Product (sessions)</td><td class="small muted">Sorry you could not sign in. If the OTP does not arrive within a minute, please use the resend option; if it still does not arrive, write to app@moveinsync.com from your work email with your mobile operator, and we will check delivery for your number.</td></tr><tr><td class="small">Hard to use / new UI worse; OTP/QR check-in friction; Repeated pop-ups &amp; permission demands; Forced trip rating / feedback</td><td class="num">29</td><td class="small">Product &amp; design</td><td class="small muted">Thank you for the detailed feedback on {the new design / the seat-belt step / the pop-ups}. We have shared it with our design team and are changing {specific step} so it takes fewer taps.</td></tr><tr><td class="small">Helpdesk unhelpful / complaints ignored; Cab late, early or didn&#39;t come; Driver behaviour or driving; Vehicle condition / overcrowding; Wrongly marked no-show</td><td class="num">34</td><td class="small">Operations &amp; helpdesk (include employer if named)</td><td class="small muted">We are sorry about {the late cab / the driver / the no-show}. This should not happen. Please raise it in the app under Help with the trip date, or write to app@moveinsync.com from your work email, so the transport team for your company can look into this trip.</td></tr><tr><td class="small">Long routes / bad clubbing; Pickup time unpredictable / changed late; Booking rules too strict; Can&#39;t call or message driver</td><td class="num">20</td><td class="small">Routing team / account team (often an employer setting)</td><td class="small muted">Thank you for raising this. {Route length / booking cut-off / calling the driver} is set together with your company&#39;s transport team. We have passed your feedback to them; you can also raise it with your transport desk directly.</td></tr><tr><td class="small">Safety concern</td><td class="num">5</td><td class="small">Safety &amp; compliance — same day</td><td class="small muted">We are very sorry to read this. Your safety is our priority and we would like to follow up personally. Please write to app@moveinsync.com with the trip date so our safety team can act on it today.</td></tr><tr><td class="small">Cab location wrong or lagging; ETA / arrival time wrong; Notifications missing, late or spammy; Can&#39;t see my bookings / trip details; Booking fails or not recorded</td><td class="num">34</td><td class="small">Platform / backend</td><td class="small muted">Sorry the {cab location / arrival time / notification / booking} was wrong. We are working on {more accurate tracking / reliable notifications / clearer bookings}. If it happens again, please send the trip date to app@moveinsync.com so we can trace it.</td></tr></tbody>
+      </table></div>
+      <p class="note">Counts are distinct reviews within a row; a review naming issues from two rows appears in both.</p>
+    </div>
+  </section>
+
+  <!-- ── (e) Measure ─────────────────────────────────────────────────── -->
+  <section id="measure">
+    <div class="card">
+      <h2>How we'll know it worked</h2>
+      <p class="sub">The monitor (<code>reports/latest.html</code>, refreshed weekly by <code>refresh.bat</code> or GitHub Actions) answers “how are our ratings?” and tracks every fix below against its baseline.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>KPI</th><th class="num">Now</th><th>Target</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>Play Store rating</td><td class="num">4.64★</td><td>Rising week on week; 4.74★ at Safetrax Commuter's 1–2★ share</td><td class="small">Monitor: weekly listing snapshot</td></tr>
+          <tr><td>1★ share of all ratings</td><td class="num">6.4%</td><td>Toward Safetrax Commuter's 3.8%</td><td class="small">Monitor: listing snapshot</td></tr>
+          <tr><td>1–2★ share of written reviews, last 90 days</td><td class="num">28% <span class="ci">25%–32%</span></td><td>Significantly below today (monitor's test)</td><td class="small">Monitor: summary</td></tr>
+          <tr><td>1–2★ reviews answered within 2 working days</td><td class="num">1% answered at all</td><td>≥ 90%</td><td class="small">Monitor: “Reviews answered”</td></tr>
+          <tr><td>Star changes after a reply</td><td class="num">tracking starts now</td><td>More up than down</td><td class="small"><code>review_changes</code> log (new: Play shows only the latest stars)</td></tr>
+          <tr><td>Each fix's issue share</td><td class="num">see below</td><td>“Improved” in the Fix tracker</td><td class="small">Monitor: Fix tracker</td></tr>
+          <tr><td>Crash and ANR rate (Android vitals)</td><td class="num">internal</td><td>Below 1.09% / 0.47%, and 8% on every phone model</td><td class="small">Play Console</td></tr>
+          <tr><td>OTP delivered within 30 s</td><td class="num">internal</td><td>≥ 98%, per operator</td><td class="small">SMS gateway delivery reports</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Fix tracker baselines</h3>
+      <p class="sub small">Share of 1–2★ reviews naming each fix's main issue in the 90 days to the baseline date. With about 205 1–2★ reviews per 90 days the monitor can only confirm large drops — the last column is the share at which the whole 95% interval clears the baseline. Smaller effects show up first in the internal metrics.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Fix</th><th>Main issue</th><th class="num">Baseline</th><th class="num">Confirmed at</th></tr></thead>
+        <tbody><tr><td><a href="#MIS-04"><span class="id">MIS-04</span></a>Fix the &#34;not downloaded from Play Store&#34; false block</td><td class="small">&#39;Not downloaded from Play Store&#39; error</td><td class="num">3.9% <span class="ci">8/207</span></td><td class="num">≤ 1.0%</td></tr><tr><td><a href="#MIS-05"><span class="id">MIS-05</span></a>Stability — fix top crash clusters and replace blank screens with a recoverable screen</td><td class="small">Crash, blank screen or won&#39;t open</td><td class="num">13.0% <span class="ci">27/207</span></td><td class="num">≤ 8.3%</td></tr><tr><td><a href="#MIS-06"><span class="id">MIS-06</span></a>Sign-in that works — OTP delivery fallback and fewer forced logouts</td><td class="small">Login OTP not received</td><td class="num">5.3% <span class="ci">11/207</span></td><td class="num">≤ 2.0%</td></tr><tr><td><a href="#MIS-07"><span class="id">MIS-07</span></a>Boarding — show the OTP first and move the seat-belt check after it</td><td class="small">Hard to use / new UI worse</td><td class="num">7.2% <span class="ci">15/207</span></td><td class="num">≤ 3.4%</td></tr><tr><td><a href="#MIS-08"><span class="id">MIS-08</span></a>Ask happy riders for a rating — in-app review prompt after good trips</td><td class="small">Forced trip rating / feedback</td><td class="num">2.9% <span class="ci">6/207</span></td><td class="num">≤ 0.5%</td></tr><tr><td><a href="#MIS-09"><span class="id">MIS-09</span></a>Find out why notifications are missing or late</td><td class="small">Notifications missing, late or spammy</td><td class="num">3.4% <span class="ci">7/207</span></td><td class="num">≤ 0.5%</td></tr><tr><td><a href="#MIS-10"><span class="id">MIS-10</span></a>Live tracking you can trust — fresher cab location and an &#34;updated X s ago&#34; label</td><td class="small">Cab location wrong or lagging</td><td class="num">5.8% <span class="ci">12/207</span></td><td class="num">≤ 2.4%</td></tr><tr><td><a href="#MIS-11"><span class="id">MIS-11</span></a>My trips — bookings always visible and confirmed</td><td class="small">Can&#39;t see my bookings / trip details</td><td class="num">2.9% <span class="ci">6/207</span></td><td class="num">≤ 0.5%</td></tr><tr><td><a href="#OPS-01"><span class="id">OPS-01</span></a>Follow up every safety concern raised in a review within 24 hours</td><td class="small">Safety concern</td><td class="num">2.4% <span class="ci">5/207</span></td><td class="num"><span class="muted">too rare to confirm</span></td></tr><tr><td><a href="#OPS-02"><span class="id">OPS-02</span></a>Close the loop on complaints — ticket number, status and resolution in the app</td><td class="small">Helpdesk unhelpful / complaints ignored</td><td class="num">9.2% <span class="ci">19/207</span></td><td class="num">≤ 4.9%</td></tr><tr><td><a href="#OPS-03"><span class="id">OPS-03</span></a>Vendor scorecards for late cabs, no-shows and driver behaviour</td><td class="small">Cab late, early or didn&#39;t come</td><td class="num">6.3% <span class="ci">13/207</span></td><td class="num">≤ 2.9%</td></tr><tr><td><a href="#OPS-04"><span class="id">OPS-04</span></a>Review routing rules — long routes and clubbing</td><td class="small">Long routes / bad clubbing</td><td class="num">6.3% <span class="ci">13/207</span></td><td class="num">≤ 2.9%</td></tr><tr><td><a href="#OPS-05"><span class="id">OPS-05</span></a>Account reviews with named employers — calls disabled, cut-offs, forced logout</td><td class="small">Can&#39;t call or message driver</td><td class="num">1.0% <span class="ci">2/207</span></td><td class="num"><span class="muted">too rare to confirm</span></td></tr></tbody>
+      </table></div>
+      <p class="note">Effects take time to show: the 90-day window needs several weeks of post-release reviews, and Play's rating moves gradually because it weights recent ratings. Judge fixes 4–8 weeks after full rollout, and judge releases on Android vitals within days.</p>
+    </div>
+  </section>
+
+  <!-- ── (f) Method ──────────────────────────────────────────────────── -->
+  <section id="method">
+    <div class="card">
+      <h2>Method, accuracy and limits</h2>
+      <ul class="points small">
+        <li><strong>Data.</strong> All 24,317 public Google Play reviews of <code>com.moveinsync.ets</code> (Mar 2014 to 11 Oct 2026, India store, English), the store listing, and three comparable employee-commute apps' listings and replies. Reviewer names are never stored.</li>
+        <li><strong>Tagging.</strong> 10,311 of 10,311 reviews since Jan 2023 are tagged with up to three of 33 issues built from the employee journey, each with a fixed owner and root-cause type. Short praise is tagged by rule; the rest by nemotron-3-ultra-550b-a55b on NVIDIA's free NIM tier, with nemotron-3-super-120b-a12b as fallback.</li>
+<li><strong>Accuracy</strong> on 120 held-out, labelled reference reviews: main issue correct 99% (95% CI 95%–100%), tag precision 99%, recall 90%, 0 safety reviews missed. Recall below 100% means issue shares slightly undercount.</li>        <li><strong>Statistics.</strong> “1–2★ share” = share of 1–2★ reviews in the window naming the issue (95% Wilson interval, n shown). Changes: two-proportion z-test; “emerging” = last 30 days vs the 180 before; releases are Bonferroni-corrected. Rating cost splits each review evenly between the issues it names, so costs add up; it is an upper bound on what a fix can recover.</li>
+        <li><strong>Assumptions.</strong> Scenarios keep today's star mix within 1–2★ and 3–5★ and assume the store's 1–2★ share moves with written 1–2★ reviews (most 1★ ratings carry text). Effort estimates and internal targets are proposals for the owning teams to confirm.</li>
+        <li><strong>Limits.</strong> Written reviews are about 21% of ratings and skew negative: they show <em>what</em> goes wrong and how often relative to other problems, not how many trips go wrong. There is no access to crash, OTP, GPS or trip data — each ticket names the internal metric that would confirm it. Employer settings are invisible from outside. Google's rating formula is private.</li>
+        <li><strong>Google Play facts used</strong> (replies notify users, reply and in-app review rules, recency weighting, Android vitals thresholds, Play Integrity remediation): sources in <a href="../docs/SOURCES.md">docs/SOURCES.md</a>. Full method: <a href="../docs/METHOD.md">docs/METHOD.md</a>.</li>
+        <li><strong>Downloads.</strong> <a href="backlog.xlsx">backlog.xlsx</a> · <a href="backlog_jira.csv">backlog_jira.csv</a> (Jira import) · <a href="reply_playbook.md">reply_playbook.md</a>.</li>
+        <li><strong>Tools.</strong> Python 3.12, pandas, SQLite, google-play-scraper, NVIDIA NIM (Nemotron-3) through the OpenAI-compatible API, Jinja2 with hand-built SVG charts, openpyxl, Typer; pytest, ruff, mypy. Regenerate everything with <code>uv run ratings recommend</code>.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+<div id="tip" role="tooltip"></div>
+<script>
+(() => {
+  // ── Tooltips: every data mark carries data-tip ───────────────────────────────────────────
+  const tip = document.getElementById("tip");
+  const show = (el, x, y) => {
+    tip.textContent = el.getAttribute("data-tip");
+    tip.style.opacity = 1;
+    const r = tip.getBoundingClientRect();
+    tip.style.left = Math.max(8, Math.min(x + 14, innerWidth - r.width - 8)) + "px";
+    tip.style.top = Math.max(8, y - r.height - 12) + "px";
+  };
+  const hide = () => { tip.style.opacity = 0; };
+  document.addEventListener("pointermove", e => {
+    const el = e.target.closest("[data-tip]");
+    el ? show(el, e.clientX, e.clientY) : hide();
+  });
+  document.addEventListener("focusin", e => {
+    const el = e.target.closest("[data-tip]");
+    if (el) { const r = el.getBoundingClientRect(); show(el, r.left + r.width / 2, r.top); }
+  });
+  document.addEventListener("focusout", hide);
+  document.addEventListener("scroll", hide, { passive: true });
+
+  // ── Live indicator: how old the data is; amber once a scheduled refresh looks missed ─────
+  const live = document.querySelector(".live[data-ts]");
+  if (live) {
+    const ts = Date.parse(live.dataset.ts);
+    const text = live.querySelector(".live-text");
+    const ago = ms => {
+      const m = Math.round(ms / 60000);
+      if (m < 1) return "just now";
+      if (m < 60) return m + " min ago";
+      const h = Math.round(m / 60);
+      if (h < 48) return h + " h ago";
+      return Math.round(h / 24) + " days ago";
+    };
+    const tick = () => {
+      if (isNaN(ts)) return;
+      const age = Date.now() - ts;
+      const stale = age > 6 * 3600 * 1000;
+      live.classList.toggle("stale", stale);
+      text.textContent = (stale ? "Last updated " : "Live · updated ") + ago(age);
+    };
+    tick();
+    setInterval(tick, 60000);
+  }
+
+  // ── Theme: automatic → light → dark, remembered on this device when storage allows ───────
+  const btn = document.querySelector(".theme-btn");
+  const root = document.documentElement;
+  const icons = { auto: "◐", light: "☀", dark: "☾" };
+  const names = { auto: "automatic", light: "light", dark: "dark" };
+  const apply = mode => {
+    if (mode === "auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", mode);
+    if (btn) { btn.textContent = icons[mode]; btn.setAttribute("aria-label", "Colour theme: " + names[mode]); }
+  };
+  let mode = "auto";
+  try { mode = localStorage.getItem("ratings-theme") || "auto"; } catch (e) { /* storage blocked */ }
+  apply(mode);
+  if (btn) btn.addEventListener("click", () => {
+    mode = { auto: "light", light: "dark", dark: "auto" }[mode];
+    apply(mode);
+    try { localStorage.setItem("ratings-theme", mode); } catch (e) { /* storage blocked */ }
+  });
+
+  // ── Long tables: show the first rows, expand on request (all rows print) ─────────────────
+  document.querySelectorAll("[data-collapse]").forEach(tbody => {
+    const keep = +tbody.dataset.collapse;
+    const rows = [...tbody.rows].slice(keep);
+    if (!rows.length) return;
+    rows.forEach(r => r.classList.add("folded"));
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "more-btn";
+    btn.textContent = "Show all " + (keep + rows.length);
+    btn.setAttribute("aria-expanded", "false");
+    btn.addEventListener("click", () => {
+      const open = btn.getAttribute("aria-expanded") !== "true";
+      rows.forEach(r => r.classList.toggle("folded", !open));
+      btn.setAttribute("aria-expanded", String(open));
+      btn.textContent = open ? "Show fewer" : "Show all " + (keep + rows.length);
+    });
+    tbody.closest(".table-scroll, table").after(btn);
+  });
+
+  // Print every collapsed detail.
+  addEventListener("beforeprint", () => document.querySelectorAll("details").forEach(d => (d.open = true)));
+})();</script>
+</body>
+</html>
