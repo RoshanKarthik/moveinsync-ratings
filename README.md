@@ -25,29 +25,29 @@ The same files are in this repository and open in any browser, offline:
 | `deliverables/backlog_jira.csv` | The same tickets for Jira's CSV import (Summary, Issue Type, Priority, Labels, Description) |
 | `deliverables/reply_playbook.md` | Google-compliant reply templates per issue, routing, and the current number of unanswered 1–2★ reviews per issue |
 | `reports/latest.html` | The monitor |
-| `docs/METHOD.md` | How the numbers are made, the accuracy results, assumptions and limits |
+| `docs/METHOD.md` | How the numbers are made, the accuracy results, assumptions and limits (regenerated on every run, so its figures match the data) |
 
 ## How it works
 
 Every 2 hours a scheduled GitHub workflow:
 
 1. downloads the Play Store reviews that are new or edited since the last run, plus the store
-   listing and three comparable apps;
-2. sorts each new review into one of 33 issues with an AI model (NVIDIA Nemotron); on 120
-   labelled test reviews it named the right main issue 99% of the time (95% CI 95–100%);
+   listing and the comparable apps in `config.yaml`;
+2. sorts each new review into the issues in `taxonomy.yaml` with an AI model (NVIDIA Nemotron);
+   its measured accuracy, with confidence interval, is on the "How it was built" page;
 3. recomputes every number, with 95% intervals and significance tests;
 4. rebuilds the monitor and the recommendation and publishes them;
 5. sends new alerts to Slack.
 
-Each run takes about 3 minutes. GitHub may start a scheduled run some minutes late when its
+GitHub may start a scheduled run some minutes late when its
 servers are busy. The pages show when they were last updated; the indicator turns amber if a
 refresh has been missed.
 
 **What updates and what does not.** Every number, chart, quote, trend and the Fix tracker update
-on each run (the app gets a few written reviews a day, so many runs change little). The plan
+on each run (runs with no new reviews change little). The plan
 itself (tickets, owners, priorities) comes from `backlog.yaml` and changes only when someone edits
 it, so teams are not chasing a list that reorders itself. When the data shows something the plan
-does not cover (a new emerging or rising issue, or a new top-5 cost), the recommendation shows a
+does not cover (a new emerging or rising issue, or a new top rating cost), the recommendation shows a
 **Not yet in the plan** box at the top.
 
 **Alerts.** After each refresh, `ratings alerts` posts to Slack when something needs a person
@@ -93,9 +93,9 @@ uv run ratings alerts    # send new alerts to Slack (--dry-run: only print them)
 | Path | What it is |
 |---|---|
 | `config.yaml` | The app, comparison apps, analysis windows and models. No secrets. |
-| `taxonomy.yaml` | The 33 issues reviews are sorted into, each with its journey stage, owner and root-cause type |
+| `taxonomy.yaml` | The issues reviews are sorted into, each with its journey stage, owner and root-cause type |
 | `backlog.yaml` | The recommended fixes and reply templates: the judgement behind the recommendation. Every number is added from the data at build time. |
-| `data/eval/` | The tagging model's measured accuracy on 120 labelled test reviews, shown on both pages |
+| `data/eval/` | The tagging model's measured accuracy on the held-out labelled test reviews, shown on every page |
 | `docs/` | How the numbers are made (`METHOD.md`) and the Google Play sources (`SOURCES.md`); linked from the pages |
 | `src/moveinsync_ratings/` | The code: `fetch` → `store` → `tagger` → `analysis` → `report` / `recommend` |
 | `.github/workflows/refresh.yml` | The 2-hourly refresh and publish |
