@@ -624,6 +624,7 @@ def latest_eval(settings: Settings) -> dict[str, Any] | None:
     if not files:
         return None
     data: dict[str, Any] = json.loads(Path(files[-1]).read_text(encoding="utf-8"))
+    data.setdefault("date", files[-1].stem.split("_")[1])  # eval_<YYYY-MM-DD>_test.json
     return data
 
 
@@ -678,6 +679,8 @@ def analyse(settings: Settings, tax: Taxonomy, store: Store) -> dict[str, Any]:
         "visible": visible_section(df, end, a.comparison_days),
         "benchmark_reviews": benchmark_reviews(store, settings, end, a.comparison_days),
         "rating_changes": changes_section(store, settings.app.id),
-        "eval": {"set": ev["set"], "result": best} if ev and best else None,
+        "eval": {"set": ev["set"], "date": ev["date"], "result": best, "results": ev["results"]}
+        if ev and best
+        else None,
         "end_iso": (end - timedelta(0)).isoformat(),
     }
