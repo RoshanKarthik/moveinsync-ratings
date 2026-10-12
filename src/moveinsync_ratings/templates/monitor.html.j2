@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Play Store Ratings Monitor</title>
+<meta name="description" content="Why the MoveInSync employee app is rated the way it is — refreshed {{ a.data_through }}.">
+<script>try{var t=localStorage.getItem("ratings-theme");if(t&&t!=="auto")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<style>
+{% include "_base.css" %}
+</style>
+</head>
+<body>
+{% set main = a.listing.main %}
+{% set W = a.windows %}
+{% set I = a.issues %}
+{% set active = "monitor" %}{% set monitor_href = "latest.html" %}{% set rec_href = "../deliverables/recommendation.html" %}
+{% include "_appbar.html.j2" %}
+<div class="wrap">
+  <header class="page-title">
+    <h1>How are our Play Store ratings?</h1>
+    <div class="sub">{{ a.app.name }} · <code>{{ a.app.id }}</code> · reviews up to <strong>{{ a.data_through }}</strong> · {{ a.counts.reviews | num }} reviews since {{ a.counts.first_review }}</div>
+  </header>
+
+  <!-- ── Summary ─────────────────────────────────────────────────────────── -->
+  <section id="summary" style="margin-top:0">
+    <div class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Google Play rating</div>
+        <div class="hero-row">
+          <span class="hero-value">{{ main.score | f2 }}</span>
+          <span class="stars" style="--pct: {{ '%.1f' | format(main.score / 5 * 100) }}%" role="img" aria-label="{{ main.score | f2 }} out of 5 stars"></span>
+        </div>
+        <div class="hero-ctx">{{ main.ratings | num }} ratings · {{ main.one_star.p | pct(1) }} are 1★ · version {{ main.version }}</div>
+        <div class="peers" aria-label="Rating compared with similar apps">
+          {% set peers = [main] + a.listing.benchmarks %}
+          {% for b in peers | sort(attribute="score", reverse=True) %}
+          <div class="peer{{ ' me' if b.id == main.id else '' }}" data-tip="{{ b.name }}: {{ b.score | f2 }}★ from {{ b.ratings | num }} ratings, {{ b.one_star.p | pct(1) }} are 1★" tabindex="0">
+            <span>{{ "This app" if b.id == main.id else b.name }}</span>
+            <span class="bar"><span style="width: {{ '%.1f' | format((b.score - 1) / 4 * 100) }}%"></span></span>
+            <span class="num">{{ b.score | f2 }}★</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% if c.rating_history %}
+        <div class="hero-chart">
+          <div class="eyebrow" style="margin-bottom:4px">Rating at each refresh</div>
+          {{ c.rating_history | safe }}
+        </div>
+        {% endif %}
+      </div>
+      <div class="card" style="margin-top:0">
+        <h2>What's happening</h2>
+        <p class="sub small">Generated from this refresh's numbers; a change is called only when it is statistically significant. Tile sparklines show the last 12 months.</p>
+        <ul class="signals">
+          {% for p in summary %}<li class="sig-{{ p.kind }}"><span class="sig-icon" aria-hidden="true">{{ {"bad": "▲", "good": "✓", "info": "●"}[p.kind] }}</span><span><span class="sr-only">{{ {"bad": "Needs attention", "good": "Good", "info": "Note"}[p.kind] }}: </span>{{ p.text }}</span></li>{% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid-3 tiles">
+      {% for t in tiles %}
+      <div class="tile">
+        <div class="label">{{ t.label }}</div>
+        <div class="tile-row">
+          <div class="value {{ t.value_cls or '' }}">{{ t.value }}</div>
+          {{ t.spark | safe }}
+        </div>
+        <div class="delta" title="{{ t.delta.title }}"><strong class="{{ t.delta.cls }}">{{ t.delta.text }}</strong> <span class="note">{{ t.delta.note }}</span></div>
+        <div class="ctx">{{ t.ctx }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if actions %}
+    <div class="card" style="margin-top:12px">
+      <h2>Do this week</h2>
+      <p class="sub small">Triggered by this refresh's numbers; each card says what triggered it.</p>
+      <div class="actions">
+        {% for x in actions %}
+        <article class="action p-{{ {'Today': 'today', 'This week': 'week', 'Watch': 'watch', 'FYI': 'fyi'}.get(x.priority, 'week') }}">
+          <div class="action-top"><span class="chip {{ 'worse' if x.priority == 'Today' else '' }}">{{ x.priority }}</span><span>{{ x.owner }}</span></div>
+          <p class="action-title">{{ x.action }}</p>
+          <p class="action-why">{{ x.evidence }}</p>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </section>
+
+  <nav class="toc" aria-label="Sections" style="margin-top:22px">
+    <a href="#issues">What drives bad ratings</a><a href="#why">Root causes</a>
+    <a href="#trend">Trend</a><a href="#releases">Releases</a><a href="#replies">Replies</a><a href="#silent">Who rates</a>
+    <a href="#visible">Most-read reviews</a><a href="#safety">Safety</a>{% if tracker %}<a href="#tracker">Fix tracker</a>{% endif %}<a href="#method">Method</a>
+  </nav>
+
+  <!-- ── Issues ──────────────────────────────────────────────────────────── -->
+  <section id="issues">
+    <div class="card">
+      <h2>What drives bad ratings</h2>
+      <p class="sub">Each bar is the share of 1–2★ reviews in the last {{ W.recent.days }} days ({{ I.recent_neg_n }} reviews) that name the issue, with its 95% confidence interval. A review can name up to three issues. Colour shows the kind of root cause.</p>
+      <div class="legend">
+        {% for k, label in [("defect","Broken (bug or wrong data)"),("design","Works, but badly designed"),("policy","Rule set by MoveInSync or employer"),("service","Cab, driver or helpdesk failed"),("gap","Missing feature")] %}
+        <span><i style="background:var({{ root_vars[k] }})"></i>{{ label }}</span>
+        {% endfor %}
+      </div>
+      {{ c.issues | safe }}
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Every issue, ranked by its cost to the rating</h3>
+      <p class="sub small"><strong>Rating cost</strong> = stars of average written rating lost to this issue over the last {{ W.year.days }} days: its 1–2★ reviews are re-scored at the average of reviewers with no complaint ({{ I.alt_score | f2 }}★). It is an upper bound on what fixing the issue could recover, used to rank issues; a review naming several issues is split between them so costs add up.</p>
+      <div class="table-scroll">
+      <table>
+        <thead><tr>
+          <th>#</th><th>Issue</th><th>Owner</th><th class="num">Rating cost</th><th class="num">Last {{ W.recent.days }}d</th><th class="num">Before</th><th>Trend</th><th>12 months</th><th class="num">Tag precision</th>
+        </tr></thead>
+        <tbody data-collapse="10">
+        {% for i in I.issues if i.year.k > 0 %}
+          <tr>
+            <td class="num">{{ i.rank }}</td>
+            <td><span class="sw" style="background:var({{ root_vars[i.root] }})"></span>{{ i.label }}
+              <details><summary>Evidence</summary>
+                <div class="small muted">{{ i.stage }} · {{ i.root_label }} · named in {{ i.mentions_year }} reviews in a year (avg {{ i.mean_stars_when_mentioned | f2 }}★){% if i.blames_update.k %} · {{ i.blames_update.p | pct }} blame a recent update{% endif %}</div>
+                {% if i.details %}<div class="small" style="margin-top:6px"><strong>Most common specifics:</strong> {% for d, n in i.details %}{{ d }} ({{ n }}){% if not loop.last %}; {% endif %}{% endfor %}</div>{% endif %}
+                {% for e in i.examples %}<blockquote>“{{ e.text }}”<span class="meta">{{ e.stars }}★ · {{ e.date }}{% if e.version %} · v{{ e.version }}{% endif %}{% if e.upvotes %} · {{ e.upvotes }} found helpful{% endif %}</span></blockquote>{% endfor %}
+              </details>
+            </td>
+            <td class="small">{{ i.owner }}</td>
+            <td class="num">−{{ i.rating_cost | f3 }}★</td>
+            <td class="num">{{ i.recent.p | pct }} <span class="ci">{{ i.recent.lo | pct }}–{{ i.recent.hi | pct }}</span></td>
+            <td class="num">{{ i.prior.p | pct }}</td>
+            <td><span class="chip {{ i.trend }}">{{ i.trend }}</span></td>
+            <td>{{ i.spark | safe }}</td>
+            <td class="num">{% if i.tag_quality and i.tag_quality.predicted %}{{ i.tag_quality.precision | pct }} <span class="ci">of {{ i.tag_quality.predicted }}</span>{% else %}<span class="muted">—</span>{% endif %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      </div>
+      <p class="note">Trend compares the last {{ W.recent.days }} days with the {{ W.recent.days }} days before; “rising”/“falling” only when the change is statistically significant (p &lt; 0.05). Tag precision = how often the model's use of that tag matched the reference labels on the {{ a.eval.result.n if a.eval else '' }} held-out reviews, out of the number of times it used the tag (“of n”); — = too rare in the test set to measure.</p>
+    </div>
+  </section>
+
+  <!-- ── Root causes ─────────────────────────────────────────────────────── -->
+  <section id="why">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Why reviews are negative</h2>
+        <p class="sub">Root cause of the main issue in each 1–2★ review, last {{ W.year.days }} days ({{ I.year_neg_n | num }} reviews).</p>
+        <table>
+          <tbody>
+          {% for k, s in I.roots.items() %}
+            <tr><td><span class="sw" style="background:var({{ root_vars[k] }})"></span>{{ {"defect":"Broken (bug or wrong data)","design":"Works, but badly designed","policy":"Rule set by MoveInSync or employer","service":"Cab, driver or helpdesk failed","gap":"Missing feature","unspecified":"No specific reason given"}[k] }}</td>
+            <td class="num">{{ s.p | pct }}</td><td class="num ci">{{ s.lo | pct }}–{{ s.hi | pct }}</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h2>Where in the journey</h2>
+        <p class="sub">Share of 1–2★ reviews naming at least one issue at each stage, last {{ W.year.days }} days.</p>
+        <table>
+          <tbody>
+          {% for s in I.stages %}
+            <tr><td>{{ s.stage }}</td><td class="num">{{ s.p | pct }}</td><td class="num ci">{{ s.lo | pct }}–{{ s.hi | pct }}</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <p class="note">Unhappy with: {% for k, s in I.targets.items() %}{{ {"app":"the app","service":"the service","both":"both","none":"unclear"}[k] }} {{ s.p | pct }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Trend ───────────────────────────────────────────────────────────── -->
+  <section id="trend">
+    <div class="card">
+      <h2>Negative reviews over time</h2>
+      <p class="sub">Share of written reviews that are 1–2★, per month, with 95% confidence band. The current month is faded until it completes.</p>
+      {{ c.neg_trend | safe }}
+    </div>
+    <div class="card">
+      <h2>Average stars of written reviews</h2>
+      {{ c.mean_trend | safe }}
+    </div>
+  </section>
+
+  <!-- ── Releases ────────────────────────────────────────────────────────── -->
+  <section id="releases">
+    <div class="card">
+      <h2>Release health</h2>
+      <p class="sub">Share of 1–2★ reviews per app version (versions with at least {{ a.versions[0].n if false else 25 }} reviews in the last {{ W.year.days }} days). <span style="color:var(--critical-ink)">●</span> significantly worse than other releases, <span style="color:var(--serious)">●</span> watch (p &lt; 0.05 but could be chance across {{ a.versions[0].tests if a.versions else 0 }} releases), <span style="color:var(--good-ink)">●</span> significantly better. The horizontal line is the share across all these releases.</p>
+      {{ c.releases | safe }}
+      <details><summary>Table</summary>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Version</th><th>First review</th><th class="num">Reviews</th><th class="num">1–2★</th><th class="num">95% CI</th><th class="num">p</th><th>Top issues in its 1–2★ reviews</th></tr></thead>
+          <tbody>{% for v in a.versions | reverse %}<tr><td>{{ v.version }}</td><td>{{ v.first_seen }}</td><td class="num">{{ v.n }}</td><td class="num">{{ v.neg.p | pct }}</td><td class="num ci">{{ v.neg.lo | pct }}–{{ v.neg.hi | pct }}</td><td class="num">{{ "%.3f" | format(v.p) }}</td><td class="small">{% for code, n in v.top_issues %}{{ tax.issues[code].label }} ({{ n }}){% if not loop.last %}, {% endif %}{% endfor %}</td></tr>{% endfor %}</tbody>
+        </table></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── Replies ─────────────────────────────────────────────────────────── -->
+  <section id="replies">
+    <div class="card">
+      <h2>Do we answer reviews?</h2>
+      <p class="sub">Share of reviews with a developer reply, per quarter. Users are notified of a reply and can update their rating.</p>
+      {{ c.replies | safe }}
+      <div class="table-scroll"><table style="margin-top:10px">
+        <thead><tr><th>App</th><th class="num">Reviews, last {{ W.year.days }}d</th><th class="num">Answered</th><th class="num">1–2★ answered</th><th class="num">Avg written ★</th></tr></thead>
+        <tbody>
+          <tr><td><strong>{{ a.app.name }}</strong></td><td class="num">{{ W.year.n | num }}</td><td class="num">{{ W.year.replied.p | pct }}</td><td class="num">{{ W.year.replied_neg.p | pct }}</td><td class="num">{{ W.year.mean.mean | f2 }}</td></tr>
+          {% for b in a.benchmark_reviews %}<tr><td>{{ b.name }}</td><td class="num">{{ b.n | num }}</td><td class="num">{{ b.replied.p | pct }}</td><td class="num">{{ b.replied_neg.p | pct }}</td><td class="num">{{ b.mean | f2 }}</td></tr>{% endfor %}
+        </tbody>
+      </table></div>
+      <p class="note">Last MoveInSync reply: {{ a.replies.last_reply }}.</p>
+    </div>
+  </section>
+
+  <!-- ── Silent majority ─────────────────────────────────────────────────── -->
+  <section id="silent">
+    <div class="card">
+      <h2>Who rates, and who writes</h2>
+      <p class="sub">People who only tap stars average <strong>{{ a.gap.star_only_mean | f2 }}★</strong>; people who write a review average <strong>{{ a.gap.written_mean | f2 }}★</strong>. Written reviews are {{ a.gap.written_share_of_ratings | pct }} of all ratings — but they are what every new employee reads on the store page.</p>
+      {{ c.star_mix | safe }}
+      <p class="note">Star-only = Play Store star counts minus written reviews per star (approximate: Google rescales its published star counts to match its recency-weighted rating, and they cover all languages).</p>
+      <div class="table-scroll"><table style="margin-top:10px">
+        <thead><tr><th>App</th><th class="num">Rating</th><th class="num">Ratings</th><th class="num">1★ share</th><th class="num">Installs</th></tr></thead>
+        <tbody>
+          <tr><td><strong>{{ main.name }}</strong></td><td class="num">{{ main.score | f2 }}</td><td class="num">{{ main.ratings | num }}</td><td class="num">{{ main.one_star.p | pct(1) }}</td><td class="num">{{ main.installs | num }}</td></tr>
+          {% for b in a.listing.benchmarks %}<tr><td>{{ b.name }}</td><td class="num">{{ b.score | f2 }}</td><td class="num">{{ b.ratings | num }}</td><td class="num">{{ b.one_star.p | pct(1) }}</td><td class="num">{{ b.installs | num }}</td></tr>{% endfor %}
+          {% for b in a.listing.siblings %}<tr class="muted"><td>{{ b.name }} <span class="small">(MoveInSync)</span></td><td class="num">{{ b.score | f2 }}</td><td class="num">{{ b.ratings | num }}</td><td class="num">{{ b.one_star.p | pct(1) }}</td><td class="num">{{ b.installs | num }}</td></tr>{% endfor %}
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ── Most visible ────────────────────────────────────────────────────── -->
+  <section id="visible">
+    <div class="card">
+      <h2>The negative reviews people read most</h2>
+      <p class="sub">Most “found helpful” 1–2★ reviews of the last {{ W.year.days }} days — Play shows these first. Unanswered ones are the quickest wins for a reply.</p>
+      {% for v in a.visible %}
+      <blockquote>“{{ v.text }}”<span class="meta">{{ v.stars }}★ · {{ v.date }} · {{ v.upvotes }} found helpful · {% if v.replied %}answered{% else %}<strong class="delta-bad">not answered</strong>{% endif %}{% if v.issues %} · {% for c in v.issues %}{{ tax.issues[c].label }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</span></blockquote>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ── Safety ──────────────────────────────────────────────────────────── -->
+  <section id="safety">
+    <div class="card">
+      <h2>Safety concerns raised in reviews</h2>
+      <p class="sub">{{ a.safety.n }} of {{ a.safety.of | num }} reviews in the last {{ W.year.days }} days raise a personal-safety concern. Every one is listed for the safety team — these are never just a statistic. (A further {{ a.safety.praise }} reviews praise safety; they are not counted here.)</p>
+      <details {% if a.safety.n <= 6 %}open{% endif %}><summary>Show all {{ a.safety.n }}</summary>
+        {% for s in a.safety.reviews %}<blockquote>“{{ s.text }}”<span class="meta">{{ s.stars }}★ · {{ s.date }} · {% if s.replied %}answered{% else %}not answered{% endif %}</span></blockquote>{% endfor %}
+      </details>
+    </div>
+  </section>
+
+  {% if a.orgs %}
+  <section id="orgs">
+    <div class="card">
+      <h2>Employers named in reviews</h2>
+      <p class="sub">Employers named by at least 3 reviewers since Jan 2023. Useful for account teams; small numbers — treat as a lead, not a verdict.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Employer</th><th class="num">Reviews</th><th class="num">1–2★</th><th>Top issues</th></tr></thead>
+        <tbody>{% for o in a.orgs %}<tr><td>{{ o.org }}</td><td class="num">{{ o.n }}</td><td class="num">{{ o.neg.p | pct }}</td><td class="small">{% for code, n in o.top_issues %}{{ tax.issues[code].label }} ({{ n }}){% if not loop.last %}, {% endif %}{% endfor %}</td></tr>{% endfor %}</tbody>
+      </table></div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if tracker %}
+  <section id="tracker">
+    <div class="card">
+      <h2>Fix tracker</h2>
+      <p class="sub">Each recommended fix, and whether its issue's share of negative reviews has moved since the recommendation baseline. “Improved” / “worse” only when the whole 95% interval is past the baseline.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Fix</th><th>Issue</th><th class="num">Baseline</th><th class="num">Now (last {{ W.recent.days }}d)</th><th>Status</th></tr></thead>
+        <tbody>{% for t in tracker %}<tr><td><strong>{{ t.id }}</strong> {{ t.title }}</td><td class="small">{{ t.issue }}</td><td class="num">{{ t.baseline | pct }}</td><td class="num">{{ t.now.p | pct }} <span class="ci">{{ t.now.lo | pct }}–{{ t.now.hi | pct }}</span></td><td><span class="chip {{ t.status.split()[0] }}">{{ t.status }}</span></td></tr>{% endfor %}</tbody>
+      </table></div>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ── Method ──────────────────────────────────────────────────────────── -->
+  <section id="method">
+    <div class="card">
+      <h2>How this report is made</h2>
+      <ul class="points small">
+        <li><strong>Data:</strong> all public Google Play reviews of <code>{{ a.app.id }}</code> (India, English — over 99% of reviews), the store listing, and three comparable employee-commute apps. Reviewer names are never stored.</li>
+        <li><strong>Tagging:</strong> {{ a.counts.tagged | num }} of {{ a.counts.tag_window | num }} reviews since {{ a.counts.first_review if false else "Jan 2023" }} are tagged with issues from a {{ tax.issues | length }}-code taxonomy built from the employee journey.
+          Model{{ "s" if a.models | length > 1 else "" }}: {{ a.models | join(", ") }}{% if a.models | length > 1 %} — each review is tagged by every model and an issue counts when most of them agree (average agreement {{ a.counts.agreement_mean | pct }}){% endif %}.</li>
+        {% if a.eval %}<li><strong>Accuracy</strong> on {{ a.eval.result.n }} held-out, labelled reference reviews: main issue correct {{ a.eval.result.primary_accuracy | pct }} (95% CI {{ a.eval.result.primary_ci95[0] | pct }}–{{ a.eval.result.primary_ci95[1] | pct }}), tag precision {{ a.eval.result.label_precision | pct }}, recall {{ a.eval.result.label_recall | pct }}.</li>{% endif %}
+        <li><strong>Statistics:</strong> shares carry 95% Wilson intervals; changes use a two-proportion z-test; release comparisons are Bonferroni-corrected. Dates are India time.</li>
+        <li><strong>Refresh:</strong> double-click <code>refresh.bat</code> or run <code>uv run ratings refresh</code>. Only new or edited reviews are downloaded and tagged.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+<footer class="site-foot">Public Google Play data; reviewer names are never stored. Refreshed by the scheduled workflow or <code>refresh.bat</code>. Recommendation: <a href="../deliverables/recommendation.html">what to fix first</a>.</footer>
+<div id="tip" role="tooltip"></div>
+<script>
+{% include "_ui.js" %}
+</script>
+</body>
+</html>

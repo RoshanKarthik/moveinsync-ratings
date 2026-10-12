@@ -1,0 +1,17 @@
+{# Shared top bar. Needs: active ("monitor" | "recommendation"), monitor_href, rec_href, a. #}
+<header class="appbar">
+  <div class="appbar-in">
+    <a class="brand" href="{{ monitor_href }}">
+      <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 6.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L16 21.1l-5.9 3.2 1.3-6.5-4.9-4.5 6.6-.8z" fill="#fff"/></svg>
+      <span class="brand-text"><strong>Ratings Monitor</strong><span class="brand-sub">{{ a.app.name }}</span></span>
+    </a>
+    <nav class="tabs" aria-label="Pages">
+      <a href="{{ monitor_href }}"{% if active == "monitor" %} aria-current="page"{% endif %}>Monitor</a>
+      <a href="{{ rec_href }}"{% if active == "recommendation" %} aria-current="page"{% endif %}>Recommendation</a>
+    </nav>
+    <div class="appbar-right">
+      <span class="live" data-ts="{{ a.generated_iso }}" title="Data refreshed {{ a.generated_at }}; reviews up to {{ a.data_through }}"><i aria-hidden="true"></i><span class="live-text">Updated {{ a.generated_at }}</span></span>
+      <button class="theme-btn" type="button" aria-label="Colour theme: automatic" title="Colour theme">◐</button>
+    </div>
+  </div>
+</header>
