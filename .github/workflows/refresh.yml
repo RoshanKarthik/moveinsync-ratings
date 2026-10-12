@@ -1,5 +1,6 @@
 # Refreshes the ratings monitor and the recommendation every 2 hours and on demand.
-# On demand: GitHub → Actions → "Refresh ratings report" → Run workflow.
+# On demand: GitHub → Actions → "Refresh ratings report" → Run workflow. A manual run also
+# checks the setup first (one test call to the model), so a bad key shows its exact error.
 #
 # One-time setup:
 #   1. Settings → Secrets and variables → Actions → New secret: NVIDIA_API_KEY = nvapi-...
@@ -55,6 +56,16 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
+
+      # Scheduled runs call the model only when there are new reviews; a manual run always
+      # tests the key, so a bad or expired one shows its exact error here. Never stops the run.
+      - name: Check setup (model key, Google Play)
+        if: github.event_name == 'workflow_dispatch'
+        continue-on-error: true
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          CI: "1"
+        run: uv run ratings doctor
 
       - name: Refresh (download, tag, monitor)
         env:
