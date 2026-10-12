@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-13",
+  "method": "Random sample (Python random.Random(2026)), 20 per reference set, each label re-read against the definitions in taxonomy.yaml with AI assistance.",
+  "seed": 2026,
+  "reviewed": {
+    "dev": 20,
+    "test": 20
+  },
+  "sample": [
+    "d642e79f-81cf-4aa2-8ea1-973a75a3a17d",
+    "2b0213c8-2dfe-4116-aecc-a27929059916",
+    "fc7a96bf-10c7-47a2-8ba1-876d67adb5f0",
+    "a4c2845e-5230-40cc-99ab-c1f90d048fec",
+    "34f4e9e2-9dcb-401d-b60a-27d598066eb4",
+    "711667e7-c0a4-4f9b-bcda-6961beb28537",
+    "50d2a069-4bdc-4f56-80a0-8140c2149a22",
+    "782c4844-7afd-417f-b1ce-3c3019dfc8fb",
+    "6dcbea8e-787b-4c8d-a1d1-a0bb7ded9121",
+    "fc9ef686-e301-4edb-8a4f-46413eea51c6",
+    "88230a2b-04e7-412c-b25a-ff3b604c5589",
+    "e8adb0f1-5039-4ff7-9f3b-6d9f98638fdc",
+    "1d842e0b-279a-49eb-99ad-23eaa43ceae5",
+    "197db894-c960-4cee-851d-f1a8401ec457",
+    "7804617c-c8c1-420c-9020-3ab6d982f05f",
+    "5b0b22d9-500a-444f-bd12-c1ee93fadf23",
+    "88ab92a8-1128-4cdf-a521-c6997f826492",
+    "d39ac007-db0c-4ad6-b607-9e0a77674e42",
+    "76c66a55-e366-43cf-88c4-d59ad99e18d3",
+    "64584f42-2a9b-4133-be17-269e7d4e06e1",
+    "b2474ac0-877f-4d75-b6b7-e546ca1efbd6",
+    "96f22a30-4868-4dcc-b2bc-d69d01446d03",
+    "f3acdd08-3636-4419-96d1-2fbc829b7212",
+    "f350062c-ff8a-4c1b-8b6d-480f1f67497f",
+    "edf9c82f-f269-4a7a-a3b4-a6342ea5afc3",
+    "9188bf32-0368-4ca6-bbc6-c0130eb30a7f",
+    "d30d5418-ac4e-4f39-aad1-17b0eaf5b785",
+    "16b0e08d-a18e-4fcc-99d5-7fdc5acfcba8",
+    "be4a7099-a96b-4dca-af45-2f3b0463dffa",
+    "b3b7662f-2e43-4171-9a26-d482d59308ec",
+    "32c5c515-3e4d-4100-a284-a30e08fdae3e",
+    "4fe4be30-3c7e-4093-87a1-c9fe03889423",
+    "4114f6dd-c75a-4ea2-b5e5-8d7a34285909",
+    "b560d395-e19f-41c8-8329-434b91668f13",
+    "59a9a227-cdf2-46c2-a519-a88f4bdcb54e",
+    "57e9771b-2587-4824-a4e9-6cfb90480170",
+    "75c2fbcd-e1c8-4dc3-a3aa-2715e3c67e85",
+    "c6d30800-250c-4541-9335-7e6114e0474b",
+    "5bcffb12-45cb-4e75-8a8b-ec5b525646ac",
+    "248339f0-2adb-4391-a02c-e3c862235a37"
+  ],
+  "changed": [
+    {
+      "review_id": "64584f42-2a9b-4133-be17-269e7d4e06e1",
+      "set": "dev",
+      "before": {
+        "issues": [
+          "slow_or_hangs",
+          "checkin_friction"
+        ],
+        "also_ok": [
+          "crash_or_wont_open"
+        ]
+      },
+      "after": {
+        "issues": [
+          "slow_or_hangs",
+          "checkin_friction",
+          "crash_or_wont_open"
+        ],
+        "also_ok": []
+      },
+      "why": "Definition of crash_or_wont_open covers 'will not open ... needs reinstalling'; the review says it never loads and must be reinstalled."
+    }
+  ]
+}

@@ -675,6 +675,24 @@ def latest_eval(settings: Settings) -> dict[str, Any] | None:
     return data
 
 
+def latest_spot_check(settings: Settings) -> dict[str, Any] | None:
+    """The latest re-check of the reference labels (data/eval/spot_check_<date>.json), summarised."""
+    folder = settings.root / "data" / "eval"
+    files = sorted(folder.glob("spot_check_*.json")) if folder.exists() else []
+    if not files:
+        return None
+    d: dict[str, Any] = json.loads(files[-1].read_text(encoding="utf-8"))
+    changed = d.get("changed", [])
+    return {
+        "file": f"data/eval/{files[-1].name}",
+        "date": pd.Timestamp(d["date"]).strftime("%d %b %Y"),
+        "reviewed": sum(d["reviewed"].values()),
+        "by_set": d["reviewed"],
+        "changed": len(changed),
+        "changed_test": sum(1 for c in changed if c.get("set") == "test"),
+    }
+
+
 def analyse(settings: Settings, tax: Taxonomy, store: Store) -> dict[str, Any]:
     df = load_frame(store, settings.app.id)
     if df.empty:
@@ -728,6 +746,7 @@ def analyse(settings: Settings, tax: Taxonomy, store: Store) -> dict[str, Any]:
         "visible": visible_section(df, end, a.comparison_days),
         "benchmark_reviews": benchmark_reviews(store, settings, end, a.comparison_days),
         "rating_changes": changes_section(store, settings.app.id),
+        "spot_check": latest_spot_check(settings),
         "eval": {"set": ev["set"], "date": ev["date"], "result": best, "results": ev["results"]}
         if ev and best
         else None,

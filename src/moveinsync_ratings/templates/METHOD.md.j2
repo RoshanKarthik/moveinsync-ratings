@@ -94,8 +94,14 @@ Per-issue precision is shown in the report next to each issue.
 
 > **Who labelled the reference sets:** the reference labels were written by the analyst with an
 > AI assistant, against the written definitions in `taxonomy.yaml`, before any tagging
-> model was run. Spot-check by the author: _[to be completed: number of labels reviewed and
-> number changed]_.
+> model was run. {% if a.spot_check %}{% set sc = a.spot_check %}Spot-check ({{ sc.date }}): {{ sc.reviewed }} labels drawn at random
+> ({% for k, n in sc.by_set.items() %}{{ n }} {{ k }}{% if not loop.last %}, {% endif %}{% endfor %}) were re-read against the definitions in `taxonomy.yaml` with AI
+> assistance; {{ sc.changed }} {{ "was" if sc.changed == 1 else "were" }} changed{% if sc.changed and not sc.changed_test %}, none in the test set, so
+> the held-out scores above are unaffected{% elif sc.changed_test %}, {{ sc.changed_test }} in the test set (the scores above
+> were measured before the change){% endif %}. The sample's review ids and the reason for each change are in
+> `{{ sc.file }}`.{% else %}Spot-check by the author: _[to be completed: number of labels reviewed and
+> number changed]_.{% endif %}
+
 
 **Safety precision.** After the first full run, the model was found to flag *praise* about safety
 ("safe ride") as well as concerns. Two fixes followed:
