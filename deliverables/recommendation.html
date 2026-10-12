@@ -184,7 +184,7 @@ details summary { cursor: pointer; color: var(--accent); font-size: 13.5px; }
 nav.toc { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 0; }
 nav.toc a { font-size: 13px; text-decoration: none; padding: 3px 10px; border-radius: 999px; background: var(--chip); color: var(--ink-2); }
 #tip { position: fixed; z-index: 10; max-width: 340px; pointer-events: none; background: var(--ink); color: var(--page); font-size: 12.5px; line-height: 1.4; padding: 7px 10px; border-radius: 8px; opacity: 0; transition: opacity 0.08s; }
-/* ── App bar (shared by the monitor and the recommendation) ─────────────────────────────── */
+/* ── App bar (shared by every page) ─────────────────────────────── */
 .appbar { position: sticky; top: 0; z-index: 20; background: var(--appbar); -webkit-backdrop-filter: saturate(1.4) blur(10px); backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--border); }
 .appbar-in { max-width: 1080px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px 20px; flex-wrap: wrap; }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-width: 0; }
@@ -193,6 +193,7 @@ nav.toc a { font-size: 13px; text-decoration: none; padding: 3px 10px; border-ra
 .brand-sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tabs { display: flex; gap: 4px; background: var(--chip); padding: 3px; border-radius: 10px; }
 .tabs a { font-size: 13.5px; text-decoration: none; color: var(--ink-2); padding: 5px 12px; border-radius: 8px; }
+.tabs .t-short { display: none; }
 .tabs a[aria-current="page"] { background: var(--card); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); }
 .appbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .live { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
@@ -261,6 +262,8 @@ tr.folded { display: none; }
   .appbar-in { flex-wrap: nowrap; gap: 10px; }
   .live { gap: 0; }
   .tabs a { padding: 5px 9px; }
+  .tabs .t-long { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .tabs .t-short { display: inline; }
 }
 
 @media print {
@@ -327,10 +330,11 @@ table.scen td, table.scen th { font-size: 14px; }
     </a>
     <nav class="tabs" aria-label="Pages">
       <a href="../reports/latest.html">Monitor</a>
-      <a href="recommendation.html" aria-current="page">Recommendation</a>
+      <a href="recommendation.html" aria-current="page"><span class="t-long">Recommendation</span><span class="t-short" aria-hidden="true">Plan</span></a>
+      <a href="approach.html"><span class="t-long">How it was built</span><span class="t-short" aria-hidden="true">Method</span></a>
     </nav>
     <div class="appbar-right">
-      <span class="live" data-ts="2026-10-12T20:24:33+00:00" title="Data refreshed 13 Oct 2026, 01:54; reviews up to 11 Oct 2026"><i aria-hidden="true"></i><span class="live-text">Updated 13 Oct 2026, 01:54</span></span>
+      <span class="live" data-ts="2026-10-12T21:10:03+00:00" title="Data refreshed 13 Oct 2026, 02:40; reviews up to 11 Oct 2026"><i aria-hidden="true"></i><span class="live-text">Updated 13 Oct 2026, 02:40</span></span>
       <button class="theme-btn" type="button" aria-label="Colour theme: automatic" title="Colour theme">◐</button>
     </div>
   </div>
@@ -340,7 +344,7 @@ table.scen td, table.scen th { font-size: 14px; }
       <h1>What to fix first to raise the employee app's Play Store rating</h1>
       <div class="sub">MoveInSync (employee app) · <code>com.moveinsync.ets</code> · as of Play Store reviews to <strong>11 Oct 2026</strong> (store snapshot 2026-10-12)</div>
     </div>
-    <div class="sub small">Recommendation · evidence refreshed 13 Oct 2026, 01:54 · plan written 2026-10-09 · <a href="../reports/latest.html">Live ratings monitor</a></div>
+    <div class="sub small">Recommendation · evidence refreshed 13 Oct 2026, 02:40 · plan written 2026-10-09 · <a href="../reports/latest.html">Live ratings monitor</a></div>
   </header>
   <nav class="toc" aria-label="Sections">
     <a href="#answer">The answer</a><a href="#why">Why</a><a href="#plan">What to do first</a><a href="#scenario">What it adds up to</a>
@@ -934,7 +938,7 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
     </div>
     <div>
       <h4>Evidence</h4>
-      <ul class="ev"><li>Concentrix: named in 7 reviews since 2023, 57% 1–2★ (Long routes / bad clubbing, Helpdesk unhelpful / complaints ignored, Driver behaviour or driving).</li><li>Wipro: named in 5 reviews since 2023, 60% 1–2★ (Slow to load / hangs, Cab location wrong or lagging, Can&#39;t call or message driver).</li><li>HCL: named in 4 reviews since 2023, 75% 1–2★ (Pickup time unpredictable / changed late, Can&#39;t see my bookings / trip details, Crash, blank screen or won&#39;t open).</li><li>Tech Mahindra: named in 4 reviews since 2023, 50% 1–2★ (Helpdesk unhelpful / complaints ignored, Long routes / bad clubbing).</li><li>JPMorgan Chase: named in 3 reviews since 2023, 33% 1–2★ (no specific issue).</li><li>Small numbers: a lead for the account team, not a verdict.</li><li>Can&#39;t call or message driver: in 1.0% of 1–2★ reviews in the last 90 days (2 of 205; 95% CI 0.3%–3.5%); 2.3% in the 90 days before (no significant change, p = 0.286).</li><li>Rating cost rank #16 of 29: −0.017★ on the 365-day written-review average; named in 27 reviews in that period.</li><li>Booking rules too strict: in 1.5% of 1–2★ reviews in the last 90 days (3 of 205; 95% CI 0.5%–4.2%); 1.4% in the 90 days before (no significant change, p = 0.944).</li><li>Rating cost rank #26 of 29: −0.013★ on the 365-day written-review average; named in 18 reviews in that period.</li></ul>
+      <ul class="ev"><li>Concentrix: named in 7 reviews since 2023, 57% 1–2★ (Long routes / bad clubbing, Helpdesk unhelpful / complaints ignored, Driver behaviour or driving).</li><li>Wipro: named in 5 reviews since 2023, 60% 1–2★ (Can&#39;t call or message driver, Slow to load / hangs, Cab location wrong or lagging).</li><li>HCL: named in 4 reviews since 2023, 75% 1–2★ (Pickup time unpredictable / changed late, Can&#39;t see my bookings / trip details, Crash, blank screen or won&#39;t open).</li><li>Tech Mahindra: named in 4 reviews since 2023, 50% 1–2★ (Helpdesk unhelpful / complaints ignored, Long routes / bad clubbing).</li><li>JPMorgan Chase: named in 3 reviews since 2023, 33% 1–2★ (no specific issue).</li><li>Small numbers: a lead for the account team, not a verdict.</li><li>Can&#39;t call or message driver: in 1.0% of 1–2★ reviews in the last 90 days (2 of 205; 95% CI 0.3%–3.5%); 2.3% in the 90 days before (no significant change, p = 0.286).</li><li>Rating cost rank #16 of 29: −0.017★ on the 365-day written-review average; named in 27 reviews in that period.</li><li>Booking rules too strict: in 1.5% of 1–2★ reviews in the last 90 days (3 of 205; 95% CI 0.5%–4.2%); 1.4% in the 90 days before (no significant change, p = 0.944).</li><li>Rating cost rank #26 of 29: −0.013★ on the 365-day written-review average; named in 18 reviews in that period.</li></ul>
 <blockquote>“Worst experience with this app, there is no perfect timing scheduled it changes very badly and when we try to contact the driver no response the auto reply comes (looks like the driver is not responding) and there …”<span class="meta">1★ · Apr 2026 · v12.11.2</span></blockquote><blockquote>“I&#39;m getting calling permission is disabled as per company policy”<span class="meta">1★ · Aug 2026 · v12.17.0</span></blockquote>    </div>
   </div>
   <div class="outcome">
