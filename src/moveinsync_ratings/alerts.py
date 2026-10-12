@@ -1,8 +1,8 @@
 """Alerts for the scheduled refresh: what someone should look at today, sent once to Slack.
 
 Triggers, each built from `analyse()` with the same wording as the monitor's to-do list:
-- a new review raising a safety concern (last 30 days)
-- an issue newly emerging (last 30 days vs the 180 before, p < 0.05)
+- a new review raising a safety concern (last EMERGING_DAYS days)
+- an issue newly emerging (see analysis.emerging_section)
 - a release flagged 'worse' or 'watch'
 - Google's published rating falling
 - stale data: the last refresh failed, no new review for days, or reviews left untagged
@@ -24,6 +24,7 @@ from typing import Any, Literal
 
 import pandas as pd
 
+from .analysis import EMERGING_DAYS
 from .config import Settings
 from .report import next_actions
 from .store import Store
@@ -54,7 +55,7 @@ def _short(text: str, limit: int = 240) -> str:
 
 
 # ── triggers ──────────────────────────────────────────────────────────────────────────────────
-def safety_alerts(a: dict[str, Any], tax: Taxonomy, days: int = 30) -> list[Alert]:
+def safety_alerts(a: dict[str, Any], tax: Taxonomy, days: int = EMERGING_DAYS) -> list[Alert]:
     since = pd.Timestamp(a["end_iso"]) - pd.Timedelta(days=days)
     return [
         Alert(

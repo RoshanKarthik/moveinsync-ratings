@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import math
+import platform
 import re
 from collections import Counter
 from datetime import UTC, datetime, timedelta
@@ -28,6 +29,13 @@ from .taxonomy import NON_SPECIFIC, ROOT_CAUSE_LABELS, Taxonomy
 
 IST = "Asia/Kolkata"
 NEG_MAX = 2
+# Fixed method settings. The pages quote these (via `params`), so the text always matches the maths.
+ALPHA = 0.05  # significance level for every "rising", "emerging", "worse" and "better"
+EMERGING_DAYS = 30  # "emerging" compares the last 30 days ...
+EMERGING_BASE_DAYS = 180  # ... with the 180 days before them
+EMERGING_MIN = 3  # ... and needs at least this many mentions in the last 30 days
+ORG_MIN = 3  # employers are listed once at least this many reviewers name them
+TREND_MONTHS = 12  # per-issue and tile sparklines
 
 
 # ── small statistics helpers ──────────────────────────────────────────────────────────────────
@@ -256,8 +264,8 @@ def version_section(df: pd.DataFrame, end: pd.Timestamp, days: int, min_n: int) 
                 # "worse"/"better": significant after Bonferroni correction for all releases tested.
                 # "watch": p < 0.05 on its own, but could be chance given how many releases were tested.
                 "flag": ("worse" if worse else "better")
-                if p < 0.05 / tests
-                else ("watch" if worse and p < 0.05 else ""),
+                if p < ALPHA / tests
+                else ("watch" if worse and p < ALPHA else ""),
                 "tests": tests,
                 "top_issues": _top_codes(g[g["neg"]], 3),
             }
@@ -316,7 +324,7 @@ def issue_section(
         r_share = rc[code] / rn if rn else 0
         p_share = pc[code] / pn if pn else 0
         trend = "steady"
-        if p < 0.05:
+        if p < ALPHA:
             trend = "rising" if r_share > p_share else "falling"
         issues.append(
             {
@@ -375,7 +383,9 @@ def issue_section(
     }
 
 
-def _monthly_share(tagged: pd.DataFrame, code: str, end: pd.Timestamp, months: int = 12) -> list[dict[str, Any]]:
+def _monthly_share(
+    tagged: pd.DataFrame, code: str, end: pd.Timestamp, months: int = TREND_MONTHS
+) -> list[dict[str, Any]]:
     last = (
         end.tz_localize(None).to_period("M")
         if end.tzinfo is None
@@ -454,19 +464,20 @@ def _details(frame: pd.DataFrame, k: int = 6) -> list[tuple[str, int]]:
 
 
 def emerging_section(df: pd.DataFrame, tax: Taxonomy, end: pd.Timestamp) -> list[dict[str, Any]]:
-    """Issues whose share of negative reviews in the last 30 days is significantly above the
-    previous 180 days — the early warning a weekly run exists for."""
+    """Issues whose share of negative reviews in the last EMERGING_DAYS is significantly above the
+    EMERGING_BASE_DAYS before — the early warning a scheduled run exists for."""
     tagged = df[df["tagged"] & df["neg"]]
-    last = tagged[tagged["ts"] > end - pd.Timedelta(days=30)]
-    base = tagged[(tagged["ts"] <= end - pd.Timedelta(days=30)) & (tagged["ts"] > end - pd.Timedelta(days=210))]
+    cut = end - pd.Timedelta(days=EMERGING_DAYS)
+    last = tagged[tagged["ts"] > cut]
+    base = tagged[(tagged["ts"] <= cut) & (tagged["ts"] > cut - pd.Timedelta(days=EMERGING_BASE_DAYS))]
     out = []
     for code in tax.specific_codes:
         k1 = int(_has(last, code).sum())
         k2 = int(_has(base, code).sum())
-        if k1 < 3:
+        if k1 < EMERGING_MIN:
             continue
         p = two_prop_p(k1, len(last), k2, len(base))
-        if p < 0.05 and k1 / max(len(last), 1) > k2 / max(len(base), 1):
+        if p < ALPHA and k1 / max(len(last), 1) > k2 / max(len(base), 1):
             out.append(
                 {
                     "code": code,
@@ -486,7 +497,7 @@ def org_section(df: pd.DataFrame, since: pd.Timestamp) -> list[dict[str, Any]]:
     norm = norm[norm != "Moveinsync"]
     out = []
     for org, g in w.groupby(norm):
-        if len(g) >= 3 and org:
+        if len(g) >= ORG_MIN and org:
             out.append(
                 {
                     "org": org,
@@ -549,7 +560,7 @@ def safety_section(df: pd.DataFrame, end: pd.Timestamp, days: int) -> dict[str, 
     return {
         "n": len(s),
         "of": len(w),
-        "last30": int((s["ts"] > end - pd.Timedelta(days=30)).sum()),
+        "last30": int((s["ts"] > end - pd.Timedelta(days=EMERGING_DAYS)).sum()),
         "praise": len(praise),
         "reviews": [
             {
@@ -626,6 +637,34 @@ def changes_section(store: Store, app_id: str) -> dict[str, Any]:
     }
 
 
+def _version_key(v: str) -> tuple[int, ...]:
+    return tuple(int(x) for x in re.findall(r"\d+", v))
+
+
+def releases(df: pd.DataFrame, current: str | None) -> dict[str, str | None]:
+    """The release on the store now and the one before it (by version number, among versions
+    seen in reviews), so plan text can name them without typing them."""
+    seen = sorted({v for v in df["app_version"].dropna() if _version_key(v)}, key=_version_key)
+    latest = current if current and _version_key(current) else (seen[-1] if seen else None)
+    older = [v for v in seen if latest and _version_key(v) < _version_key(latest)]
+    return {"latest": latest, "previous": older[-1] if older else None}
+
+
+def fill_release_names(text: str, a: dict[str, Any]) -> str:
+    """Replace {latest_release} / {previous_release} in plan text with today's release names."""
+    r = a.get("releases") or {}
+    return text.replace("{latest_release}", r.get("latest") or "the current release").replace(
+        "{previous_release}", r.get("previous") or "the previous release"
+    )
+
+
+def refresh_hours(root: Path) -> int | None:
+    """Hours between scheduled refreshes, read from the workflow's cron (e.g. "15 */2 * * *")."""
+    wf = root / ".github" / "workflows" / "refresh.yml"
+    m = re.search(r'cron:\s*"\S+\s+\*/(\d+)\s', wf.read_text(encoding="utf-8")) if wf.exists() else None
+    return int(m.group(1)) if m else None
+
+
 def latest_eval(settings: Settings) -> dict[str, Any] | None:
     folder = settings.root / "data" / "eval"
     files = sorted(folder.glob("eval_*_test.json")) if folder.exists() else []
@@ -665,6 +704,7 @@ def analyse(settings: Settings, tax: Taxonomy, store: Store) -> dict[str, Any]:
             "reviews": len(df),
             "tag_window": len(tag_window),
             "tagged": int(tag_window["tagged"].sum()),
+            "rule_tagged": int((tag_window["method"] == "rule").sum()),
             "first_review": df["ts"].min().strftime("%b %Y"),
             "agreement_mean": float(tag_window["agreement"].dropna().mean())
             if tag_window["agreement"].notna().any()
@@ -692,4 +732,22 @@ def analyse(settings: Settings, tax: Taxonomy, store: Store) -> dict[str, Any]:
         if ev and best
         else None,
         "end_iso": (end - timedelta(0)).isoformat(),
+        "releases": releases(df, (listings["main"] or {}).get("version")),
+        # Method settings, quoted by the pages so their wording always matches the analysis.
+        "params": {
+            "alpha": ALPHA,
+            "emerging_days": EMERGING_DAYS,
+            "emerging_base_days": EMERGING_BASE_DAYS,
+            "emerging_min": EMERGING_MIN,
+            "org_min": ORG_MIN,
+            "trend_months": TREND_MONTHS,
+            "min_reviews_per_version": a.min_reviews_per_version,
+            "tag_since": pd.Timestamp(settings.tag_since).strftime("%b %Y"),
+            "benchmarks": len(settings.benchmarks),
+            "siblings": len(settings.sibling_apps),
+            "refresh_hours": refresh_hours(settings.root),
+            "python": platform.python_version(),
+            "batch_size": settings.llm.batch_size,
+            "strategy": settings.llm.strategy,
+        },
     }

@@ -13,6 +13,7 @@ import yaml
 from jinja2 import Environment, PackageLoader, select_autoescape
 
 from . import charts
+from .analysis import ALPHA, EMERGING_DAYS, fill_release_names
 from .charts import Point, Row, pct
 from .config import Settings
 from .taxonomy import Taxonomy
@@ -216,7 +217,7 @@ def tracker(a: dict[str, Any], backlog: dict[str, Any] | None) -> list[dict[str,
         out.append(
             {
                 "id": t["id"],
-                "title": t["title"],
+                "title": fill_release_names(t["title"], a),
                 "issue": main["label"],
                 "baseline": base,
                 "now": main["recent"],
@@ -248,17 +249,17 @@ def stat_tiles(a: dict[str, Any]) -> list[dict[str, Any]]:
 
     r, p = a["windows"]["recent"], a["windows"]["prior"]
     days = r["days"]
-    months = [m for m in a["monthly"] if not m["partial"]][-12:]
+    months = [m for m in a["monthly"] if not m["partial"]][-a["params"]["trend_months"] :]
 
     def delta(diff: float, pv: float, up_is_good: bool, unit: str) -> dict[str, str]:
-        sig = pv < 0.05
+        sig = pv < ALPHA
         good = (diff > 0) == up_is_good
         arrow = "▲" if diff > 0 else "▼" if diff < 0 else "■"
         text = f"{arrow} {diff:+.2f}{unit}" if unit == "★" else f"{arrow} {diff * 100:+.1f} pp"
         return {
             "text": text,
             "note": f"vs previous {days} days" + ("" if sig else " · not significant"),
-            "title": f"Two-sided p = {pv:.3f}" + (" (significant at 0.05)" if sig else ""),
+            "title": f"Two-sided p = {pv:.3f}" + (f" (significant at {ALPHA})" if sig else ""),
             "cls": ("delta-good" if good else "delta-bad") if sig else "muted",
         }
 
@@ -319,7 +320,7 @@ def summary_points(a: dict[str, Any]) -> list[dict[str, str]]:
     days = r["days"]
     pv = two_prop_p(r["neg"]["k"], r["neg"]["n"], p["neg"]["k"], p["neg"]["n"])
     direction = "up" if r["neg"]["p"] > p["neg"]["p"] else "down"
-    if pv < 0.05:
+    if pv < ALPHA:
         pts.append(
             {
                 "kind": "bad" if direction == "up" else "good",
@@ -339,7 +340,7 @@ def summary_points(a: dict[str, Any]) -> list[dict[str, str]]:
         pts.append(
             {
                 "kind": "bad",
-                "text": f"Emerging: “{e['label']}” is in {e['last30']['p']:.0%} of negative reviews in the last 30 days, "
+                "text": f"Emerging: “{e['label']}” is in {e['last30']['p']:.0%} of negative reviews in the last {EMERGING_DAYS} days, "
                 f"up from {e['base']['p']:.0%} (p = {e['p']:.3f}).",
             }
         )
@@ -370,7 +371,7 @@ def summary_points(a: dict[str, Any]) -> list[dict[str, str]]:
         pts.append(
             {
                 "kind": "bad",
-                "text": f"{a['safety']['last30']} review(s) in the last 30 days raised a personal-safety concern — "
+                "text": f"{a['safety']['last30']} review(s) in the last {EMERGING_DAYS} days raised a personal-safety concern — "
                 "each is listed in the Safety section for follow-up.",
             }
         )
@@ -390,7 +391,7 @@ def next_actions(a: dict[str, Any], tax: Taxonomy, tracked: list[dict[str, Any]]
                 "key": "safety",
                 "priority": "Today",
                 "owner": tax.owners["safety_team"],
-                "action": f"Follow up the {s30} safety-related review{'s' if s30 > 1 else ''} from the last 30 days.",
+                "action": f"Follow up the {s30} safety-related review{'s' if s30 > 1 else ''} from the last {EMERGING_DAYS} days.",
                 "evidence": "Listed in full in the Safety section below.",
             }
         )
@@ -415,7 +416,7 @@ def next_actions(a: dict[str, Any], tax: Taxonomy, tracked: list[dict[str, Any]]
                 "priority": "This week",
                 "owner": tax.owners[meta.owner],
                 "action": f"Investigate the rise in “{meta.label}”.",
-                "evidence": f"{e['last30']['p']:.0%} of negative reviews in the last 30 days vs {e['base']['p']:.0%} before (p = {e['p']:.3f}).",
+                "evidence": f"{e['last30']['p']:.0%} of negative reviews in the last {EMERGING_DAYS} days vs {e['base']['p']:.0%} before (p = {e['p']:.3f}).",
             }
         )
     unanswered = [v for v in a["visible"] if not v["replied"] and v["upvotes"] >= 2]
