@@ -2,7 +2,9 @@
 #
 # This file is the single source for deliverables/recommendation.html, backlog.xlsx,
 # backlog_jira.csv and reply_playbook.md (`uv run ratings recommend`), and for the monitor's
-# Fix tracker. Text here is judgement; every number is added from the data at render time.
+# Fix tracker. Text here is judgement; every number is added from the data at render time, so
+# never type a figure, trend or release here. {latest_release} and {previous_release} are filled
+# in from the store listing and the reviews.
 #
 # - horizon: now (this week, no release) | next (next 1-2 releases) | quarter (this quarter)
 # - track: product (app & platform) | ops (operations / account teams)
@@ -23,9 +25,9 @@ tickets:
   issues: []
   evidence: replies
   problem: >-
-    MoveInSync stopped replying to Play Store reviews. Unhappy employees hear nothing back,
-    and every new employee reading the store page sees complaints left unanswered, while the
-    closest comparison app answers its negative reviews.
+    Unanswered reviews: unhappy employees hear nothing back, and every new employee reading
+    the store page sees the complaints left unanswered. The evidence gives the current reply
+    rates for MoveInSync and the closest comparison app.
   change:
   - Reply to every unanswered 1–2★ review from the last 90 days, most-upvoted first, using the
     issue-specific templates in the reply playbook (address the specific problem, give a concrete
@@ -48,7 +50,7 @@ tickets:
     measures it from now on.
 
 - id: MIS-02
-  title: Triage the crash rise in 12.19.0 with Android vitals and decide hotfix vs. rollback
+  title: Triage crashes in release {latest_release} with Android vitals and decide hotfix vs. rollback
   horizon: now
   track: product
   type: Bug
@@ -59,12 +61,12 @@ tickets:
   tracked: false  # MIS-05 tracks the crash share
   evidence: release
   problem: >-
-    "Crash, blank screen or won't open" costs the rating more than any other issue and is
-    rising in the latest reviews, led by the newest release. Play may also reduce the app's
+    Crashes, blank screens and an app that won't open; the evidence gives the issue's current
+    rating-cost rank, trend and the latest release's figures. Play may also reduce the app's
     visibility and show a store-listing warning when crash or ANR rates pass its bad-behaviour
     thresholds.
   change:
-  - Pull Play Console Android vitals for 12.19.0 vs 12.18.1 — user-perceived crash rate and ANR
+  - Pull Play Console Android vitals for {latest_release} vs {previous_release} — user-perceived crash rate and ANR
     rate, top clusters, split by device model and Android version.
   - If either rate is above Play's bad-behaviour threshold (1.09% crashes, 0.47% ANRs, or 8% on any
     phone model), halt the rollout and ship a hotfix for the top clusters; otherwise fix the top
@@ -72,12 +74,12 @@ tickets:
   - Match crash clusters to the review quotes (blank screen on open, "something went wrong",
     closes on OTP screen) so the fix covers what users actually hit.
   acceptance:
-  - Vitals comparison of 12.19.0 vs 12.18.1 shared with Product within 2 working days, with the top
+  - Vitals comparison of {latest_release} vs {previous_release} shared with Product within 2 working days, with the top
     3 crash and ANR clusters and their device spread.
   - Written hotfix or rollback decision, with the threshold used.
   metric: User-perceived crash and ANR rate per release (Android vitals); crash share of 1–2★ reviews (monitor).
   confirm_with: Android vitals (crash rate, ANR rate, top clusters per version and device).
-  expected: Stops the current rise; the lasting fix is MIS-05.
+  expected: Contains crashes in the current release; the lasting fix is MIS-05.
 
 - id: MIS-03
   title: Staged rollout with halt rules for every release
@@ -90,7 +92,7 @@ tickets:
   issues: []
   evidence: releases
   problem: >-
-    Releases ship often, and many reviews calling the app hard to use blame a recent update.
+    Releases ship often, and reviews calling the app hard to use blame recent updates.
     A bad release reaches every employee before anyone notices.
   change:
   - Release through Play staged rollout (for example 10% → 50% → 100% over a week).
@@ -119,7 +121,7 @@ tickets:
   quote_terms: ["play store"]
   problem: >-
     Employees who installed from Google Play are told every few days that the app "was not
-    downloaded from Play Store" and must reinstall. This is rising. The pattern (works, then
+    downloaded from Play Store" and must reinstall. The pattern (works, then
     fails days later) points to an integrity check that fails closed on transient errors or
     stale verdicts, not to sideloading.
   change:
@@ -166,7 +168,7 @@ tickets:
   - Today's trip and boarding OTP visible offline after one successful sync.
   metric: Crash share of 1–2★ reviews (Fix tracker); crash and ANR rate (Android vitals).
   confirm_with: Android vitals; cold-start time per device.
-  expected: Targets the largest single rating cost.
+  expected: Targets the issue's rating cost (its current rank is in the evidence).
 
 - id: MIS-06
   title: Sign-in that works — OTP delivery fallback and fewer forced logouts
@@ -212,7 +214,7 @@ tickets:
   evidence: issue
   quote_terms: ["seat belt", "seat buckle"]
   problem: >-
-    The redesigned app is called hard to use, often blaming a recent update. The newest named
+    The redesigned app is called hard to use, some reviews blaming a recent update. One named
     complaint is the seat-belt confirmation that now pops up before the boarding OTP, adding a
     step and hiding the OTP while the driver waits.
   change:
@@ -241,7 +243,8 @@ tickets:
   evidence: silent
   depends_on: [MIS-05]
   problem: >-
-    Most ratings come from employees who never write a review, and they rate the app highly.
+    Employees who rate without writing a review count in the store rating but never appear in
+    reviews; the evidence gives their share and average stars.
     Asking them on Play at a good moment is the cheapest way to add recent positive ratings.
     The app's own post-trip rating pop-up, by contrast, is itself a complaint. (If the app
     already calls the In-App Review API, this ticket becomes tuning when it fires.)
@@ -274,8 +277,8 @@ tickets:
   baseline: {share: 0.0338, k: 7, n: 207, days: 90, as_of: '2026-10-09'}
   evidence: issue
   problem: >-
-    Complaints about missing, late or repeated notifications (cab allocated, cab arriving) are
-    emerging in the last 30 days.
+    Complaints about missing, late or repeated notifications (cab allocated, cab arriving); the
+    evidence gives their current share and trend.
   change:
   - Check push delivery rate by Android version and device; check that the Android 13+ notification
     permission is requested and that the app is not stopped by battery optimisation.
@@ -284,7 +287,7 @@ tickets:
   - Root cause written up with delivery rate by Android version; fix ticketed.
   metric: Notification share of 1–2★ reviews (Fix tracker); push delivery rate.
   confirm_with: Push provider delivery reports.
-  expected: Early action on an emerging complaint while it is still small.
+  expected: Fixes the cause before the complaint grows.
 
 - id: MIS-10
   title: Live tracking you can trust — fresher cab location and an "updated X s ago" label
@@ -350,8 +353,8 @@ tickets:
   baseline: {share: 0.0242, k: 5, n: 207, days: 90, as_of: '2026-10-09'}
   evidence: safety
   problem: >-
-    Safety concerns are rare in reviews but each one needs action; more reviews praise safety
-    than raise a concern, so safety is a strength to protect.
+    Each safety concern raised in a review needs action, however few there are. The evidence
+    gives the current count, and how many reviews praise safety.
   change:
   - Review the safety list in the monitor every week; contact the employer's transport desk for
     each concern within 24 hours, and reply publicly with the escalation route.
@@ -359,7 +362,7 @@ tickets:
   - Every safety review from the last 30 days has an owner, an action and a public reply.
   metric: Safety concerns per month and time to follow-up.
   confirm_with: Safety incident log.
-  expected: Protects a strength; prevents a single incident review from going unanswered.
+  expected: No safety concern raised in a review goes unanswered.
 
 - id: OPS-02
   title: Close the loop on complaints — ticket number, status and resolution in the app

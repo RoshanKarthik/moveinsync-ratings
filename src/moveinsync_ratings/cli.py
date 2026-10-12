@@ -238,7 +238,14 @@ def recommend(
         if frozen:
             console.print(f"  Fix-tracker baselines written for: {', '.join(frozen)}")
     backlog = load_backlog_model(path, tax)
-    paths = write_all(settings.root / "deliverables", data, tax, backlog, load_frame(store, settings.app.id))
+    paths = write_all(
+        settings.root / "deliverables",
+        data,
+        tax,
+        backlog,
+        load_frame(store, settings.app.id),
+        docs_dir=settings.root / "docs",
+    )
     for p in paths.values():
         console.print(f"  {p}")
     console.print("[bold green]Done.[/] Run `ratings report` to refresh the monitor's Fix tracker.")

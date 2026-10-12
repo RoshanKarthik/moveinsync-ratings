@@ -22,6 +22,7 @@
 {% set I = a.issues %}
 {% set bench = a.listing.benchmarks[0] if a.listing.benchmarks else none %}
 {% set ev = eval_primary %}
+{% set P = a.params %}
 {% set active = "approach" %}{% set monitor_href = "../reports/latest.html" %}{% set rec_href = "recommendation.html" %}{% set approach_href = "approach.html" %}
 {% include "_appbar.html.j2" %}
 <div class="wrap">
@@ -66,7 +67,7 @@
 
   <section id="tagging">
     <h2>Sorting reviews into issues</h2>
-    <p>I read a sample of recent complaints and grouped them along the employee journey ({{ journey | join(" → ") }}) into {{ tax.issues | length }} issues, each with a fixed owner and root-cause type. {{ a.counts.tagged | num }} of the {{ a.counts.tag_window | num }} reviews since Jan 2023 are tagged with up to three issues: short praise by a rule, the rest by {{ model_names[0] }} on NVIDIA's free NIM tier{% if model_names | length > 1 %}, with {{ model_names[1] }} as fallback{% endif %}.</p>
+    <p>I read a sample of recent complaints and grouped them along the employee journey ({{ journey | join(" → ") }}) into {{ tax.issues | length }} issues, each with a fixed owner and root-cause type. {{ a.counts.tagged | num }} of the {{ a.counts.tag_window | num }} reviews since {{ P.tag_since }} are tagged with up to three issues: short praise by a rule, the rest by {{ model_names[0] }} on NVIDIA's free NIM tier{% if model_names | length > 1 %}, with {{ model_names[1] }} as fallback{% endif %}.</p>
     {% if ev %}<p>To know how far to trust the tags, I scored them against {{ ev.n }} reference reviews labelled before any model output existed and never used for tuning (measured {{ eval_date }}): the main issue is correct in {{ ev.primary_accuracy | pct }} (95% CI {{ ev.primary_ci95[0] | pct }}–{{ ev.primary_ci95[1] | pct }}), tag precision is {{ ev.label_precision | pct }} and recall {{ ev.label_recall | pct }}, and {{ ev.safety.fn }} of {{ ev.safety.tp + ev.safety.fn }} safety reviews were missed. Recall under 100% means issue shares slightly undercount.</p>{% endif %}
   </section>
 
@@ -74,9 +75,9 @@
     <h2>Key decisions, and why</h2>
     <ul class="points">
       <li><strong>Models chosen by measured accuracy, at no cost.</strong> I tried the free NVIDIA NIM models and kept the ones that answered reliably{% if ev %}; on the held-out set {{ model_names[0] }} got the main issue right in {{ ev.primary_accuracy | pct }} (95% CI {{ ev.primary_ci95[0] | pct }}–{{ ev.primary_ci95[1] | pct }}, recall {{ ev.label_recall | pct }}){% for r in eval_others %}, {{ r.short }} {{ r.primary_accuracy | pct }} (95% CI {{ r.primary_ci95[0] | pct }}–{{ r.primary_ci95[1] | pct }}, recall {{ r.label_recall | pct }}){% endfor %}.{% if eval_overlap %} The intervals overlap, so I kept the simplest set-up{% else %} I kept{% endif %}: {{ model_names[0] }} as the primary model{% if model_names | length > 1 %}, {{ model_names[1] }} only filling gaps when it fails{% endif %}{% endif %}.</li>
-      <li><strong>A live site and a ticket-ready backlog instead of slides.</strong> {{ W.recent.n | num }} reviews arrived in the last {{ W.recent.days }} days, so a deck would be out of date within weeks. The site refreshes every 2 hours; the {{ tickets | length }} tickets import into Jira or open in Excel, each with an owner, acceptance criteria, a success metric and the internal data that would confirm it.</li>
+      <li><strong>A live site and a ticket-ready backlog instead of slides.</strong> {{ W.recent.n | num }} reviews arrived in the last {{ W.recent.days }} days, so a deck would be out of date within weeks. The site refreshes{% if P.refresh_hours %} every {{ P.refresh_hours }} hours{% else %} on a schedule{% endif %}; the {{ tickets | length }} tickets import into Jira or open in Excel, each with an owner, acceptance criteria, a success metric and the internal data that would confirm it.</li>
       <li><strong>Plan text kept separate from the numbers.</strong> The judgement (what to change, who owns it, effort) lives in one file; every share, interval and quote is filled in at build time. The evidence updates on each refresh while the plan stays fixed{% if plan_date %} (baselines recorded {{ plan_date }}){% endif %}, and the page flags any new signal no ticket covers — {% if uncovered %}{{ uncovered | length }} today{% else %}none today{% endif %}.</li>
-      <li><strong>A significance test before calling any change.</strong> Every share carries its n and a 95% Wilson interval; “rising”, “falling” and “emerging” need p &lt; 0.05 on a two-proportion test; releases are Bonferroni-corrected ({{ n_versions }} compared over {{ W.year.days }} days, {{ n_flagged }} flagged now). With about {{ I.recent_neg_n | num }} reviews rated 1–2★ per {{ W.recent.days }} days, the fix tracker only calls a fix “improved” when the whole interval clears its baseline.</li>
+      <li><strong>A significance test before calling any change.</strong> Every share carries its n and a 95% Wilson interval; “rising”, “falling” and “emerging” need p &lt; {{ P.alpha }} on a two-proportion test; releases are Bonferroni-corrected ({{ n_versions }} compared over {{ W.year.days }} days, {{ n_flagged }} flagged now). With about {{ I.recent_neg_n | num }} reviews rated 1–2★ per {{ W.recent.days }} days, the fix tracker only calls a fix “improved” when the whole interval clears its baseline.</li>
     </ul>
   </section>
 
@@ -87,7 +88,7 @@
 
   <section id="tools">
     <h2>Tools used</h2>
-    <p>Python 3.12, pandas and SQLite; google-play-scraper for public data; NVIDIA NIM (Nemotron-3) through the OpenAI-compatible API for tagging; Jinja2 with hand-built SVG charts; openpyxl for the Excel backlog; Typer and Rich for the <code>ratings</code> command; pytest, ruff and mypy for checks; GitHub Actions and GitHub Pages to refresh and publish every 2 hours. I used AI assistance for code, taxonomy drafting, reference labelling and analysis review.</p>
+    <p>Python {{ P.python.rsplit(".", 1)[0] }}, pandas and SQLite; google-play-scraper for public data; NVIDIA NIM (Nemotron-3) through the OpenAI-compatible API for tagging; Jinja2 with hand-built SVG charts; openpyxl for the Excel backlog; Typer and Rich for the <code>ratings</code> command; pytest, ruff and mypy for checks; GitHub Actions and GitHub Pages to refresh and publish{% if P.refresh_hours %} every {{ P.refresh_hours }} hours{% endif %}. I used AI assistance for code, taxonomy drafting, reference labelling and analysis review.</p>
     <p class="sub">Read next: <a href="recommendation.html">the recommendation</a> · <a href="../reports/latest.html">the live monitor</a> · <a href="../docs/METHOD.md">full method and accuracy (METHOD.md)</a> · <a href="../docs/SOURCES.md">Google Play sources</a> · downloads: <a href="backlog.xlsx">backlog.xlsx</a>, <a href="backlog_jira.csv">backlog_jira.csv</a>, <a href="reply_playbook.md">reply_playbook.md</a></p>
   </section>
   </div>

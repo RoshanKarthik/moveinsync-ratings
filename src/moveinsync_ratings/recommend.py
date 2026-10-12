@@ -10,6 +10,7 @@ Outputs (in deliverables/):
 - backlog_jira.csv     Jira CSV import (Summary, Issue Type, Priority, Labels, Description)
 - reply_playbook.md    reply templates and routing per issue, with the current reply backlog
 - approach.html        the submission note: how the recommendation was reached and the tools used
+- docs/METHOD.md       the method note, regenerated so its figures match the data
 """
 
 from __future__ import annotations
@@ -24,13 +25,23 @@ import yaml
 from pydantic import BaseModel, Field
 
 from . import charts
-from .analysis import quotes_matching, two_prop_p, unanswered_negatives
+from .analysis import (
+    EMERGING_BASE_DAYS,
+    EMERGING_DAYS,
+    fill_release_names,
+    quotes_matching,
+    two_prop_p,
+    unanswered_negatives,
+)
 from .charts import Row
 from .evaluate import wilson
 from .report import ROOT_VARS, _env, build_charts
-from .taxonomy import Taxonomy
+from .taxonomy import ROOT_CAUSE_LABELS, Taxonomy
 
 Horizon = Literal["now", "next", "quarter"]
+# A quarter at or above REPLY_HIGH counts as "answering reviews"; below REPLY_LOW as "stopped".
+REPLY_HIGH = 0.9
+REPLY_LOW = 0.2
 
 HORIZONS: dict[str, tuple[str, str]] = {
     "now": ("This week", "No release needed"),
@@ -170,8 +181,8 @@ def issue_lines(i: dict[str, Any], a: dict[str, Any], emerging: dict[str, Any]) 
     e = emerging.get(i["code"])
     if e:
         lines.append(
-            f"Emerging: {_p(e['last30']['p'])} of 1–2★ reviews in the last 30 days ({_ci(e['last30'])}) vs "
-            f"{_p(e['base']['p'])} in the 180 days before ({_pv(e['p'])})."
+            f"Emerging: {_p(e['last30']['p'])} of 1–2★ reviews in the last {EMERGING_DAYS} days ({_ci(e['last30'])}) vs "
+            f"{_p(e['base']['p'])} in the {EMERGING_BASE_DAYS} days before ({_pv(e['p'])})."
         )
     lines.append(
         f"Rating cost rank #{i['rank']} of {len(a['issues']['issues'])}: −{i['rating_cost']:.3f}★ on the "
@@ -244,7 +255,7 @@ def ticket_evidence(t: Ticket, a: dict[str, Any], tax: Taxonomy) -> list[str]:
         s = a["safety"]
         out.append(
             f"{s['n']} of {s['of']:,} reviews in the last {W['year']['days']} days raise a safety concern; "
-            f"{s['last30']} in the last 30 days. {s['praise']} reviews praise safety."
+            f"{s['last30']} in the last {EMERGING_DAYS} days. {s['praise']} reviews praise safety."
         )
     elif t.evidence == "orgs":
         for o in a["orgs"][:5]:
@@ -261,12 +272,12 @@ def ticket_evidence(t: Ticket, a: dict[str, Any], tax: Taxonomy) -> list[str]:
 
 
 def reply_story(a: dict[str, Any]) -> dict[str, Any]:
-    """When replies stopped: last quarter at ≥90%, first quarter after it under 20%, and the
-    highest rate in any quarter since."""
+    """When replies stopped: last quarter at ≥ REPLY_HIGH, first quarter after it under REPLY_LOW,
+    and the highest rate in any quarter since."""
     q = [x for x in a["replies"]["quarters"]]
-    high_idx = max((i for i, x in enumerate(q) if x["replied"]["p"] >= 0.9), default=0)
+    high_idx = max((i for i, x in enumerate(q) if x["replied"]["p"] >= REPLY_HIGH), default=0)
     after = q[high_idx + 1 :]
-    collapse = next((x for x in after if x["replied"]["p"] < 0.2), after[0] if after else q[-1])
+    collapse = next((x for x in after if x["replied"]["p"] < REPLY_LOW), after[0] if after else q[-1])
     since = q[q.index(collapse) :]
     return {
         "high": q[high_idx],
@@ -317,6 +328,7 @@ def scenarios(a: dict[str, Any], backlog: Backlog) -> dict[str, Any]:
 def build_context(a: dict[str, Any], tax: Taxonomy, backlog: Backlog, df: pd.DataFrame | None = None) -> dict[str, Any]:
     """Everything the outputs need. `df` (the review frame) adds keyword-matched quotes and distinct
     reply-backlog counts; without it, quotes fall back to the analysis examples."""
+    backlog = fill_placeholders(backlog, a)
     by_code = {i["code"]: i for i in a["issues"]["issues"]}
     watch = [v for v in a["versions"] if v["flag"] in ("worse", "watch")][-1:]
     used: set[str] = set()  # never show the same quote on two tickets
@@ -347,6 +359,7 @@ def build_context(a: dict[str, Any], tax: Taxonomy, backlog: Backlog, df: pd.Dat
                 "detectable": detectable_share(base, n_now) if base is not None and n_now else None,
             }
         )
+    plan_as_of = min((t.baseline["as_of"] for t in backlog.tickets if t.baseline), default=None)
     y, yb = a["windows"]["year"], a["windows"]["year_before"]
     yoy_p = two_prop_p(y["neg"]["k"], y["neg"]["n"], yb["neg"]["k"], yb["neg"]["n"])
     m = a["listing"]["main"]
@@ -362,14 +375,39 @@ def build_context(a: dict[str, Any], tax: Taxonomy, backlog: Backlog, df: pd.Dat
         "scen": scenarios(a, backlog),
         "replies_story": reply_story(a),
         "yoy_p": yoy_p,
+        "recent_p": two_prop_p(
+            a["windows"]["recent"]["neg"]["k"],
+            a["windows"]["recent"]["neg"]["n"],
+            a["windows"]["prior"]["neg"]["k"],
+            a["windows"]["prior"]["neg"]["n"],
+        ),
+        "replies_low": a["windows"]["recent"]["replied"]["p"] < REPLY_LOW,
         "one_star_written": a["gap"]["written"][0] / max(m["hist"][0], 1) if a["gap"] else None,
         "top": a["issues"]["issues"][0],
         "emerging": {e["code"]: e for e in a["emerging"]},
         "watch": watch,
         "playbook": playbook_rows(a, tax, backlog, df),
         "uncovered": plan_check(a, backlog),
-        "plan_as_of": min((t.baseline["as_of"] for t in backlog.tickets if t.baseline), default=None),
+        "plan_as_of": plan_as_of,
+        "plan_date": pd.Timestamp(plan_as_of).strftime("%d %b %Y") if plan_as_of else None,
     }
+
+
+def fill_placeholders(backlog: Backlog, a: dict[str, Any]) -> Backlog:
+    """Put today's release names into ticket text ({latest_release}, {previous_release}), so the
+    plan never names a release by hand. Reply templates keep their own {…} fill-in slots."""
+
+    def fill(x: Any) -> Any:
+        if isinstance(x, str):
+            return fill_release_names(x, a)
+        if isinstance(x, list):
+            return [fill(i) for i in x]
+        return x
+
+    fields = ("title", "problem", "change", "acceptance", "metric", "confirm_with", "expected")
+    return backlog.model_copy(
+        update={"tickets": [t.model_copy(update={f: fill(getattr(t, f)) for f in fields}) for t in backlog.tickets]}
+    )
 
 
 def plan_check(a: dict[str, Any], backlog: Backlog, top_n: int = 5) -> list[dict[str, str]]:
@@ -389,7 +427,7 @@ def plan_check(a: dict[str, Any], backlog: Backlog, top_n: int = 5) -> list[dict
         add(
             e["code"],
             e["label"],
-            f"emerging: {_p(e['last30']['p'])} of 1–2★ reviews in the last 30 days vs {_p(e['base']['p'])} before ({_pv(e['p'])})",
+            f"emerging: {_p(e['last30']['p'])} of 1–2★ reviews in the last {EMERGING_DAYS} days vs {_p(e['base']['p'])} before ({_pv(e['p'])})",
         )
     for i in a["issues"]["issues"]:
         if i["trend"] == "rising":
@@ -483,7 +521,6 @@ def approach_context(a: dict[str, Any], tax: Taxonomy, ctx: dict[str, Any]) -> d
         "eval_date": pd.Timestamp(ev["date"]).strftime("%d %b %Y") if ev else None,
         "model_names": [model_name(m) for m in a["models"]],
         "journey": [label for stage, label in tax.stages.items() if stage != "general"],
-        "plan_date": pd.Timestamp(ctx["plan_as_of"]).strftime("%d %b %Y") if ctx["plan_as_of"] else None,
         "n_specific": len(tax.specific_codes),
         "n_product": sum(t["track"] == "product" for t in tickets),
         "n_ops": sum(t["track"] == "ops" for t in tickets),
@@ -496,6 +533,20 @@ def approach_context(a: dict[str, Any], tax: Taxonomy, ctx: dict[str, Any]) -> d
 
 def render_approach(a: dict[str, Any], tax: Taxonomy, ctx: dict[str, Any]) -> str:
     return _env().get_template("approach.html.j2").render(a=a, tax=tax, **ctx, **approach_context(a, tax, ctx))
+
+
+def render_method(a: dict[str, Any], tax: Taxonomy, ctx: dict[str, Any]) -> str:
+    """docs/METHOD.md, rebuilt from the data and config on every run so no figure goes stale."""
+    env = _env()
+    env.autoescape = False  # Markdown, not HTML
+    return env.get_template("METHOD.md.j2").render(
+        a=a,
+        tax=tax,
+        root_labels=ROOT_CAUSE_LABELS,
+        model_label=lambda n: "Vote of both models" if n.startswith("vote") else model_name(n),
+        **ctx,
+        **approach_context(a, tax, ctx),
+    )
 
 
 def ticket_description_text(t: dict[str, Any], sep: str = "\n") -> str:
@@ -630,8 +681,8 @@ def write_xlsx(path: Path, a: dict[str, Any], ctx: dict[str, Any]) -> None:
         (f"Share, previous {days}d", 12),
         ("Trend", 9),
         ("Trend p", 8),
-        ("Share, 12 months", 10),
-        ("Emerging (last 30d)", 12),
+        (f"Share, last {a['windows']['year']['days']}d", 10),
+        (f"Emerging (last {EMERGING_DAYS}d)", 12),
         ("Unanswered 1–2★, last 90d", 12),
     ]
     ev.append([h for h, _ in ycols])
@@ -701,7 +752,12 @@ def render_playbook(a: dict[str, Any], tax: Taxonomy, ctx: dict[str, Any]) -> st
 
 
 def write_all(
-    out_dir: Path, a: dict[str, Any], tax: Taxonomy, backlog: Backlog, df: pd.DataFrame | None = None
+    out_dir: Path,
+    a: dict[str, Any],
+    tax: Taxonomy,
+    backlog: Backlog,
+    df: pd.DataFrame | None = None,
+    docs_dir: Path | None = None,
 ) -> dict[str, Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
     ctx = build_context(a, tax, backlog, df)
@@ -717,4 +773,8 @@ def write_all(
     write_jira_csv(paths["jira"], a, ctx)
     paths["playbook"].write_text(render_playbook(a, tax, ctx), encoding="utf-8")
     paths["approach"].write_text(render_approach(a, tax, ctx), encoding="utf-8")
+    if docs_dir is not None:
+        docs_dir.mkdir(parents=True, exist_ok=True)
+        paths["method"] = docs_dir / "METHOD.md"
+        paths["method"].write_text(render_method(a, tax, ctx), encoding="utf-8")
     return paths

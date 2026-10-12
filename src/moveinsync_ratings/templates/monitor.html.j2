@@ -14,6 +14,7 @@
 {% set main = a.listing.main %}
 {% set W = a.windows %}
 {% set I = a.issues %}
+{% set P = a.params %}
 {% set active = "monitor" %}{% set monitor_href = "latest.html" %}{% set rec_href = "../deliverables/recommendation.html" %}{% set approach_href = "../deliverables/approach.html" %}
 {% include "_appbar.html.j2" %}
 <div class="wrap">
@@ -51,7 +52,7 @@
       </div>
       <div class="card" style="margin-top:0">
         <h2>What's happening</h2>
-        <p class="sub small">Generated from this refresh's numbers; a change is called only when it is statistically significant. Tile sparklines show the last 12 months.</p>
+        <p class="sub small">Generated from this refresh's numbers; a change is called only when it is statistically significant. Tile sparklines show the last {{ P.trend_months }} months.</p>
         <ul class="signals">
           {% for p in summary %}<li class="sig-{{ p.kind }}"><span class="sig-icon" aria-hidden="true">{{ {"bad": "▲", "good": "✓", "info": "●"}[p.kind] }}</span><span><span class="sr-only">{{ {"bad": "Needs attention", "good": "Good", "info": "Note"}[p.kind] }}: </span>{{ p.text }}</span></li>{% endfor %}
         </ul>
@@ -113,7 +114,7 @@
       <div class="table-scroll">
       <table>
         <thead><tr>
-          <th>#</th><th>Issue</th><th>Owner</th><th class="num">Rating cost</th><th class="num">Last {{ W.recent.days }}d</th><th class="num">Before</th><th>Trend</th><th>12 months</th><th class="num">Tag precision</th>
+          <th>#</th><th>Issue</th><th>Owner</th><th class="num">Rating cost</th><th class="num">Last {{ W.recent.days }}d</th><th class="num">Before</th><th>Trend</th><th>{{ P.trend_months }} months</th><th class="num">Tag precision</th>
         </tr></thead>
         <tbody data-collapse="10">
         {% for i in I.issues if i.year.k > 0 %}
@@ -138,7 +139,7 @@
         </tbody>
       </table>
       </div>
-      <p class="note">Trend compares the last {{ W.recent.days }} days with the {{ W.recent.days }} days before; “rising”/“falling” only when the change is statistically significant (p &lt; 0.05). Tag precision = how often the model's use of that tag matched the reference labels on the {{ a.eval.result.n if a.eval else '' }} held-out reviews, out of the number of times it used the tag (“of n”); — = too rare in the test set to measure.</p>
+      <p class="note">Trend compares the last {{ W.recent.days }} days with the {{ W.recent.days }} days before; “rising”/“falling” only when the change is statistically significant (p &lt; {{ P.alpha }}). Tag precision = how often the model's use of that tag matched the reference labels on the {{ a.eval.result.n if a.eval else '' }} held-out reviews, out of the number of times it used the tag (“of n”); — = too rare in the test set to measure.</p>
     </div>
   </section>
 
@@ -189,7 +190,7 @@
   <section id="releases">
     <div class="card">
       <h2>Release health</h2>
-      <p class="sub">Share of 1–2★ reviews per app version (versions with at least {{ a.versions[0].n if false else 25 }} reviews in the last {{ W.year.days }} days). <span style="color:var(--critical-ink)">●</span> significantly worse than other releases, <span style="color:var(--serious)">●</span> watch (p &lt; 0.05 but could be chance across {{ a.versions[0].tests if a.versions else 0 }} releases), <span style="color:var(--good-ink)">●</span> significantly better. The horizontal line is the share across all these releases.</p>
+      <p class="sub">Share of 1–2★ reviews per app version (versions with at least {{ a.versions[0].n if false else 25 }} reviews in the last {{ W.year.days }} days). <span style="color:var(--critical-ink)">●</span> significantly worse than other releases, <span style="color:var(--serious)">●</span> watch (p &lt; {{ P.alpha }} but could be chance across {{ a.versions[0].tests if a.versions else 0 }} releases), <span style="color:var(--good-ink)">●</span> significantly better. The horizontal line is the share across all these releases.</p>
       {{ c.releases | safe }}
       <details><summary>Table</summary>
         <div class="table-scroll"><table>
@@ -261,7 +262,7 @@
   <section id="orgs">
     <div class="card">
       <h2>Employers named in reviews</h2>
-      <p class="sub">Employers named by at least 3 reviewers since Jan 2023. Useful for account teams; small numbers — treat as a lead, not a verdict.</p>
+      <p class="sub">Employers named by at least {{ P.org_min }} reviewers since {{ P.tag_since }}. Useful for account teams; small numbers — treat as a lead, not a verdict.</p>
       <div class="table-scroll"><table>
         <thead><tr><th>Employer</th><th class="num">Reviews</th><th class="num">1–2★</th><th>Top issues</th></tr></thead>
         <tbody>{% for o in a.orgs %}<tr><td>{{ o.org }}</td><td class="num">{{ o.n }}</td><td class="num">{{ o.neg.p | pct }}</td><td class="small">{% for code, n in o.top_issues %}{{ tax.issues[code].label }} ({{ n }}){% if not loop.last %}, {% endif %}{% endfor %}</td></tr>{% endfor %}</tbody>
@@ -288,8 +289,8 @@
     <div class="card">
       <h2>How this report is made</h2>
       <ul class="points small">
-        <li><strong>Data:</strong> all public Google Play reviews of <code>{{ a.app.id }}</code> (India, English — over 99% of reviews), the store listing, and three comparable employee-commute apps. Reviewer names are never stored.</li>
-        <li><strong>Tagging:</strong> {{ a.counts.tagged | num }} of {{ a.counts.tag_window | num }} reviews since {{ a.counts.first_review if false else "Jan 2023" }} are tagged with issues from a {{ tax.issues | length }}-code taxonomy built from the employee journey.
+        <li><strong>Data:</strong> all public Google Play reviews of <code>{{ a.app.id }}</code> (India store, English), the store listing, and {{ P.benchmarks }} comparable employee-commute apps. Reviewer names are never stored.</li>
+        <li><strong>Tagging:</strong> {{ a.counts.tagged | num }} of {{ a.counts.tag_window | num }} reviews since {{ P.tag_since }} are tagged with issues from a {{ tax.issues | length }}-code taxonomy built from the employee journey.
           Model{{ "s" if a.models | length > 1 else "" }}: {{ a.models | join(", ") }}{% if a.models | length > 1 %} — each review is tagged by every model and an issue counts when most of them agree (average agreement {{ a.counts.agreement_mean | pct }}){% endif %}.</li>
         {% if a.eval %}<li><strong>Accuracy</strong> on {{ a.eval.result.n }} held-out, labelled reference reviews: main issue correct {{ a.eval.result.primary_accuracy | pct }} (95% CI {{ a.eval.result.primary_ci95[0] | pct }}–{{ a.eval.result.primary_ci95[1] | pct }}), tag precision {{ a.eval.result.label_precision | pct }}, recall {{ a.eval.result.label_recall | pct }}.</li>{% endif %}
         <li><strong>Statistics:</strong> shares carry 95% Wilson intervals; changes use a two-proportion z-test; release comparisons are Bonferroni-corrected. Dates are India time.</li>
