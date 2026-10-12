@@ -7,6 +7,8 @@
 #   3. From your computer, upload the review database once:  uv run python scripts/seed_data_branch.py
 #      (the full history takes hours to tag on the free model tier — far over a CI run's limit;
 #      after seeding, each run only fetches and tags what is new, about a minute)
+#   4. Alerts (optional): create a Slack incoming webhook, then add the secret
+#      SLACK_WEBHOOK_URL = https://hooks.slack.com/services/...  Without it, alerts only appear in the run log.
 # The site is then published at https://<owner>.github.io/<repo>/
 #   /                                   → the monitor ("How are our ratings?")
 #   /deliverables/recommendation.html   → the recommendation, with live evidence
@@ -41,6 +43,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Restore review database from the data branch
+        id: restore
         run: |
           if git fetch --depth=1 origin data 2>/dev/null; then
             git show origin/data:ratings.db > data/ratings.db && echo "Restored database"
@@ -65,7 +68,19 @@ jobs:
         # --no-freeze: baselines are recorded locally and committed, never moved by a CI run.
         run: uv run ratings recommend --no-open --no-freeze
 
+      # Runs even when the refresh failed, so a failed refresh or stale data is reported.
+      # A Slack error marks this step failed but still publishes the site.
+      - name: Send new alerts to Slack
+        if: always() && steps.restore.outcome == 'success'
+        continue-on-error: true
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          CI: "1"
+        run: uv run ratings alerts
+
+      # Saved even after a failed refresh: it holds partial progress and the record of sent alerts.
       - name: Save review database to the data branch
+        if: always() && steps.restore.outcome == 'success'
         run: |
           mkdir -p /tmp/data && cp data/ratings.db /tmp/data/
           cd /tmp/data

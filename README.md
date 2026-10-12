@@ -36,7 +36,8 @@ Every 2 hours a scheduled GitHub workflow:
 2. sorts each new review into one of 33 issues with an AI model (NVIDIA Nemotron); on 120
    labelled test reviews it named the right main issue 99% of the time (95% CI 95–100%);
 3. recomputes every number, with 95% intervals and significance tests;
-4. rebuilds the monitor and the recommendation and publishes them.
+4. rebuilds the monitor and the recommendation and publishes them;
+5. sends new alerts to Slack.
 
 Each run takes about 3 minutes. GitHub may start a scheduled run some minutes late when its
 servers are busy. The pages show when they were last updated; the indicator turns amber if a
@@ -48,6 +49,15 @@ itself (tickets, owners, priorities) comes from `backlog.yaml` and changes only 
 it, so teams are not chasing a list that reorders itself. When the data shows something the plan
 does not cover (a new emerging or rising issue, or a new top-5 cost), the recommendation shows a
 **Not yet in the plan** box at the top.
+
+**Alerts.** After each refresh, `ratings alerts` posts to Slack when something needs a person
+today: a new review raising a safety concern, an issue newly emerging, a release flagged worse or
+"watch", the store rating falling, or stale data (a failed refresh, no new reviews for days,
+reviews left untagged). Each message carries the evidence and the owner. Every alert is sent once:
+sent alerts are recorded in the review database, and a condition that clears (an emerging issue
+that settles down) can alert again if it returns. To turn it on, create a Slack incoming webhook
+and add it as the repository secret `SLACK_WEBHOOK_URL`; until then, alerts appear only in the
+run log.
 
 ## Run your own copy (optional)
 
@@ -63,6 +73,7 @@ uv run ratings tag       # only tag new/edited reviews
 uv run ratings report    # only rebuild the monitor
 uv run ratings recommend # rebuild the recommendation, backlog exports and reply playbook
                          #   (--no-freeze: never write baselines; used by the scheduled run)
+uv run ratings alerts    # send new alerts to Slack (--dry-run: only print them)
 ```
 
 ### Changing the plan or what is measured
