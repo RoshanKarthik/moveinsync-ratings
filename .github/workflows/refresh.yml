@@ -38,10 +38,12 @@ concurrency:
 
 jobs:
   refresh:
-    runs-on: ubuntu-latest
+    # Pinned image and Node 24 action versions, so runs are reproducible and free of
+    # deprecation warnings. setup-uv publishes no major tag, so it is pinned to a release.
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Restore review database from the data branch
         id: restore
@@ -53,7 +55,7 @@ jobs:
             exit 1
           fi
 
-      - uses: astral-sh/setup-uv@v6
+      - uses: astral-sh/setup-uv@v10.3.0
         with:
           enable-cache: true
 
@@ -114,16 +116,16 @@ jobs:
           <a href="reports/latest.html">Open the ratings monitor</a>
           HTML
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
 
   deploy:
     needs: refresh
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
