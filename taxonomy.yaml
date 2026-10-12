@@ -1,0 +1,251 @@
+# Review taxonomy for the MoveInSync employee app.
+#
+# Built by reading ~300 recent 1–3★ reviews (open coding) and organised along the employee
+# journey described in the case brief. Each issue has a fixed journey stage and owner, so the
+# model only has to pick issues; ownership and stage come from here and stay consistent.
+#
+# Root-cause types:
+#   defect  – something is broken (bug, crash, wrong data)
+#   design  – works as built, but the experience is confusing, slow or annoying
+#   policy  – a rule set by MoveInSync or the employer (cut-offs, call blocking, forced logout)
+#   service – the physical service failed (cab, driver, helpdesk, vendor) – the app is the messenger
+#   gap     – a missing capability users ask for
+#
+# Bump `version` whenever codes or definitions change: re-runs re-tag only reviews whose tags were
+# produced by an older version.
+
+version: 3
+
+stages:
+  access: "Sign-in & onboarding"
+  app: "App stability & speed"
+  booking: "Booking & schedules"
+  planning: "Pickup time & routing"
+  tracking: "Live tracking & alerts"
+  boarding: "Boarding & check-in"
+  contact: "Contacting driver"
+  service: "Cab, driver & helpdesk"
+  safety: "Safety"
+  feedback: "Ratings, pop-ups & UI"
+  general: "General"
+
+owners:
+  eng_mobile: "Mobile engineering"
+  eng_platform: "Platform / backend"
+  product_ux: "Product & design"
+  routing: "Routing & scheduling team"
+  ops: "Operations, vendors & helpdesk"
+  customer_admin: "Employer transport desk (customer config)"
+  safety_team: "Safety & compliance"
+  none: "—"
+
+issues:
+  # ── Sign-in & onboarding ────────────────────────────────────────────────────────────────────
+  otp_not_received:
+    stage: access
+    owner: eng_platform
+    root: defect
+    label: "Login OTP not received"
+    definition: "Cannot sign in or register because the OTP never arrives (SMS, email or WhatsApp), arrives very late, or is rejected."
+  forced_logout:
+    stage: access
+    owner: product_ux
+    root: policy
+    label: "Frequent logout / re-login"
+    definition: "App logs the user out often, asks for OTP or identity validation on every open, or loses the session when offline — including complaints that this happens exactly when the cab is waiting."
+  registration_help:
+    stage: access
+    owner: product_ux
+    root: design
+    label: "Onboarding / registration confusion"
+    definition: "First-time user cannot register or does not know if they are registered, no clear error, no guidance on how to start, sign-in with work email fails."
+  # ── App stability & speed ──────────────────────────────────────────────────────────────────
+  crash_or_wont_open:
+    stage: app
+    owner: eng_mobile
+    root: defect
+    label: "Crash, blank screen or won't open"
+    definition: "App crashes, shows a blank/white screen, closes itself, 'something went wrong'/'oops', 404, needs restarting or reinstalling, or will not open — including device-specific crashes. Also use for a bare 'not working' / 'not opening' with no other detail."
+  play_integrity_error:
+    stage: app
+    owner: eng_mobile
+    root: defect
+    label: "'Not downloaded from Play Store' error"
+    definition: "App refuses to open with an error saying it was not installed/downloaded from the Play Store, forcing a reinstall."
+  slow_or_hangs:
+    stage: app
+    owner: eng_mobile
+    root: defect
+    label: "Slow to load / hangs"
+    definition: "Slow start-up, long loading, freezes, laggy screens, network errors or timeouts, or the app hangs at peak times (e.g. when booking opens)."
+  # ── Booking & schedules ────────────────────────────────────────────────────────────────────
+  booking_fails:
+    stage: booking
+    owner: eng_platform
+    root: defect
+    label: "Booking fails or not recorded"
+    definition: "Cannot book a cab or shuttle, booking button disabled, booking errors, booking silently cancelled, duplicate-schedule errors, or a confirmed booking that the driver/system does not have."
+  booking_flow_ux:
+    stage: booking
+    owner: product_ux
+    root: design
+    label: "Booking flow hard to use"
+    definition: "Booking/rostering steps are confusing or slow: date picker, no weekday or AM/PM shown, multi-day/date-range selection, edits and cancellation, too many taps, auto-selected dates."
+  booking_rules:
+    stage: booking
+    owner: customer_admin
+    root: policy
+    label: "Booking rules too strict"
+    definition: "Complaints about booking cut-off times, advance-booking windows, waitlists, limits on changes, or penalties such as being blocked after no-shows."
+  schedule_not_visible:
+    stage: booking
+    owner: product_ux
+    root: defect
+    label: "Can't see my bookings / trip details"
+    definition: "Booked schedules, trip history, cab number, pickup time or co-passenger list are missing, hidden or hard to find in the app."
+  address_change:
+    stage: booking
+    owner: product_ux
+    root: design
+    label: "Can't change address / pickup pin"
+    definition: "Cannot update home address, pickup point or pin location, or the change takes days or reverts."
+  # ── Pickup time & routing ──────────────────────────────────────────────────────────────────
+  pickup_time_changes:
+    stage: planning
+    owner: routing
+    root: design
+    label: "Pickup time unpredictable / changed late"
+    definition: "Pickup time changes at short notice or without notice, varies day to day, or the cab comes far too early compared with the shift."
+  routing_clubbing:
+    stage: planning
+    owner: routing
+    root: design
+    label: "Long routes / bad clubbing"
+    definition: "Routes are long or illogical, too many people clubbed, wrong drop order, unrealistic travel-time assumptions, nodal/pickup points too far away."
+  # ── Live tracking & alerts ─────────────────────────────────────────────────────────────────
+  tracking_inaccurate:
+    stage: tracking
+    owner: eng_platform
+    root: defect
+    label: "Cab location wrong or lagging"
+    definition: "Live cab location is wrong, frozen, minutes behind, or only updates when the cab is at the door; tracking not working."
+  eta_inaccurate:
+    stage: tracking
+    owner: routing
+    root: defect
+    label: "ETA / arrival time wrong"
+    definition: "Estimated arrival or drop time shown in the app is wrong or unrealistic compared with reality or Google Maps."
+  map_ux:
+    stage: tracking
+    owner: product_ux
+    root: design
+    label: "Tracking map hard to use"
+    definition: "Map auto-zooms or resets, cannot see co-passengers or the pickup sequence, no 'cab arrived' indicator, tracking only available close to pickup."
+  notifications:
+    stage: tracking
+    owner: eng_platform
+    root: defect
+    label: "Notifications missing, late or spammy"
+    definition: "Notifications or SMS about cab allocation, delay or arrival are missing, late, wrong, or repeated far too often."
+  # ── Boarding & check-in ────────────────────────────────────────────────────────────────────
+  checkin_friction:
+    stage: boarding
+    owner: product_ux
+    root: design
+    label: "OTP/QR check-in friction"
+    definition: "Problems showing or using the boarding OTP or QR scan, check-in/check-out failing, the seat-belt confirmation before the OTP, or location-accuracy requirements blocking check-in."
+  no_show_dispute:
+    stage: boarding
+    owner: ops
+    root: service
+    label: "Wrongly marked no-show"
+    definition: "User marked as no-show unfairly (app showed wrong info, cab changed, did not wait), or cannot mark/undo no-show, or no-show penalties shown long after."
+  # ── Contacting the driver ──────────────────────────────────────────────────────────────────
+  cannot_contact_driver:
+    stage: contact
+    owner: customer_admin
+    root: policy
+    label: "Can't call or message driver"
+    definition: "Calling the driver is disabled ('as per company policy'), calls drop or are unclear, the driver does not pick up, no chat option."
+  # ── Cab, driver & helpdesk (service delivery) ──────────────────────────────────────────────
+  cab_late_or_missing:
+    stage: service
+    owner: ops
+    root: service
+    label: "Cab late, early or didn't come"
+    definition: "Cab or shuttle arrives late, leaves without the user, never arrives, not enough cabs, or drops are consistently late."
+  driver_behaviour:
+    stage: service
+    owner: ops
+    root: service
+    label: "Driver behaviour or driving"
+    definition: "Rude, abusive or unprofessional drivers, rash driving, driver doesn't know the route, refuses door drop."
+  vehicle_condition:
+    stage: service
+    owner: ops
+    root: service
+    label: "Vehicle condition / overcrowding"
+    definition: "No AC, dirty or poor vehicles, too many people in the car."
+  helpdesk_support:
+    stage: service
+    owner: ops
+    root: service
+    label: "Helpdesk unhelpful / complaints ignored"
+    definition: "Helpdesk or transport team is rude, unreachable, hangs up, or complaints and raised issues get no response or resolution."
+  # ── Safety ─────────────────────────────────────────────────────────────────────────────────
+  safety_concern:
+    stage: safety
+    owner: safety_team
+    root: service
+    label: "Safety concern"
+    definition: "Any personal-safety issue: women's safety, night drops, escort/guard, SOS not working, unsafe driving or vehicle, harassment."
+  # ── Ratings, pop-ups & UI ──────────────────────────────────────────────────────────────────
+  forced_trip_rating:
+    stage: feedback
+    owner: product_ux
+    root: design
+    label: "Forced trip rating / feedback"
+    definition: "Rating or feedback after each trip is mandatory, cannot be skipped, blocks the next booking, pops up repeatedly — or the opposite: cannot rate a past trip, feedback box broken."
+  popups_permissions:
+    stage: feedback
+    owner: product_ux
+    root: design
+    label: "Repeated pop-ups & permission demands"
+    definition: "Policy/terms acceptance on every open, launch banners, repeated prompts, demands for microphone, phone or precise location permission, device time-zone checks."
+  ui_redesign:
+    stage: feedback
+    owner: product_ux
+    root: design
+    label: "Hard to use / new UI worse"
+    definition: "The app is 'not user friendly', confusing or hard to navigate, or a recent update / the new design made it worse — use alongside a more specific issue when one is named."
+  feature_request:
+    stage: feedback
+    owner: product_ux
+    root: gap
+    label: "Missing feature"
+    definition: "A concrete request for something the app does not do (dark mode, offline mode, chat, favourites, tutorial, shuttle tracking …) that is not covered by a more specific issue."
+  # ── General ────────────────────────────────────────────────────────────────────────────────
+  generic_negative:
+    stage: general
+    owner: none
+    root: service
+    label: "Negative, no specific reason"
+    definition: "Negative review with no identifiable issue ('worst app', 'pathetic service')."
+  generic_positive:
+    stage: general
+    owner: none
+    root: service
+    label: "Positive, no specific reason"
+    definition: "Positive review with no specific detail ('good', 'nice app', 'very helpful')."
+  praise_specific:
+    stage: general
+    owner: none
+    root: service
+    label: "Specific praise"
+    definition: "Positive review that names what works well (tracking, punctual cabs, safety, easy booking, helpful driver …)."
+  other:
+    stage: general
+    owner: none
+    root: gap
+    label: "Other / unclear"
+    definition: "Anything not covered above, including other MoveInSync products (desk booking, metro tickets) or off-topic text. Describe it in `detail`."

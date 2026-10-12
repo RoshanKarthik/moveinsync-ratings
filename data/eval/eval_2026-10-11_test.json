@@ -1,0 +1,579 @@
+{
+  "set": "test",
+  "taxonomy_version": 3,
+  "results": [
+    {
+      "name": "nvidia/nemotron-3-ultra-550b-a55b@nothink",
+      "n": 120,
+      "primary_accuracy": 0.9916666666666667,
+      "primary_ci95": [
+        0.9543025846256777,
+        0.9985274821693252
+      ],
+      "label_precision": 0.986013986013986,
+      "label_recall": 0.8978102189781022,
+      "target_accuracy": 0.9666666666666667,
+      "safety": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0
+      },
+      "per_code": {
+        "address_change": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "booking_fails": {
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 3
+        },
+        "booking_flow_ux": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "booking_rules": {
+          "precision": 1.0,
+          "recall": 0.75,
+          "support": 4,
+          "predicted": 3
+        },
+        "cab_late_or_missing": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "cannot_contact_driver": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "support": 2,
+          "predicted": 1
+        },
+        "checkin_friction": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3,
+          "predicted": 3
+        },
+        "crash_or_wont_open": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 19,
+          "predicted": 19
+        },
+        "eta_inaccurate": {
+          "precision": 1.0,
+          "recall": 0.6666666666666666,
+          "support": 3,
+          "predicted": 2
+        },
+        "feature_request": {
+          "precision": 0.875,
+          "recall": 0.875,
+          "support": 8,
+          "predicted": 8
+        },
+        "forced_logout": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3,
+          "predicted": 3
+        },
+        "forced_trip_rating": {
+          "precision": 1.0,
+          "recall": 0.8,
+          "support": 5,
+          "predicted": 4
+        },
+        "helpdesk_support": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 1,
+          "predicted": 1
+        },
+        "map_ux": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "support": 2,
+          "predicted": 1
+        },
+        "no_show_dispute": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "notifications": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3,
+          "predicted": 3
+        },
+        "otp_not_received": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 5,
+          "predicted": 5
+        },
+        "pickup_time_changes": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "play_integrity_error": {
+          "precision": 1.0,
+          "recall": 0.6666666666666666,
+          "support": 3,
+          "predicted": 2
+        },
+        "popups_permissions": {
+          "precision": 1.0,
+          "recall": 0.75,
+          "support": 4,
+          "predicted": 3
+        },
+        "registration_help": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 1,
+          "predicted": 1
+        },
+        "routing_clubbing": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 5,
+          "predicted": 5
+        },
+        "safety_concern": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "schedule_not_visible": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 5,
+          "predicted": 5
+        },
+        "slow_or_hangs": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 4,
+          "predicted": 4
+        },
+        "tracking_inaccurate": {
+          "precision": 1.0,
+          "recall": 0.8333333333333334,
+          "support": 12,
+          "predicted": 10
+        },
+        "ui_redesign": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 8,
+          "predicted": 8
+        }
+      }
+    },
+    {
+      "name": "nvidia/nemotron-3-super-120b-a12b@nothink",
+      "n": 120,
+      "primary_accuracy": 0.9833333333333333,
+      "primary_ci95": [
+        0.9412628731870861,
+        0.9954175314588486
+      ],
+      "label_precision": 0.9722222222222222,
+      "label_recall": 0.8613138686131386,
+      "target_accuracy": 0.9,
+      "safety": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0
+      },
+      "per_code": {
+        "address_change": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "booking_fails": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 1,
+          "predicted": 0
+        },
+        "booking_flow_ux": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "booking_rules": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 4,
+          "predicted": 4
+        },
+        "cab_late_or_missing": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "support": 2,
+          "predicted": 1
+        },
+        "cannot_contact_driver": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "support": 2,
+          "predicted": 1
+        },
+        "checkin_friction": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3,
+          "predicted": 3
+        },
+        "crash_or_wont_open": {
+          "precision": 1.0,
+          "recall": 0.9444444444444444,
+          "support": 18,
+          "predicted": 17
+        },
+        "eta_inaccurate": {
+          "precision": 1.0,
+          "recall": 0.6666666666666666,
+          "support": 3,
+          "predicted": 2
+        },
+        "feature_request": {
+          "precision": 0.8888888888888888,
+          "recall": 0.8888888888888888,
+          "support": 9,
+          "predicted": 9
+        },
+        "forced_logout": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3,
+          "predicted": 3
+        },
+        "forced_trip_rating": {
+          "precision": 1.0,
+          "recall": 0.8,
+          "support": 5,
+          "predicted": 4
+        },
+        "map_ux": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 2,
+          "predicted": 0
+        },
+        "no_show_dispute": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "notifications": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3,
+          "predicted": 3
+        },
+        "otp_not_received": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 5,
+          "predicted": 5
+        },
+        "pickup_time_changes": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "play_integrity_error": {
+          "precision": 1.0,
+          "recall": 0.6666666666666666,
+          "support": 3,
+          "predicted": 2
+        },
+        "popups_permissions": {
+          "precision": 1.0,
+          "recall": 0.75,
+          "support": 4,
+          "predicted": 3
+        },
+        "registration_help": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 1,
+          "predicted": 1
+        },
+        "routing_clubbing": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 5,
+          "predicted": 5
+        },
+        "safety_concern": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "schedule_not_visible": {
+          "precision": 1.0,
+          "recall": 0.8,
+          "support": 5,
+          "predicted": 4
+        },
+        "slow_or_hangs": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 5,
+          "predicted": 5
+        },
+        "tracking_inaccurate": {
+          "precision": 0.9166666666666666,
+          "recall": 0.9166666666666666,
+          "support": 12,
+          "predicted": 12
+        },
+        "ui_redesign": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 11,
+          "predicted": 11
+        }
+      }
+    },
+    {
+      "name": "vote: nemotron-3-ultra-550b-a55b@nothink + nemotron-3-super-120b-a12b@nothink",
+      "n": 120,
+      "primary_accuracy": 1.0,
+      "primary_ci95": [
+        0.9689797289440706,
+        1.0
+      ],
+      "label_precision": 0.9927007299270073,
+      "label_recall": 0.8686131386861314,
+      "target_accuracy": 0.9666666666666667,
+      "safety": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0
+      },
+      "per_code": {
+        "address_change": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "booking_fails": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 1,
+          "predicted": 0
+        },
+        "booking_flow_ux": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "booking_rules": {
+          "precision": 1.0,
+          "recall": 0.75,
+          "support": 4,
+          "predicted": 3
+        },
+        "cab_late_or_missing": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "support": 2,
+          "predicted": 1
+        },
+        "cannot_contact_driver": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "support": 2,
+          "predicted": 1
+        },
+        "checkin_friction": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3,
+          "predicted": 3
+        },
+        "crash_or_wont_open": {
+          "precision": 1.0,
+          "recall": 0.9473684210526315,
+          "support": 19,
+          "predicted": 18
+        },
+        "eta_inaccurate": {
+          "precision": 1.0,
+          "recall": 0.6666666666666666,
+          "support": 3,
+          "predicted": 2
+        },
+        "feature_request": {
+          "precision": 0.875,
+          "recall": 0.875,
+          "support": 8,
+          "predicted": 8
+        },
+        "forced_logout": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3,
+          "predicted": 3
+        },
+        "forced_trip_rating": {
+          "precision": 1.0,
+          "recall": 0.8,
+          "support": 5,
+          "predicted": 4
+        },
+        "helpdesk_support": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 1,
+          "predicted": 1
+        },
+        "map_ux": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "support": 2,
+          "predicted": 1
+        },
+        "no_show_dispute": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "notifications": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3,
+          "predicted": 3
+        },
+        "otp_not_received": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 5,
+          "predicted": 5
+        },
+        "pickup_time_changes": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "play_integrity_error": {
+          "precision": 1.0,
+          "recall": 0.6666666666666666,
+          "support": 3,
+          "predicted": 2
+        },
+        "popups_permissions": {
+          "precision": 1.0,
+          "recall": 0.75,
+          "support": 4,
+          "predicted": 3
+        },
+        "registration_help": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 1,
+          "predicted": 1
+        },
+        "routing_clubbing": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 5,
+          "predicted": 5
+        },
+        "safety_concern": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2,
+          "predicted": 2
+        },
+        "schedule_not_visible": {
+          "precision": 1.0,
+          "recall": 0.8,
+          "support": 5,
+          "predicted": 4
+        },
+        "slow_or_hangs": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 4,
+          "predicted": 4
+        },
+        "tracking_inaccurate": {
+          "precision": 1.0,
+          "recall": 0.8333333333333334,
+          "support": 12,
+          "predicted": 10
+        },
+        "ui_redesign": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 8,
+          "predicted": 8
+        }
+      }
+    }
+  ],
+  "misses": {
+    "nvidia/nemotron-3-ultra-550b-a55b@nothink": [
+      {
+        "text": "so many glitches with so much restrictions during the cab booking, driver can Mark you no show without any reason.",
+        "gold": [
+          "no_show_dispute",
+          "booking_rules"
+        ],
+        "got": [
+          "booking_fails",
+          "no_show_dispute"
+        ]
+      }
+    ],
+    "nvidia/nemotron-3-super-120b-a12b@nothink": [
+      {
+        "text": "Finally you are here much needed app",
+        "gold": [
+          "generic_positive"
+        ],
+        "got": [
+          "praise_specific"
+        ]
+      },
+      {
+        "text": "Overall Great.",
+        "gold": [
+          "generic_positive"
+        ],
+        "got": [
+          "praise_specific"
+        ]
+      }
+    ],
+    "vote: nemotron-3-ultra-550b-a55b@nothink + nemotron-3-super-120b-a12b@nothink": []
+  }
+}
