@@ -1,0 +1,102 @@
+# Refreshes the ratings monitor and the recommendation every 2 hours and on demand.
+# On demand: GitHub → Actions → "Refresh ratings report" → Run workflow.
+#
+# One-time setup:
+#   1. Settings → Secrets and variables → Actions → New secret: NVIDIA_API_KEY = nvapi-...
+#   2. Settings → Pages → Source: GitHub Actions
+#   3. From your computer, upload the review database once:  uv run python scripts/seed_data_branch.py
+#      (the full history takes hours to tag on the free model tier — far over a CI run's limit;
+#      after seeding, each run only fetches and tags what is new, about a minute)
+# The site is then published at https://<owner>.github.io/<repo>/
+#   /                                   → the monitor ("How are our ratings?")
+#   /deliverables/recommendation.html   → the recommendation, with live evidence
+#
+# The review database lives on a separate `data` branch, overwritten each run (one commit),
+# so the main history never grows with data.
+
+name: Refresh ratings report
+
+on:
+  schedule:
+    # Every 2 hours at :15 past (GitHub delays runs at the top of the hour, when load is highest).
+    # Times are UTC: 00:15, 02:15, ... = 05:45, 07:45, ... IST. Each run takes about 3 minutes.
+    - cron: "15 */2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore review database from the data branch
+        run: |
+          if git fetch --depth=1 origin data 2>/dev/null; then
+            git show origin/data:ratings.db > data/ratings.db && echo "Restored database"
+          else
+            echo "::error::No 'data' branch. Run 'uv run python scripts/seed_data_branch.py' once from your computer (see README)."
+            exit 1
+          fi
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Refresh (download, tag, monitor)
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          CI: "1"
+        run: uv run ratings refresh --no-open
+
+      - name: Rebuild the recommendation with today's evidence
+        env:
+          CI: "1"
+        # --no-freeze: baselines are recorded locally and committed, never moved by a CI run.
+        run: uv run ratings recommend --no-open --no-freeze
+
+      - name: Save review database to the data branch
+        run: |
+          mkdir -p /tmp/data && cp data/ratings.db /tmp/data/
+          cd /tmp/data
+          git init -q -b data
+          git config user.name "ratings-bot"
+          git config user.email "ratings-bot@users.noreply.github.com"
+          git add ratings.db
+          git commit -q -m "data: reviews and tags as of $(date -u +%F)"
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" data
+
+      - name: Prepare site (same layout as the project folder, so every link works)
+        run: |
+          mkdir -p site/reports site/deliverables site/docs
+          cp reports/latest.html site/reports/latest.html
+          cp deliverables/* site/deliverables/
+          cp docs/METHOD.md docs/SOURCES.md site/docs/
+          cat > site/index.html <<'HTML'
+          <!doctype html><meta charset="utf-8"><title>Play Store Ratings Monitor</title>
+          <meta http-equiv="refresh" content="0; url=reports/latest.html">
+          <a href="reports/latest.html">Open the ratings monitor</a>
+          HTML
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: refresh
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
