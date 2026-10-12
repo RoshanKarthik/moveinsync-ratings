@@ -334,7 +334,7 @@ table.scen td, table.scen th { font-size: 14px; }
       <a href="approach.html"><span class="t-long">How it was built</span><span class="t-short" aria-hidden="true">Method</span></a>
     </nav>
     <div class="appbar-right">
-      <span class="live" data-ts="2026-10-12T22:00:22+00:00" title="Data refreshed 13 Oct 2026, 03:30 IST; reviews up to 11 Oct 2026"><i aria-hidden="true"></i><span class="live-text">Updated 13 Oct 2026, 03:30 IST</span></span>
+      <span class="live" data-ts="2026-10-12T22:22:41+00:00" title="Data refreshed 13 Oct 2026, 03:52 IST; reviews up to 11 Oct 2026"><i aria-hidden="true"></i><span class="live-text">Updated 13 Oct 2026, 03:52 IST</span></span>
       <button class="theme-btn" type="button" aria-label="Colour theme: automatic" title="Colour theme">◐</button>
     </div>
   </div>
@@ -344,7 +344,7 @@ table.scen td, table.scen th { font-size: 14px; }
       <h1>What to fix first to raise the employee app's Play Store rating</h1>
       <div class="sub">MoveInSync (employee app) · <code>com.moveinsync.ets</code> · as of Play Store reviews to <strong>11 Oct 2026</strong> (store snapshot 13 Oct 2026)</div>
     </div>
-    <div class="sub small">Recommendation · evidence refreshed 13 Oct 2026, 03:30 IST · plan written 2026-10-09 · <a href="../reports/latest.html">Live ratings monitor</a></div>
+    <div class="sub small">Recommendation · evidence refreshed 13 Oct 2026, 03:52 IST · plan written 09 Oct 2026 · <a href="../reports/latest.html">Live ratings monitor</a></div>
   </header>
   <nav class="toc" aria-label="Sections">
     <a href="#answer">The answer</a><a href="#why">Why</a><a href="#plan">What to do first</a><a href="#scenario">What it adds up to</a>
@@ -357,11 +357,11 @@ table.scen td, table.scen th { font-size: 14px; }
     <div class="card answer">
       <h2>The answer</h2>
       <p class="lead">
-        <strong>The app is rated 4.64★, below Safetrax Commuter's 4.72★, because 6.4% of its ratings are 1★ against 3.8%</strong> — and about 87% of those 1★ ratings come with a written review, while the 79% of raters who leave no text average 4.91★.
+        <strong>The app is rated 4.64★, below Safetrax Commuter's 4.72★; 6.4% of its ratings are 1★ against 3.8%</strong> — and about 87% of those 1★ ratings come with a written review, while the 79% of raters who leave no text average 4.91★.
       </p>
       <p class="lead">
         66% of the 769 1–2★ reviews of the last 365 days are about the app rather than the cab service; the costliest problem is <strong>“Crash, blank screen or won&#39;t open”</strong> (13% of 1–2★ reviews in the last 90 days, 19% in the last 30 days), followed by “Helpdesk unhelpful / complaints ignored”, “Login OTP not received”, “Hard to use / new UI worse” and “Frequent logout / re-login”.
-        <strong>Meanwhile MoveInSync stopped answering reviews</strong>: 98% were answered in 2024Q1, 1% in the last 90 days, while Safetrax Commuter answers 100% of its 1–2★ reviews.
+<strong>Meanwhile MoveInSync stopped answering reviews</strong>: 98% were answered in 2024Q1, 1% in the last 90 days, while Safetrax Commuter answers 100% of its 1–2★ reviews.
       </p>
       <p class="lead">
         <strong>First, this week and with no release:</strong> answer every 1–2★ review, triage each new release with Android vitals, and put releases behind staged rollouts; <strong>then, in the next two releases,</strong> fix crashes, the false “not downloaded from Play Store” block and sign-in, show the boarding OTP before the seat-belt check, and start asking happy riders for a rating after good trips.
@@ -392,7 +392,7 @@ If 1–2★ ratings fell to Safetrax Commuter's share, the rating would be about
         <div class="col">
           <h3>This week</h3>
           <div class="small muted">No release needed</div>
-          <ol><li><a href="#MIS-01"><span class="id">MIS-01</span>Answer every 1–2★ review within 2 working days, starting with the backlog</a></li><li><a href="#MIS-02"><span class="id">MIS-02</span>Triage the crash rise in 12.19.0 with Android vitals and decide hotfix vs. rollback</a></li><li><a href="#MIS-03"><span class="id">MIS-03</span>Staged rollout with halt rules for every release</a></li><li><a href="#OPS-01"><span class="id">OPS-01</span>Follow up every safety concern raised in a review within 24 hours</a> <span class="muted small">(ops)</span></li></ol>
+          <ol><li><a href="#MIS-01"><span class="id">MIS-01</span>Answer every 1–2★ review within 2 working days, starting with the backlog</a></li><li><a href="#MIS-02"><span class="id">MIS-02</span>Triage crashes in release 12.19.0 with Android vitals and decide hotfix vs. rollback</a></li><li><a href="#MIS-03"><span class="id">MIS-03</span>Staged rollout with halt rules for every release</a></li><li><a href="#OPS-01"><span class="id">OPS-01</span>Follow up every safety concern raised in a review within 24 hours</a> <span class="muted small">(ops)</span></li></ol>
         </div>
         <div class="col">
           <h3>Next 1–2 releases</h3>
@@ -413,7 +413,7 @@ If 1–2★ ratings fell to Safetrax Commuter's share, the rating would be about
     <h2 style="margin-bottom:10px">Why the rating is where it is</h2>
     <div class="card finding">
       <h3><span class="num-badge">1</span>The low ratings are written ones; most raters are happy and silent</h3>
-      <p>Of 114,880 ratings, about 79% have no text and average <strong>4.91★</strong>; the 24,317 written reviews average <strong>3.61★</strong> (3.84★ over the last 365 days). About 87% of the store's 1★ ratings come with a written review. So the rating is set by two things: <em>how many 1–2★ written reviews arrive</em>, and <em>how many happy riders rate at all</em>. Right now the first goes unanswered and the second is left to chance.</p>
+      <p>Of 114,880 ratings, about 79% have no text and average <strong>4.91★</strong>; the 24,317 written reviews average <strong>3.61★</strong> (3.84★ over the last 365 days). About 87% of the store's 1★ ratings come with a written review. So the rating is set by two things: <em>how many 1–2★ written reviews arrive</em>, and <em>how many happy riders rate at all</em>. Right now most 1–2★ written reviews go unanswered.</p>
       <svg viewBox="0 0 720 128" class="chart" role="img" aria-label="Star mix: silent raters vs reviewers"><text class="rowlabel" x="160" y="26" text-anchor="end">Star-only ratings</text><rect class="seg" x="170.0" y="12" width="3.7" height="22" rx="2" style="fill:var(--div-neg-2)" data-tip="Star-only ratings: 1★ = 964 (1%)" tabindex="0"/><rect class="seg" x="175.7" y="12" width="0.5" height="22" rx="2" style="fill:var(--div-mid)" data-tip="Star-only ratings: 3★ = 135 (0%)" tabindex="0"/><rect class="seg" x="176.5" y="12" width="24.5" height="22" rx="2" style="fill:var(--div-pos-1)" data-tip="Star-only ratings: 4★ = 4,459 (5%)" tabindex="0"/><rect class="seg" x="203.0" y="12" width="505.0" height="22" rx="2" style="fill:var(--div-pos-2)" data-tip="Star-only ratings: 5★ = 85,325 (94%)" tabindex="0"/><text class="seglabel on-dark" x="456.5" y="27" text-anchor="middle">5★ 94%</text><text class="rowlabel" x="160" y="66" text-anchor="end">Written reviews</text><rect class="seg" x="170.0" y="52" width="139.1" height="22" rx="2" style="fill:var(--div-neg-2)" data-tip="Written reviews: 1★ = 6,352 (26%)" tabindex="0"/><text class="seglabel on-dark" x="240.5" y="67" text-anchor="middle">1★ 26%</text><rect class="seg" x="311.1" y="52" width="23.9" height="22" rx="2" style="fill:var(--div-neg-1)" data-tip="Written reviews: 2★ = 1,165 (5%)" tabindex="0"/><rect class="seg" x="336.9" y="52" width="22.2" height="22" rx="2" style="fill:var(--div-mid)" data-tip="Written reviews: 3★ = 1,089 (4%)" tabindex="0"/><rect class="seg" x="361.1" y="52" width="60.0" height="22" rx="2" style="fill:var(--div-pos-1)" data-tip="Written reviews: 4★ = 2,794 (11%)" tabindex="0"/><text class="seglabel on-light" x="392.1" y="67" text-anchor="middle">4★ 11%</text><rect class="seg" x="423.2" y="52" width="284.8" height="22" rx="2" style="fill:var(--div-pos-2)" data-tip="Written reviews: 5★ = 12,917 (53%)" tabindex="0"/><text class="seglabel on-dark" x="566.6" y="67" text-anchor="middle">5★ 53%</text><text class="rowlabel" x="160" y="106" text-anchor="end">Safetrax Commuter (all)</text><rect class="seg" x="170.0" y="92" width="18.6" height="22" rx="2" style="fill:var(--div-neg-2)" data-tip="Safetrax Commuter (all): 1★ = 922 (4%)" tabindex="0"/><rect class="seg" x="190.6" y="92" width="1.3" height="22" rx="2" style="fill:var(--div-neg-1)" data-tip="Safetrax Commuter (all): 2★ = 149 (1%)" tabindex="0"/><rect class="seg" x="194.0" y="92" width="4.9" height="22" rx="2" style="fill:var(--div-mid)" data-tip="Safetrax Commuter (all): 3★ = 310 (1%)" tabindex="0"/><rect class="seg" x="200.9" y="92" width="42.9" height="22" rx="2" style="fill:var(--div-pos-1)" data-tip="Safetrax Commuter (all): 4★ = 2,006 (8%)" tabindex="0"/><text class="seglabel on-light" x="223.3" y="107" text-anchor="middle">4★ 8%</text><rect class="seg" x="245.8" y="92" width="462.2" height="22" rx="2" style="fill:var(--div-pos-2)" data-tip="Safetrax Commuter (all): 5★ = 20,753 (86%)" tabindex="0"/><text class="seglabel on-dark" x="477.9" y="107" text-anchor="middle">5★ 86%</text></svg>
       <p class="note">Star-only = Google's published star counts minus written reviews per star. Approximate: Google rescales its counts to match its recency-weighted rating, and they include all languages.</p>
     </div>
@@ -442,13 +442,12 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
           <tr><td><strong>MoveInSync (employee app)</strong></td><td class="num">4.64</td><td class="num">2,848</td><td class="num">3%</td><td class="num">4%</td></tr>
 <tr><td>Safetrax Commuter</td><td class="num">4.72</td><td class="num">114</td><td class="num">100%</td><td class="num">100%</td></tr><tr><td>WhistleDrive EmployeeApp</td><td class="num">4.67</td><td class="num">15</td><td class="num">0%</td><td class="num">0%</td></tr><tr><td>SMT Employee</td><td class="num">3.17</td><td class="num">48</td><td class="num">0%</td><td class="num">0%</td></tr>        </tbody>
       </table></div>
-      <p class="note">Comparison apps get far fewer written reviews, so their review averages are not comparable; their reply rates are.</p>
-    </div>
+<p class="note">Comparison apps get fewer written reviews, so their review averages are not comparable; their reply rates are.</p>    </div>
     <div class="card finding">
       <h3><span class="num-badge">4</span>Better than a year ago — but new problems are emerging</h3>
       <ul class="points">
         <li>Last 365 days: 27% of written reviews were 1–2★ (769 of 2,848), vs 30% the year before (p = 0.004, significant).</li>
-        <li>Last 90 days vs the 90 before: 28% vs 27% — no significant change.</li>
+        <li>Last 90 days vs the 90 before: 28% vs 27% (p = 0.491, not significant).</li>
 <li><strong>Emerging:</strong> “Crash, blank screen or won&#39;t open” — 19% of 1–2★ reviews in the last 30 days (14 of 73) vs 10% in the 180 days before (p = 0.015).</li><li><strong>Rising:</strong> “&#39;Not downloaded from Play Store&#39; error” — 4% of 1–2★ reviews in the last 90 days vs 1% before (p = 0.044).</li>      </ul>
     </div>
     <div class="card finding">
@@ -471,7 +470,7 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
       <span class="chip">Effort: S · ~2 person-days to clear the 90-day backlog, then ~30 min a day</span>
     </div>
   </header>
-  <p class="problem">MoveInSync stopped replying to Play Store reviews. Unhappy employees hear nothing back, and every new employee reading the store page sees complaints left unanswered, while the closest comparison app answers its negative reviews.</p>
+  <p class="problem">Unanswered reviews: unhappy employees hear nothing back, and every new employee reading the store page sees the complaints left unanswered. The evidence gives the current reply rates for MoveInSync and the closest comparison app.</p>
   <div class="cols">
     <div>
       <h4>The change</h4>
@@ -493,14 +492,14 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
 </article>
 <article class="ticket" id="MIS-02">
   <header>
-    <h3><span class="id">MIS-02</span>Triage the crash rise in 12.19.0 with Android vitals and decide hotfix vs. rollback</h3>
+    <h3><span class="id">MIS-02</span>Triage crashes in release 12.19.0 with Android vitals and decide hotfix vs. rollback</h3>
     <div class="meta-row">
       <span class="chip pri-Highest">Highest priority</span>
       <span class="chip">Owner: Mobile engineering lead</span>
       <span class="chip">Effort: S · 1–2 engineer-days to triage; fix sized after triage</span>
     </div>
   </header>
-  <p class="problem">&#34;Crash, blank screen or won&#39;t open&#34; costs the rating more than any other issue and is rising in the latest reviews, led by the newest release. Play may also reduce the app&#39;s visibility and show a store-listing warning when crash or ANR rates pass its bad-behaviour thresholds.</p>
+  <p class="problem">Crashes, blank screens and an app that won&#39;t open; the evidence gives the issue&#39;s current rating-cost rank, trend and the latest release&#39;s figures. Play may also reduce the app&#39;s visibility and show a store-listing warning when crash or ANR rates pass its bad-behaviour thresholds.</p>
   <div class="cols">
     <div>
       <h4>The change</h4>
@@ -512,7 +511,7 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
 <blockquote>“whenever i update this app, i am not able to open the app again, I need to uninstall and reinstall again. facing this issue since 3 months”<span class="meta">1★ · Oct 2026 · vnan</span></blockquote><blockquote>“a few days ago this app was working fine on my phone, but for the last 3 days it&#39;s not working at all. The app doesn&#39;t start on my phone, whenever I am opening it, it closes itself. I tried clearing data, reinstalled …”<span class="meta">3★ · Oct 2026 · vnan</span></blockquote>    </div>
   </div>
   <div class="outcome">
-    <div><h4>Expected effect</h4><p>Stops the current rise; the lasting fix is MIS-05. Upper bound: <strong>+0.136★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
+    <div><h4>Expected effect</h4><p>Contains crashes in the current release; the lasting fix is MIS-05. Upper bound: <strong>+0.136★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
     <div><h4>Success metric</h4><p>User-perceived crash and ANR rate per release (Android vitals); crash share of 1–2★ reviews (monitor).</p></div>
     <div><h4>Confirm with (internal)</h4><p>Android vitals (crash rate, ANR rate, top clusters per version and device).</p></div>
   </div>
@@ -529,7 +528,7 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
       <span class="chip">Effort: S · process change, ~1 day to set up</span>
     </div>
   </header>
-  <p class="problem">Releases ship often, and many reviews calling the app hard to use blame a recent update. A bad release reaches every employee before anyone notices.</p>
+  <p class="problem">Releases ship often, and reviews calling the app hard to use blame recent updates. A bad release reaches every employee before anyone notices.</p>
   <div class="cols">
     <div>
       <h4>The change</h4>
@@ -559,7 +558,7 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
       <span class="chip">Effort: M · 3–5 engineer-days</span>
     </div>
   </header>
-  <p class="problem">Employees who installed from Google Play are told every few days that the app &#34;was not downloaded from Play Store&#34; and must reinstall. This is rising. The pattern (works, then fails days later) points to an integrity check that fails closed on transient errors or stale verdicts, not to sideloading.</p>
+  <p class="problem">Employees who installed from Google Play are told every few days that the app &#34;was not downloaded from Play Store&#34; and must reinstall. The pattern (works, then fails days later) points to an integrity check that fails closed on transient errors or stale verdicts, not to sideloading.</p>
   <div class="cols">
     <div>
       <h4>The change</h4>
@@ -600,7 +599,7 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
 <blockquote>“This aap keeps on crashing due to some bug and there is No Update Available Yet... What will Working Professionals do who avail cab services???”<span class="meta">1★ · Sep 2026 · vnan</span></blockquote><blockquote>“app crashed did not open in my mobile plx fixed it vivo v25 Pro”<span class="meta">1★ · Sep 2026 · v12.19.0</span></blockquote>    </div>
   </div>
   <div class="outcome">
-    <div><h4>Expected effect</h4><p>Targets the largest single rating cost. Upper bound: <strong>+0.136★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
+    <div><h4>Expected effect</h4><p>Targets the issue&#39;s rating cost (its current rank is in the evidence). Upper bound: <strong>+0.136★</strong> on the written-review average if no 1–2★ review named these issues.</p></div>
     <div><h4>Success metric</h4><p>Crash share of 1–2★ reviews (Fix tracker); crash and ANR rate (Android vitals). Baseline 13.0% (27 of 207); the monitor can confirm improvement once it is at or below 8.3%.</p></div>
     <div><h4>Confirm with (internal)</h4><p>Android vitals; cold-start time per device.</p></div>
   </div>
@@ -646,7 +645,7 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
       <span class="chip">Effort: S · 2–3 engineer-days</span>
     </div>
   </header>
-  <p class="problem">The redesigned app is called hard to use, often blaming a recent update. The newest named complaint is the seat-belt confirmation that now pops up before the boarding OTP, adding a step and hiding the OTP while the driver waits.</p>
+  <p class="problem">The redesigned app is called hard to use, some reviews blaming a recent update. One named complaint is the seat-belt confirmation that now pops up before the boarding OTP, adding a step and hiding the OTP while the driver waits.</p>
   <div class="cols">
     <div>
       <h4>The change</h4>
@@ -675,7 +674,7 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
       <span class="chip">Effort: S · 2–3 engineer-days</span>
 <span class="chip">After MIS-05</span>    </div>
   </header>
-  <p class="problem">Most ratings come from employees who never write a review, and they rate the app highly. Asking them on Play at a good moment is the cheapest way to add recent positive ratings. The app&#39;s own post-trip rating pop-up, by contrast, is itself a complaint. (If the app already calls the In-App Review API, this ticket becomes tuning when it fires.)</p>
+  <p class="problem">Employees who rate without writing a review count in the store rating but never appear in reviews; the evidence gives their share and average stars. Asking them on Play at a good moment is the cheapest way to add recent positive ratings. The app&#39;s own post-trip rating pop-up, by contrast, is itself a complaint. (If the app already calls the In-App Review API, this ticket becomes tuning when it fires.)</p>
   <div class="cols">
     <div>
       <h4>The change</h4>
@@ -704,7 +703,7 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
       <span class="chip">Effort: S · 2 engineer-days to investigate</span>
     </div>
   </header>
-  <p class="problem">Complaints about missing, late or repeated notifications (cab allocated, cab arriving) are emerging in the last 30 days.</p>
+  <p class="problem">Complaints about missing, late or repeated notifications (cab allocated, cab arriving); the evidence gives their current share and trend.</p>
   <div class="cols">
     <div>
       <h4>The change</h4>
@@ -716,7 +715,7 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
 <blockquote>“06-10-2026 even after booked the trip it keep sends the push notification that trip is not booked. old: Bring monthly view ,not just day view...”<span class="meta">1★ · Oct 2026 · v12.19.0</span></blockquote><blockquote>“mobile number is not visible once cab is booked, I can not see latest notification, since seems like notification stack full and never notification can not be shown. for every button click it is asking for policy …”<span class="meta">1★ · Oct 2026 · v12.19.0</span></blockquote>    </div>
   </div>
   <div class="outcome">
-    <div><h4>Expected effect</h4><p>Early action on an emerging complaint while it is still small. Upper bound: <strong>+0.015★</strong> on the written-review average if no 1–2★ review named this issue.</p></div>
+    <div><h4>Expected effect</h4><p>Fixes the cause before the complaint grows. Upper bound: <strong>+0.015★</strong> on the written-review average if no 1–2★ review named this issue.</p></div>
     <div><h4>Success metric</h4><p>Notification share of 1–2★ reviews (Fix tracker); push delivery rate. Baseline 3.4% (7 of 207); the monitor can confirm improvement once it is at or below 0.5%.</p></div>
     <div><h4>Confirm with (internal)</h4><p>Push provider delivery reports.</p></div>
   </div>
@@ -814,7 +813,7 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
       <span class="chip">Effort: S · ongoing</span>
     </div>
   </header>
-  <p class="problem">Safety concerns are rare in reviews but each one needs action; more reviews praise safety than raise a concern, so safety is a strength to protect.</p>
+  <p class="problem">Each safety concern raised in a review needs action, however few there are. The evidence gives the current count, and how many reviews praise safety.</p>
   <div class="cols">
     <div>
       <h4>The change</h4>
@@ -826,7 +825,7 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
 <blockquote>“drivers and management are extremely rude and they talk in an inappropriate and disrespectful manner. Drivers shout during the conversation. Such behavior is unacceptable and that makes feel very uncomfortable and unsafe”<span class="meta">1★ · Jun 2026 · v12.13.2</span></blockquote><blockquote>“Keeps logging out after every 5 to 10 mins of inactivity on the app. Logging in again requires authentication via company&#39;s app which is time consuming. Also this poses a problem especially for female passengers who …”<span class="meta">1★ · May 2026 · v12.12.2</span></blockquote>    </div>
   </div>
   <div class="outcome">
-    <div><h4>Expected effect</h4><p>Protects a strength; prevents a single incident review from going unanswered. Upper bound: <strong>+0.013★</strong> on the written-review average if no 1–2★ review named this issue.</p></div>
+    <div><h4>Expected effect</h4><p>No safety concern raised in a review goes unanswered. Upper bound: <strong>+0.013★</strong> on the written-review average if no 1–2★ review named this issue.</p></div>
     <div><h4>Success metric</h4><p>Safety concerns per month and time to follow-up. Baseline 2.4% (5 of 207).</p></div>
     <div><h4>Confirm with (internal)</h4><p>Safety incident log.</p></div>
   </div>
@@ -998,10 +997,10 @@ broken 33% <span class="ci">(30%–37%)</span> · no specific reason 24% <span c
     <div class="card">
       <h2>Method, accuracy and limits</h2>
       <ul class="points small">
-        <li><strong>Data.</strong> All 24,317 public Google Play reviews of <code>com.moveinsync.ets</code> (Mar 2014 to 11 Oct 2026, India store, English), the store listing, and three comparable employee-commute apps' listings and replies. Reviewer names are never stored.</li>
+        <li><strong>Data.</strong> All 24,317 public Google Play reviews of <code>com.moveinsync.ets</code> (Mar 2014 to 11 Oct 2026, India store, English), the store listing, and 3 comparable employee-commute apps' listings and replies. Reviewer names are never stored.</li>
         <li><strong>Tagging.</strong> 10,311 of 10,311 reviews since Jan 2023 are tagged with up to three of 33 issues built from the employee journey, each with a fixed owner and root-cause type. Short praise is tagged by rule; the rest by nemotron-3-ultra-550b-a55b on NVIDIA's free NIM tier, with nemotron-3-super-120b-a12b as fallback.</li>
-<li><strong>Accuracy</strong> on 120 held-out, labelled reference reviews: main issue correct 99% (95% CI 95%–100%), tag precision 99%, recall 90%, 0 safety reviews missed. Recall below 100% means issue shares slightly undercount.</li>        <li><strong>Statistics.</strong> “1–2★ share” = share of 1–2★ reviews in the window naming the issue (95% Wilson interval, n shown). Changes: two-proportion z-test; “emerging” = last 30 days vs the 180 before; releases are Bonferroni-corrected. Rating cost splits each review evenly between the issues it names, so costs add up; it is an upper bound on what a fix can recover.</li>
-        <li><strong>Assumptions.</strong> Scenarios keep today's star mix within 1–2★ and 3–5★ and assume the store's 1–2★ share moves with written 1–2★ reviews (most 1★ ratings carry text). Effort estimates and internal targets are proposals for the owning teams to confirm.</li>
+<li><strong>Accuracy</strong> on 120 held-out, labelled reference reviews: main issue correct 99% (95% CI 95%–100%), tag precision 99%, recall 90%, 0 safety reviews missed. Recall below 100% means issue shares slightly undercount.</li>        <li><strong>Statistics.</strong> “1–2★ share” = share of 1–2★ reviews in the window naming the issue (95% Wilson interval, n shown). Changes: two-proportion z-test; “emerging” = last 30 days vs the 180 before (at least 3 mentions); releases are Bonferroni-corrected. Rating cost splits each review evenly between the issues it names, so costs add up; it is an upper bound on what a fix can recover.</li>
+        <li><strong>Assumptions.</strong> Scenarios keep today's star mix within 1–2★ and 3–5★ and assume the store's 1–2★ share moves with written 1–2★ reviews (about 87% of 1★ ratings carry text). Effort estimates and internal targets are proposals for the owning teams to confirm.</li>
         <li><strong>Limits.</strong> Written reviews are about 21% of ratings and skew negative: they show <em>what</em> goes wrong and how often relative to other problems, not how many trips go wrong. There is no access to crash, OTP, GPS or trip data — each ticket names the internal metric that would confirm it. Employer settings are invisible from outside. Google's rating formula is private.</li>
         <li><strong>Google Play facts used</strong> (replies notify users, reply and in-app review rules, recency weighting, Android vitals thresholds, Play Integrity remediation): sources in <a href="../docs/SOURCES.md">docs/SOURCES.md</a>. Full method: <a href="../docs/METHOD.md">docs/METHOD.md</a>.</li>
         <li><strong>Downloads.</strong> <a href="backlog.xlsx">backlog.xlsx</a> · <a href="backlog_jira.csv">backlog_jira.csv</a> (Jira import) · <a href="reply_playbook.md">reply_playbook.md</a>.</li>

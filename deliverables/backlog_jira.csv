@@ -1,6 +1,6 @@
 Summary,Issue Type,Priority,Labels,Labels,Labels,Description
 "[MIS-01] Answer every 1–2★ review within 2 working days, starting with the backlog",Task,Highest,play-rating,horizon-now,track-product,"h3. Problem
-MoveInSync stopped replying to Play Store reviews. Unhappy employees hear nothing back, and every new employee reading the store page sees complaints left unanswered, while the closest comparison app answers its negative reviews.
+Unanswered reviews: unhappy employees hear nothing back, and every new employee reading the store page sees the complaints left unanswered. The evidence gives the current reply rates for MoveInSync and the closest comparison app.
 
 h3. Evidence (Play Store reviews to 11 Oct 2026)
 * Reviews answered: 98% in 2024Q1 (last quarter at 90% or more); at most 10% in every quarter since 2024Q3; last reply 18 Aug 2026.
@@ -25,8 +25,8 @@ h3. Acceptance criteria
 *Success metric:* Share of 1–2★ reviews answered (monitor), and star changes after a reply (review_changes log).
 *Confirm with (internal data):* Play Console reply log; the monitor's star-change log (first full month after replies resume).
 *Expected effect:* Google notifies the reviewer of a reply by push and email, and the reviewer can update the rating. The size of the effect is not measurable from past public data; the star-change log measures it from now on."
-[MIS-02] Triage the crash rise in 12.19.0 with Android vitals and decide hotfix vs. rollback,Bug,Highest,play-rating,horizon-now,track-product,"h3. Problem
-""Crash, blank screen or won't open"" costs the rating more than any other issue and is rising in the latest reviews, led by the newest release. Play may also reduce the app's visibility and show a store-listing warning when crash or ANR rates pass its bad-behaviour thresholds.
+[MIS-02] Triage crashes in release 12.19.0 with Android vitals and decide hotfix vs. rollback,Bug,Highest,play-rating,horizon-now,track-product,"h3. Problem
+Crashes, blank screens and an app that won't open; the evidence gives the issue's current rating-cost rank, trend and the latest release's figures. Play may also reduce the app's visibility and show a store-listing warning when crash or ANR rates pass its bad-behaviour thresholds.
 
 h3. Evidence (Play Store reviews to 11 Oct 2026)
 * Crash, blank screen or won't open: in 13% of 1–2★ reviews in the last 90 days (27 of 205; 95% CI 9.2%–18%); 11% in the 90 days before (no significant change, p = 0.414).
@@ -48,9 +48,9 @@ h3. Acceptance criteria
 *Effort (estimate):* S · 1–2 engineer-days to triage; fix sized after triage
 *Success metric:* User-perceived crash and ANR rate per release (Android vitals); crash share of 1–2★ reviews (monitor).
 *Confirm with (internal data):* Android vitals (crash rate, ANR rate, top clusters per version and device).
-*Expected effect:* Stops the current rise; the lasting fix is MIS-05."
+*Expected effect:* Contains crashes in the current release; the lasting fix is MIS-05."
 [MIS-03] Staged rollout with halt rules for every release,Task,High,play-rating,horizon-now,track-product,"h3. Problem
-Releases ship often, and many reviews calling the app hard to use blame a recent update. A bad release reaches every employee before anyone notices.
+Releases ship often, and reviews calling the app hard to use blame recent updates. A bad release reaches every employee before anyone notices.
 
 h3. Evidence (Play Store reviews to 11 Oct 2026)
 * 29 releases had enough reviews to compare in the last 365 days; 0 flagged 'worse' or 'watch' by the monitor.
@@ -71,7 +71,7 @@ h3. Acceptance criteria
 *Confirm with (internal data):* Play Console release dashboard; Android vitals.
 *Expected effect:* Limits the damage of a bad release to a fraction of users for a few days."
 "[MIS-04] Fix the ""not downloaded from Play Store"" false block",Bug,Highest,play-rating,horizon-next,track-product,"h3. Problem
-Employees who installed from Google Play are told every few days that the app ""was not downloaded from Play Store"" and must reinstall. This is rising. The pattern (works, then fails days later) points to an integrity check that fails closed on transient errors or stale verdicts, not to sideloading.
+Employees who installed from Google Play are told every few days that the app ""was not downloaded from Play Store"" and must reinstall. The pattern (works, then fails days later) points to an integrity check that fails closed on transient errors or stale verdicts, not to sideloading.
 
 h3. Evidence (Play Store reviews to 11 Oct 2026)
 * 'Not downloaded from Play Store' error: in 3.9% of 1–2★ reviews in the last 90 days (8 of 205; 95% CI 2.0%–7.5%); 0.9% in the 90 days before (rising, p = 0.044).
@@ -121,7 +121,7 @@ h3. Acceptance criteria
 *Success metric:* Crash share of 1–2★ reviews (Fix tracker); crash and ANR rate (Android vitals).
 Fix tracker baseline: 13.0% of 1–2★ reviews (27 of 207, 90 days to 2026-10-09).
 *Confirm with (internal data):* Android vitals; cold-start time per device.
-*Expected effect:* Targets the largest single rating cost."
+*Expected effect:* Targets the issue's rating cost (its current rank is in the evidence)."
 [MIS-06] Sign-in that works — OTP delivery fallback and fewer forced logouts,Story,High,play-rating,horizon-next,track-product,"h3. Problem
 Employees cannot get in — the OTP does not arrive — and are logged out often, so they need a new OTP at the moment the cab arrives. Each forced logout is another chance for OTP delivery to fail.
 
@@ -151,7 +151,7 @@ Fix tracker baseline: 5.3% of 1–2★ reviews (11 of 207, 90 days to 2026-10-09
 *Confirm with (internal data):* SMS gateway delivery reports; auth service logs (session length, re-login rate).
 *Expected effect:* Removes the two sign-in complaints; each forced logout avoided is also one fewer OTP that can fail."
 [MIS-07] Boarding — show the OTP first and move the seat-belt check after it,Story,High,play-rating,horizon-next,track-product,"h3. Problem
-The redesigned app is called hard to use, often blaming a recent update. The newest named complaint is the seat-belt confirmation that now pops up before the boarding OTP, adding a step and hiding the OTP while the driver waits.
+The redesigned app is called hard to use, some reviews blaming a recent update. One named complaint is the seat-belt confirmation that now pops up before the boarding OTP, adding a step and hiding the OTP while the driver waits.
 
 h3. Evidence (Play Store reviews to 11 Oct 2026)
 * Hard to use / new UI worse: in 6.8% of 1–2★ reviews in the last 90 days (14 of 205; 95% CI 4.1%–11%); 6.5% in the 90 days before (no significant change, p = 0.876).
@@ -177,7 +177,7 @@ Fix tracker baseline: 7.2% of 1–2★ reviews (15 of 207, 90 days to 2026-10-09
 *Confirm with (internal data):* In-app analytics — time from opening the trip to OTP shown.
 *Expected effect:* Removes a fresh irritant from every trip; a small change with daily visibility."
 [MIS-08] Ask happy riders for a rating — in-app review prompt after good trips,Story,High,play-rating,horizon-next,track-product,"h3. Problem
-Most ratings come from employees who never write a review, and they rate the app highly. Asking them on Play at a good moment is the cheapest way to add recent positive ratings. The app's own post-trip rating pop-up, by contrast, is itself a complaint. (If the app already calls the In-App Review API, this ticket becomes tuning when it fires.)
+Employees who rate without writing a review count in the store rating but never appear in reviews; the evidence gives their share and average stars. Asking them on Play at a good moment is the cheapest way to add recent positive ratings. The app's own post-trip rating pop-up, by contrast, is itself a complaint. (If the app already calls the In-App Review API, this ticket becomes tuning when it fires.)
 
 h3. Evidence (Play Store reviews to 11 Oct 2026)
 * 79% of the 114,880 ratings have no text; they average 4.91★, vs 3.61★ for written reviews (approximate: Google rescales its star counts).
@@ -205,7 +205,7 @@ Fix tracker baseline: 2.9% of 1–2★ reviews (6 of 207, 90 days to 2026-10-09)
 *Expected effect:* Adds recent ratings from satisfied riders; because Play weights recent ratings more, this moves the store rating faster than fixes alone. Size depends on Google's prompt quota.
 *Depends on:* MIS-05"
 [MIS-09] Find out why notifications are missing or late,Bug,Medium,play-rating,horizon-next,track-product,"h3. Problem
-Complaints about missing, late or repeated notifications (cab allocated, cab arriving) are emerging in the last 30 days.
+Complaints about missing, late or repeated notifications (cab allocated, cab arriving); the evidence gives their current share and trend.
 
 h3. Evidence (Play Store reviews to 11 Oct 2026)
 * Notifications missing, late or spammy: in 3.4% of 1–2★ reviews in the last 90 days (7 of 205; 95% CI 1.7%–6.9%); 2.3% in the 90 days before (no significant change, p = 0.493).
@@ -225,7 +225,7 @@ h3. Acceptance criteria
 *Success metric:* Notification share of 1–2★ reviews (Fix tracker); push delivery rate.
 Fix tracker baseline: 3.4% of 1–2★ reviews (7 of 207, 90 days to 2026-10-09).
 *Confirm with (internal data):* Push provider delivery reports.
-*Expected effect:* Early action on an emerging complaint while it is still small."
+*Expected effect:* Fixes the cause before the complaint grows."
 "[MIS-10] Live tracking you can trust — fresher cab location and an ""updated X s ago"" label",Story,Medium,play-rating,horizon-quarter,track-product,"h3. Problem
 The cab's location is wrong, frozen or minutes behind, and ETAs do not match reality, so employees cannot plan when to step out.
 
@@ -278,7 +278,7 @@ Fix tracker baseline: 2.9% of 1–2★ reviews (6 of 207, 90 days to 2026-10-09)
 *Confirm with (internal data):* Booking API error logs.
 *Expected effect:* Removes a daily source of uncertainty."
 [OPS-01] Follow up every safety concern raised in a review within 24 hours,Task,Highest,play-rating,horizon-now,track-ops,"h3. Problem
-Safety concerns are rare in reviews but each one needs action; more reviews praise safety than raise a concern, so safety is a strength to protect.
+Each safety concern raised in a review needs action, however few there are. The evidence gives the current count, and how many reviews praise safety.
 
 h3. Evidence (Play Store reviews to 11 Oct 2026)
 * 24 of 2,848 reviews in the last 365 days raise a safety concern; 1 in the last 30 days. 36 reviews praise safety.
@@ -296,7 +296,7 @@ h3. Acceptance criteria
 *Success metric:* Safety concerns per month and time to follow-up.
 Fix tracker baseline: 2.4% of 1–2★ reviews (5 of 207, 90 days to 2026-10-09).
 *Confirm with (internal data):* Safety incident log.
-*Expected effect:* Protects a strength; prevents a single incident review from going unanswered."
+*Expected effect:* No safety concern raised in a review goes unanswered."
 "[OPS-02] Close the loop on complaints — ticket number, status and resolution in the app",Story,High,play-rating,horizon-next,track-ops,"h3. Problem
 Complaints raised with the helpdesk or transport team get no answer or no resolution, and the employee has no way to see what happened to them.
 
