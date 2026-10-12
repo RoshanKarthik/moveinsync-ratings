@@ -5,7 +5,7 @@
 
 This note covers data sources, tools, the tagging model and its measured accuracy, the statistics,
 and what the numbers can and cannot tell you. Every figure below is filled in from the data at
-build time (Play Store reviews to 11 Oct 2026, built 13 Oct 2026, 03:52 IST).
+build time (Play Store reviews to 11 Oct 2026, built 13 Oct 2026, 04:17 IST).
 
 ## 1. Data
 
@@ -94,8 +94,11 @@ Per-issue precision is shown in the report next to each issue.
 
 > **Who labelled the reference sets:** the reference labels were written by the analyst with an
 > AI assistant, against the written definitions in `taxonomy.yaml`, before any tagging
-> model was run. Spot-check by the author: _[to be completed: number of labels reviewed and
-> number changed]_.
+> model was run. Spot-check (13 Oct 2026): 40 labels drawn at random
+> (20 dev, 20 test) were re-read against the definitions in `taxonomy.yaml` with AI
+> assistance; 1 was changed, none in the test set, so
+> the held-out scores above are unaffected. The sample's review ids and the reason for each change are in
+> `data/eval/spot_check_2026-10-13.json`.
 
 **Safety precision.** After the first full run, the model was found to flag *praise* about safety
 ("safe ride") as well as concerns. Two fixes followed:
