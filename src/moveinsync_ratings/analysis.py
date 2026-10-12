@@ -547,6 +547,8 @@ def safety_section(df: pd.DataFrame, end: pd.Timestamp, days: int) -> dict[str, 
         "praise": len(praise),
         "reviews": [
             {
+                "id": r["review_id"],
+                "at": r["ts"].isoformat(),
                 "text": r["content"].strip(),
                 "stars": int(r["score"]),
                 "date": r["ts"].strftime("%d %b %Y"),

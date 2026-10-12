@@ -379,13 +379,15 @@ def summary_points(a: dict[str, Any]) -> list[dict[str, str]]:
 
 def next_actions(a: dict[str, Any], tax: Taxonomy, tracked: list[dict[str, Any]]) -> list[dict[str, str]]:
     """Evidence-triggered to-do list for this refresh. Each action cites the number that
-    triggered it and the owner from the taxonomy — no free-form model text, so it never drifts."""
+    triggered it and the owner from the taxonomy — no free-form model text, so it never drifts.
+    `key` names the condition (stable across refreshes); `ratings alerts` uses it to send each once."""
     acts: list[dict[str, str]] = []
     days = a["windows"]["recent"]["days"]
     s30 = a["safety"]["last30"]
     if s30:
         acts.append(
             {
+                "key": "safety",
                 "priority": "Today",
                 "owner": tax.owners["safety_team"],
                 "action": f"Follow up the {s30} safety-related review{'s' if s30 > 1 else ''} from the last 30 days.",
@@ -397,6 +399,7 @@ def next_actions(a: dict[str, Any], tax: Taxonomy, tracked: list[dict[str, Any]]
             top = ", ".join(tax.issues[c].label for c, _ in v["top_issues"]) or "no single dominant issue"
             acts.append(
                 {
+                    "key": f"release:{v['version']}:{v['flag']}",
                     "priority": "This week" if v["flag"] == "worse" else "Watch",
                     "owner": tax.owners["eng_mobile"],
                     "action": f"Check release {v['version']} for regressions — most-named problems: {top}.",
@@ -408,6 +411,7 @@ def next_actions(a: dict[str, Any], tax: Taxonomy, tracked: list[dict[str, Any]]
         meta = tax.issues[e["code"]]
         acts.append(
             {
+                "key": f"emerging:{e['code']}",
                 "priority": "This week",
                 "owner": tax.owners[meta.owner],
                 "action": f"Investigate the rise in “{meta.label}”.",
@@ -419,6 +423,7 @@ def next_actions(a: dict[str, Any], tax: Taxonomy, tracked: list[dict[str, Any]]
     if unanswered:
         acts.append(
             {
+                "key": "replies",
                 "priority": "This week",
                 "owner": "Support / app team",
                 "action": f"Reply to the {len(unanswered)} most-read unanswered 1–2★ reviews (listed below) with a concrete fix or contact.",
@@ -428,6 +433,7 @@ def next_actions(a: dict[str, Any], tax: Taxonomy, tracked: list[dict[str, Any]]
     for i in [x for x in a["issues"]["issues"] if x["trend"] == "rising"][:3]:
         acts.append(
             {
+                "key": f"rising:{i['code']}",
                 "priority": "This week",
                 "owner": i["owner"],
                 "action": f"“{i['label']}” is rising — confirm root cause and owner.",
@@ -438,6 +444,7 @@ def next_actions(a: dict[str, Any], tax: Taxonomy, tracked: list[dict[str, Any]]
         if t["status"] == "improved":
             acts.append(
                 {
+                    "key": f"fix:{t['id']}:improved",
                     "priority": "FYI",
                     "owner": "Product",
                     "action": f"Fix {t['id']} is working — “{t['issue']}” fell below its baseline.",
@@ -447,6 +454,7 @@ def next_actions(a: dict[str, Any], tax: Taxonomy, tracked: list[dict[str, Any]]
         elif t["status"] == "worse":
             acts.append(
                 {
+                    "key": f"fix:{t['id']}:worse",
                     "priority": "This week",
                     "owner": "Product",
                     "action": f"Fix {t['id']}: “{t['issue']}” is above its baseline — check the shipped change.",
