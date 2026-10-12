@@ -9,6 +9,7 @@ Outputs (in deliverables/):
 - backlog.xlsx         the tickets with evidence, plus the issue evidence table
 - backlog_jira.csv     Jira CSV import (Summary, Issue Type, Priority, Labels, Description)
 - reply_playbook.md    reply templates and routing per issue, with the current reply backlog
+- approach.html        the submission note: how the recommendation was reached and the tools used
 """
 
 from __future__ import annotations
@@ -458,6 +459,45 @@ def render_recommendation(a: dict[str, Any], tax: Taxonomy, ctx: dict[str, Any])
     )
 
 
+def model_name(name: str) -> str:
+    """'nvidia/nemotron-3-ultra-550b-a55b@nothink' → 'nemotron-3-ultra-550b-a55b'; votes read 'vote of both'."""
+    if name.startswith("vote"):
+        return "a vote of both"
+    return name.split("/")[-1].split("@")[0]
+
+
+def approach_context(a: dict[str, Any], tax: Taxonomy, ctx: dict[str, Any]) -> dict[str, Any]:
+    """Numbers for the submission note, all taken from the analysis and the built plan."""
+    ev = a["eval"]
+    primary: dict[str, Any] | None = ev["result"] if ev else None
+    others = [r for r in ev["results"] if r["name"] != primary["name"]] if ev and primary else []
+    lo, hi = primary["primary_ci95"] if primary else (0.0, 0.0)
+    tickets = ctx["tickets"]
+    versions = a["versions"]
+    return {
+        "eval_primary": primary,
+        "eval_others": [{**r, "short": model_name(r["name"])} for r in others],
+        # True when no alternative's 95% interval is clear of the primary's: no measurable gain.
+        "eval_overlap": bool(primary)
+        and all(r["primary_ci95"][0] <= hi and lo <= r["primary_ci95"][1] for r in others),
+        "eval_date": pd.Timestamp(ev["date"]).strftime("%d %b %Y") if ev else None,
+        "model_names": [model_name(m) for m in a["models"]],
+        "journey": [label for stage, label in tax.stages.items() if stage != "general"],
+        "plan_date": pd.Timestamp(ctx["plan_as_of"]).strftime("%d %b %Y") if ctx["plan_as_of"] else None,
+        "n_specific": len(tax.specific_codes),
+        "n_product": sum(t["track"] == "product" for t in tickets),
+        "n_ops": sum(t["track"] == "ops" for t in tickets),
+        "n_now": sum(t["horizon"] == "now" for t in tickets),
+        "bench_reviews": sum(b["n"] for b in a["benchmark_reviews"]),
+        "n_versions": len(versions),
+        "n_flagged": sum(v["flag"] in ("worse", "watch") for v in versions),
+    }
+
+
+def render_approach(a: dict[str, Any], tax: Taxonomy, ctx: dict[str, Any]) -> str:
+    return _env().get_template("approach.html.j2").render(a=a, tax=tax, **ctx, **approach_context(a, tax, ctx))
+
+
 def ticket_description_text(t: dict[str, Any], sep: str = "\n") -> str:
     parts = [f"Problem: {t['problem']}", "Evidence:", *[f"- {x}" for x in t["evidence_lines"]]]
     for q in t["quotes"]:
@@ -670,9 +710,11 @@ def write_all(
         "xlsx": out_dir / "backlog.xlsx",
         "jira": out_dir / "backlog_jira.csv",
         "playbook": out_dir / "reply_playbook.md",
+        "approach": out_dir / "approach.html",
     }
     paths["recommendation"].write_text(render_recommendation(a, tax, ctx), encoding="utf-8")
     write_xlsx(paths["xlsx"], a, ctx)
     write_jira_csv(paths["jira"], a, ctx)
     paths["playbook"].write_text(render_playbook(a, tax, ctx), encoding="utf-8")
+    paths["approach"].write_text(render_approach(a, tax, ctx), encoding="utf-8")
     return paths

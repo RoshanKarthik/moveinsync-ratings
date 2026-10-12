@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How It Was Built</title>
+<meta name="description" content="How the Play Store rating recommendation for the MoveInSync employee app was reached, and the tools used — numbers as of Play Store reviews to {{ a.data_through }}.">
+<script>try{var t=localStorage.getItem("ratings-theme");if(t&&t!=="auto")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<style>
+{% include "_base.css" %}
+.note-body { max-width: 78ch; }
+.note-body p, .note-body li { font-size: 15px; line-height: 1.6; }
+.note-body h2 { margin-top: 24px; }
+.note-body ul.points li { margin: 6px 0; }
+.byline { color: var(--ink-2); font-size: 14px; margin-top: 6px; }
+.grid-4 .tile .value { font-size: 24px; }
+</style>
+</head>
+<body>
+{% set main = a.listing.main %}
+{% set W = a.windows %}
+{% set I = a.issues %}
+{% set bench = a.listing.benchmarks[0] if a.listing.benchmarks else none %}
+{% set ev = eval_primary %}
+{% set active = "approach" %}{% set monitor_href = "../reports/latest.html" %}{% set rec_href = "recommendation.html" %}{% set approach_href = "approach.html" %}
+{% include "_appbar.html.j2" %}
+<div class="wrap">
+  <header class="page-title">
+    <h1>How I got to the recommendation</h1>
+    <div class="byline">Roshan Karthik · note on approach and tools · every number below is filled in from the data at build time (reviews up to <strong>{{ a.data_through }}</strong>, refreshed {{ a.generated_at }})</div>
+  </header>
+
+  <div class="grid-4" style="margin-top:14px">
+    <div class="tile">
+      <div class="label">Reviews read</div>
+      <div class="value">{{ a.counts.reviews | num }}</div>
+      <div class="ctx">{{ a.counts.first_review }} – {{ a.data_through }}</div>
+    </div>
+    <div class="tile">
+      <div class="label">Issues in the taxonomy</div>
+      <div class="value">{{ tax.issues | length }}</div>
+      <div class="ctx">{{ n_specific }} specific, each with a fixed owner</div>
+    </div>
+    <div class="tile">
+      <div class="label">Main issue correct</div>
+      <div class="value">{% if ev %}{{ ev.primary_accuracy | pct }}{% else %}—{% endif %}</div>
+      <div class="ctx">{% if ev %}95% CI {{ ev.primary_ci95[0] | pct }}–{{ ev.primary_ci95[1] | pct }} · {{ ev.n }} held-out reviews{% else %}not measured yet{% endif %}</div>
+    </div>
+    <div class="tile">
+      <div class="label">Tickets in the plan</div>
+      <div class="value">{{ tickets | length }}</div>
+      <div class="ctx">{{ n_product }} product, {{ n_ops }} operations · {{ n_now }} need no release</div>
+    </div>
+  </div>
+
+  <div class="note-body">
+  <section id="question">
+    <h2>The question</h2>
+    <p>Why are the employee app's Play Store ratings low, and exactly what should be fixed first? The app is rated {{ main.score | f2 }}★ from {{ main.ratings | num }} ratings, and {{ main.one_star.p | pct(1) }} of them are 1★{% if bench %} ({{ bench.name }}: {{ bench.score | f2 }}★, {{ bench.one_star.p | pct(1) }} 1★){% endif %}. I wanted an answer a product team could act on this week and check a month later, so the brief became: find what drives 1–2★ reviews, rank it by what it costs the rating, and give each fix an owner and a way to measure it.</p>
+  </section>
+
+  <section id="data">
+    <h2>The data</h2>
+    <p>I downloaded all {{ a.counts.reviews | num }} public Google Play reviews of <code>{{ a.app.id }}</code> ({{ a.counts.first_review }} to {{ a.data_through }}, India store, English), the store listing with its star counts, and for comparison {% for b in a.listing.benchmarks %}{{ b.name }}{% if loop.revindex == 2 %} and {% elif not loop.last %}, {% endif %}{% endfor %}: their listings plus {{ bench_reviews | num }} reviews and replies from the last {{ W.year.days }} days. Reviewer names are never stored.</p>
+  </section>
+
+  <section id="tagging">
+    <h2>Sorting reviews into issues</h2>
+    <p>I read a sample of recent complaints and grouped them along the employee journey ({{ journey | join(" → ") }}) into {{ tax.issues | length }} issues, each with a fixed owner and root-cause type. {{ a.counts.tagged | num }} of the {{ a.counts.tag_window | num }} reviews since Jan 2023 are tagged with up to three issues: short praise by a rule, the rest by {{ model_names[0] }} on NVIDIA's free NIM tier{% if model_names | length > 1 %}, with {{ model_names[1] }} as fallback{% endif %}.</p>
+    {% if ev %}<p>To know how far to trust the tags, I scored them against {{ ev.n }} reference reviews labelled before any model output existed and never used for tuning (measured {{ eval_date }}): the main issue is correct in {{ ev.primary_accuracy | pct }} (95% CI {{ ev.primary_ci95[0] | pct }}–{{ ev.primary_ci95[1] | pct }}), tag precision is {{ ev.label_precision | pct }} and recall {{ ev.label_recall | pct }}, and {{ ev.safety.fn }} of {{ ev.safety.tp + ev.safety.fn }} safety reviews were missed. Recall under 100% means issue shares slightly undercount.</p>{% endif %}
+  </section>
+
+  <section id="decisions">
+    <h2>Key decisions, and why</h2>
+    <ul class="points">
+      <li><strong>Models chosen by measured accuracy, at no cost.</strong> I tried the free NVIDIA NIM models and kept the ones that answered reliably{% if ev %}; on the held-out set {{ model_names[0] }} got the main issue right in {{ ev.primary_accuracy | pct }} (95% CI {{ ev.primary_ci95[0] | pct }}–{{ ev.primary_ci95[1] | pct }}, recall {{ ev.label_recall | pct }}){% for r in eval_others %}, {{ r.short }} {{ r.primary_accuracy | pct }} (95% CI {{ r.primary_ci95[0] | pct }}–{{ r.primary_ci95[1] | pct }}, recall {{ r.label_recall | pct }}){% endfor %}.{% if eval_overlap %} The intervals overlap, so I kept the simplest set-up{% else %} I kept{% endif %}: {{ model_names[0] }} as the primary model{% if model_names | length > 1 %}, {{ model_names[1] }} only filling gaps when it fails{% endif %}{% endif %}.</li>
+      <li><strong>A live site and a ticket-ready backlog instead of slides.</strong> {{ W.recent.n | num }} reviews arrived in the last {{ W.recent.days }} days, so a deck would be out of date within weeks. The site refreshes every 2 hours; the {{ tickets | length }} tickets import into Jira or open in Excel, each with an owner, acceptance criteria, a success metric and the internal data that would confirm it.</li>
+      <li><strong>Plan text kept separate from the numbers.</strong> The judgement (what to change, who owns it, effort) lives in one file; every share, interval and quote is filled in at build time. The evidence updates on each refresh while the plan stays fixed{% if plan_date %} (baselines recorded {{ plan_date }}){% endif %}, and the page flags any new signal no ticket covers — {% if uncovered %}{{ uncovered | length }} today{% else %}none today{% endif %}.</li>
+      <li><strong>A significance test before calling any change.</strong> Every share carries its n and a 95% Wilson interval; “rising”, “falling” and “emerging” need p &lt; 0.05 on a two-proportion test; releases are Bonferroni-corrected ({{ n_versions }} compared over {{ W.year.days }} days, {{ n_flagged }} flagged now). With about {{ I.recent_neg_n | num }} reviews rated 1–2★ per {{ W.recent.days }} days, the fix tracker only calls a fix “improved” when the whole interval clears its baseline.</li>
+    </ul>
+  </section>
+
+  <section id="limits">
+    <h2>Limits, and what internal data would confirm</h2>
+    <p>Written reviews are about {{ a.gap.written_share_of_ratings | pct }} of ratings and skew negative, so they show <em>what</em> goes wrong and how often relative to other problems, not how many trips go wrong. I had no internal data. Three sources would confirm or size the top fixes: <strong>Android vitals</strong> (crash and ANR rates per release and phone model), <strong>OTP gateway logs</strong> (delivery rate and time per operator) and <strong>trip data</strong> (pickup delays, GPS ping gaps, boarding check-ins). Employer settings are invisible from outside, and Google's rating formula is private, so rating scenarios are directional.</p>
+  </section>
+
+  <section id="tools">
+    <h2>Tools used</h2>
+    <p>Python 3.12, pandas and SQLite; google-play-scraper for public data; NVIDIA NIM (Nemotron-3) through the OpenAI-compatible API for tagging; Jinja2 with hand-built SVG charts; openpyxl for the Excel backlog; Typer and Rich for the <code>ratings</code> command; pytest, ruff and mypy for checks; GitHub Actions and GitHub Pages to refresh and publish every 2 hours. I used AI assistance for code, taxonomy drafting, reference labelling and analysis review.</p>
+    <p class="sub">Read next: <a href="recommendation.html">the recommendation</a> · <a href="../reports/latest.html">the live monitor</a> · <a href="../docs/METHOD.md">full method and accuracy (METHOD.md)</a> · <a href="../docs/SOURCES.md">Google Play sources</a> · downloads: <a href="backlog.xlsx">backlog.xlsx</a>, <a href="backlog_jira.csv">backlog_jira.csv</a>, <a href="reply_playbook.md">reply_playbook.md</a></p>
+  </section>
+  </div>
+</div>
+<div id="tip" role="tooltip"></div>
+<script>
+{% include "_ui.js" %}
+</script>
+</body>
+</html>

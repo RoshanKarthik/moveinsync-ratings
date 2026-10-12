@@ -10,6 +10,7 @@
 # The site is then published at https://<owner>.github.io/<repo>/
 #   /                                   → the monitor ("How are our ratings?")
 #   /deliverables/recommendation.html   → the recommendation, with live evidence
+#   /deliverables/approach.html         → how the recommendation was reached, and tools used
 #
 # The review database lives on a separate `data` branch, overwritten each run (one commit),
 # so the main history never grows with data.

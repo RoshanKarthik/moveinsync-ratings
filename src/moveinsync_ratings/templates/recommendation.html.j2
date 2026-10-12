@@ -57,7 +57,7 @@ table.scen td, table.scen th { font-size: 14px; }
 {% set bench_r = a.benchmark_reviews[0] if a.benchmark_reviews else none %}
 {% set rs = replies_story %}
 {% set crash_e = emerging.get(top.code) %}
-{% set active = "recommendation" %}{% set monitor_href = "../reports/latest.html" %}{% set rec_href = "recommendation.html" %}
+{% set active = "recommendation" %}{% set monitor_href = "../reports/latest.html" %}{% set rec_href = "recommendation.html" %}{% set approach_href = "approach.html" %}
 {% include "_appbar.html.j2" %}
 {% macro tref(id) %}{% set t = by_id[id] %}<a href="#{{ t.id }}"><span class="id">{{ t.id }}</span>{{ t.title }}</a>{% endmacro %}
 {% macro ticket_card(t) %}

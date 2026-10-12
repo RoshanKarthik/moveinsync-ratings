@@ -1,4 +1,4 @@
-{# Shared top bar. Needs: active ("monitor" | "recommendation"), monitor_href, rec_href, a. #}
+{# Shared top bar. Needs: active ("monitor" | "recommendation" | "approach"), monitor_href, rec_href, approach_href, a. #}
 <header class="appbar">
   <div class="appbar-in">
     <a class="brand" href="{{ monitor_href }}">
@@ -7,7 +7,8 @@
     </a>
     <nav class="tabs" aria-label="Pages">
       <a href="{{ monitor_href }}"{% if active == "monitor" %} aria-current="page"{% endif %}>Monitor</a>
-      <a href="{{ rec_href }}"{% if active == "recommendation" %} aria-current="page"{% endif %}>Recommendation</a>
+      <a href="{{ rec_href }}"{% if active == "recommendation" %} aria-current="page"{% endif %}><span class="t-long">Recommendation</span><span class="t-short" aria-hidden="true">Plan</span></a>
+      <a href="{{ approach_href }}"{% if active == "approach" %} aria-current="page"{% endif %}><span class="t-long">How it was built</span><span class="t-short" aria-hidden="true">Method</span></a>
     </nav>
     <div class="appbar-right">
       <span class="live" data-ts="{{ a.generated_iso }}" title="Data refreshed {{ a.generated_at }}; reviews up to {{ a.data_through }}"><i aria-hidden="true"></i><span class="live-text">Updated {{ a.generated_at }}</span></span>

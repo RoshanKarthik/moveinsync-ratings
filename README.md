@@ -13,12 +13,14 @@ Nothing to install, no sign-up: open the link.
 |---|---|
 | [Monitor](https://roshankarthik.github.io/moveinsync-ratings/) | How the ratings are doing right now: the rating, what changed, what to do this week, what drives bad ratings, release health, replies, safety, and whether each fix is working |
 | [Recommendation](https://roshankarthik.github.io/moveinsync-ratings/deliverables/recommendation.html) | What to fix and what to do first: the answer, the causes, a plan in three horizons with owners and evidence, an operations track, the reply playbook and how success is measured |
+| [How it was built](https://roshankarthik.github.io/moveinsync-ratings/deliverables/approach.html) | A short note on how I got to the recommendation: the data, how reviews were sorted into issues and how accurately, the key decisions, limits and tools used |
 
 The same files are in this repository and open in any browser, offline:
 
 | File | What it is |
 |---|---|
 | `deliverables/recommendation.html` | The recommendation (one file; works offline, on a phone and in print) |
+| `deliverables/approach.html` | The note on approach and tools |
 | `deliverables/backlog.xlsx` | One row per ticket: owner, effort, evidence, change, acceptance criteria, success metric, baseline; plus the evidence for every issue |
 | `deliverables/backlog_jira.csv` | The same tickets for Jira's CSV import (Summary, Issue Type, Priority, Labels, Description) |
 | `deliverables/reply_playbook.md` | Google-compliant reply templates per issue, routing, and the current number of unanswered 1–2★ reviews per issue |
