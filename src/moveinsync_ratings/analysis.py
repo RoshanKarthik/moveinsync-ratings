@@ -125,8 +125,14 @@ def listing_section(store: Store, settings: Settings) -> dict[str, Any]:
             "neg": share(h[0] + h[1], total),
             "version": cur["version"],
             "captured_at": cur["captured_at"],
+            "captured_on": pd.Timestamp(cur["captured_at"]).tz_convert(IST).strftime("%d %b %Y"),
             "history": [
-                {"at": x["captured_at"][:10], "at_full": x["captured_at"], "score": x["score"], "ratings": x["ratings"]}
+                {
+                    "at": pd.Timestamp(x["captured_at"]).tz_convert(IST).strftime("%d %b %Y"),
+                    "at_full": x["captured_at"],
+                    "score": x["score"],
+                    "ratings": x["ratings"],
+                }
                 for x in hist
             ],
         }
@@ -648,7 +654,8 @@ def analyse(settings: Settings, tax: Taxonomy, store: Store) -> dict[str, Any]:
             best = next((r for r in rows if r["name"] == settings.llm.model), rows[0])
     tag_window = df[df["ts"] >= pd.Timestamp(settings.tag_since, tz=IST)]
     return {
-        "generated_at": datetime.now(UTC).astimezone().strftime("%d %b %Y, %H:%M"),
+        # Shown on the pages; India time on any machine (the scheduled runner is on UTC).
+        "generated_at": pd.Timestamp.now(tz=IST).strftime("%d %b %Y, %H:%M IST"),
         "generated_iso": datetime.now(UTC).replace(microsecond=0).isoformat(),
         "data_through": end.strftime("%d %b %Y"),
         "app": settings.app.model_dump(),

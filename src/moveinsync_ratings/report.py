@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 import shutil
-from datetime import date, datetime
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -477,7 +477,7 @@ def render_report(settings: Settings, tax: Taxonomy, a: dict[str, Any]) -> Path:
         "tiles": stat_tiles(a),
         "tracker": tracked,
         "actions": next_actions(a, tax, tracked),
-        "today": date.today().isoformat(),
+        "today": datetime.now(IST_TZ).date().isoformat(),
     }
     html = env.get_template("monitor.html.j2").render(**ctx)
     out_dir = settings.reports_dir
@@ -486,5 +486,5 @@ def render_report(settings: Settings, tax: Taxonomy, a: dict[str, Any]) -> Path:
     latest.write_text(html, encoding="utf-8")
     archive = out_dir / "history"
     archive.mkdir(exist_ok=True)
-    shutil.copyfile(latest, archive / f"{date.today().isoformat()}.html")
+    shutil.copyfile(latest, archive / f"{datetime.now(IST_TZ).date().isoformat()}.html")
     return latest
